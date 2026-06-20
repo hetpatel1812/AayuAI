@@ -1,0 +1,58 @@
+/*
+ * Aayu AI — Trends CSS
+ */
+.trends-layout { 
+  display: grid; 
+  grid-template-columns: 1fr 240px; 
+  gap: 16px; 
+  margin-bottom: 20px; 
+}
+.trend-btns { 
+  display: flex; 
+  gap: 8px; 
+  margin-bottom: 16px; 
+  flex-wrap: wrap; 
+}
+.trend-info { 
+  font-size: 14px; 
+  font-weight: 700; 
+  color: var(--text-primary); 
+  margin-bottom: 3px; 
+}
+.trend-range { 
+  font-size: 12px; 
+  color: var(--text-muted); 
+  margin-bottom: 16px; 
+}
+.trend-cards { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+.trend-card { 
+  padding: 12px 14px; 
+}
+.tc-month { 
+  font-size: 11px; 
+  color: var(--text-dim); 
+  margin-bottom: 3px; 
+}
+.tc-value { 
+  font-size: 20px; 
+  font-weight: 800; 
+  line-height: 1; 
+}
+.tc-unit { 
+  font-size: 10px; 
+  color: var(--text-dim); 
+  margin-left: 2px; 
+}
+.tc-change { 
+  font-size: 11px; 
+  color: var(--accent-teal); 
+  margin-top: 5px; 
+}
+
+@media (max-width: 1024px) { 
+  .trends-layout { grid-template-columns: 1fr; } 
+}

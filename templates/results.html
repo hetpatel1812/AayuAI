@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Report Results — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/results.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Report Results</h1>
+    <p>Self ({{ user.name }}) · {{ report.test_date if report else 'Recent' }} · {{ report.lab_name if report else 'Lab' }} · <span id="param-count">--</span> parameters</p>
+  </div>
+  <div class="page-header-actions">
+    <button class="btn btn-secondary">🌐 Translate</button>
+    <button class="btn btn-secondary">↓ Export PDF</button>
+    <a href="{{ url_for('chat') }}" class="btn btn-blue">💬 Ask AI</a>
+  </div>
+</div>
+
+<div id="dynamic-alerts" style="margin-bottom: 20px;"></div>
+
+<!-- Score + Abnormal Grid -->
+<div class="results-top">
+  <div class="glass-card--solid glass-card--no-hover score-panel">
+    <svg id="results-ring" width="110" height="110"></svg>
+    <div>
+      <div class="stat-label">Sub-scores</div>
+      <div id="results-subscores"></div>
+    </div>
+  </div>
+  <div class="glass-card--solid glass-card--no-hover">
+    <div class="stat-label">Abnormal Values (9)</div>
+    <div class="abnormal-grid" id="ab-grid"></div>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filter-bar" id="filter-bar"></div>
+
+<!-- Results Table -->
+<div class="glass-card--solid glass-card--no-hover table-wrap" style="padding: 0;">
+  <table class="data-table" id="results-table">
+    <thead>
+      <tr><th>Test</th><th>Category</th><th>Your Value</th><th>Normal Range</th><th>Status</th><th>Details</th></tr>
+    </thead>
+    <tbody id="results-tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.LIVE_DATA = {{ report_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/results.js', v=16) }}"></script>
+{% endblock %}

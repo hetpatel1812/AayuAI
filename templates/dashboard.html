@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Dashboard</h1>
+    <p>Family health overview · Latest: Jul 2024</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">+ Upload Report</a>
+  </div>
+</div>
+
+<!-- Alert Banner -->
+<div class="alert alert-warning" style="margin-bottom: 20px;">
+  <span class="alert-icon">⚠️</span>
+  <span><strong>Action needed:</strong> 9 abnormal values — TSH, Glucose, Vitamin D, Uric Acid, Triglycerides, HDL require attention.</span>
+</div>
+
+<!-- Stat Cards -->
+<div class="dash-stats" id="dash-stats"></div>
+
+<!-- Main Body -->
+<div class="dash-body">
+  <!-- Health Score Panel -->
+  <div class="glass-card--solid glass-card--no-hover">
+    <div class="stat-label">Health Score</div>
+    <div class="score-center">
+      <svg id="dash-ring" width="130" height="130"></svg>
+    </div>
+    <div id="dash-subscores"></div>
+  </div>
+
+  <!-- Latest Report Table -->
+  <div class="glass-card--solid glass-card--no-hover" style="padding: 0; overflow: hidden;">
+    <div class="dash-table-header">
+      <div class="dash-table-header-title">Latest Report — Self (Het) · Jul 2024</div>
+      <div style="display: flex; gap: 8px;">
+        <span class="badge badge-high">9 Abnormal</span>
+        <span class="badge badge-warning">SRL Diagnostics</span>
+      </div>
+    </div>
+    <div class="dash-table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr><th>Test</th><th>Value</th><th>Range</th><th>Status</th></tr>
+        </thead>
+        <tbody id="dash-table-body"></tbody>
+      </table>
+    </div>
+    <div class="dash-table-footer">
+      <a href="{{ url_for('results') }}" class="btn btn-primary" style="flex: 1;">View Full Results →</a>
+      <button class="btn btn-secondary" style="flex: 1;">↓ Export PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- Family Vault Preview -->
+<div class="glass-card--solid glass-card--no-hover">
+  <div class="stat-label">Family Vault</div>
+  <div class="family-grid" id="dash-family"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.LIVE_DATA = {{ report_json | safe }};
+  window.LIVE_FAMILY = {{ family_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js', v=15) }}"></script>
+{% endblock %}

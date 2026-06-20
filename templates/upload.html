@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Upload Report — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Upload Report</h1>
+    <p>Select input method → analyze your blood test</p>
+  </div>
+</div>
+
+<!-- Phase 1: Main Upload UI -->
+<div id="upload-main">
+  <!-- Config Bar -->
+  <div class="glass-card--solid glass-card--no-hover" style="margin-bottom: 20px;">
+    <div class="upload-config">
+      <div class="config-item">
+        <div class="config-label">Patient</div>
+        <div class="member-pills">
+          <div class="member-pill active" style="background: #00D4AA;" data-member="{{ user.name[0].upper() if user.name else 'U' }}" title="{{ user.name }}">{{ user.name[0].upper() if user.name else 'U' }}</div>
+        </div>
+      </div>
+      <div class="config-item">
+        <div class="config-label">Test Date</div>
+        <div style="font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-secondary);">July 15, 2024</div>
+      </div>
+      <div class="config-item">
+        <div class="config-label">Language</div>
+        <div class="lang-pills">
+          <button class="lang-pill active">English</button>
+          <button class="lang-pill">हिंदी</button>
+          <button class="lang-pill">ગુજ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mode Cards -->
+  <div class="modes-row">
+    <div class="upload-mode" data-mode="pdf">
+      <div class="mode-emoji">📄</div>
+      <div class="mode-title">Digital PDF</div>
+      <span class="mode-tech" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">pdfplumber</span>
+      <p class="mode-desc">Lab PDF from SRL, Thyrocare, Dr. Lal, Metropolis. Text extracted directly.</p>
+      <div class="mode-acc" style="color: var(--accent-blue);">✓ 99% accuracy</div>
+    </div>
+    <div class="upload-mode" data-mode="scan">
+      <div class="mode-emoji">🖨️</div>
+      <div class="mode-title">Scanned Image</div>
+      <span class="mode-tech" style="background: rgba(245,158,11,0.15); color: var(--status-warning);">EasyOCR</span>
+      <p class="mode-desc">Clear flat scan or printed photo. OpenCV preprocessing applied.</p>
+      <div class="mode-acc" style="color: var(--status-warning);">✓ 85% accuracy</div>
+    </div>
+    <div class="upload-mode" data-mode="phone">
+      <span class="recommend-tag">Recommended</span>
+      <div class="mode-emoji">📱</div>
+      <div class="mode-title">Phone Camera Photo</div>
+      <span class="mode-tech" style="background: var(--accent-teal-dim); color: var(--accent-teal);">Gemini Vision</span>
+      <p class="mode-desc">Tilted, shadowed, blurry — all OK. Gemini Vision understands images.</p>
+      <div class="mode-acc" style="color: var(--accent-teal);">✓ 90% accuracy</div>
+    </div>
+  </div>
+
+  <!-- Drop Zone -->
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" id="file-input" name="file" accept="image/*,application/pdf" style="display: none;">
+    <input type="hidden" id="mode-input" name="mode" value="">
+    <input type="hidden" id="lang-input" name="lang" value="en">
+    
+    <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click();" style="cursor: pointer;">
+      <div class="dz-icon" id="dz-icon">📂</div>
+      <div class="dz-title" id="dz-title">Select an input method above first</div>
+      <div class="dz-desc" id="dz-desc">Then drag and drop your file here or click to browse.</div>
+      <div id="file-name-display" style="margin-top: 10px; font-weight: bold; color: var(--accent-teal);"></div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 20px;">
+      <button type="button" class="btn btn-secondary" id="btn-analyze" disabled style="opacity: 0.5;">Select a mode first</button>
+    </div>
+  </form>
+</div>
+
+<!-- Phase 2: Processing -->
+<div id="upload-proc" class="hidden">
+  <div class="glass-card--solid glass-card--no-hover proc-card">
+    <div class="proc-title">Analyzing Report...</div>
+    <div class="proc-sub" id="proc-sub">Processing</div>
+    <div class="progress-bar" style="margin-bottom: 8px;"><div class="progress-fill" id="proc-fill" style="width: 0%;"></div></div>
+    <div class="proc-pct">
+      <span style="font-size: 12px; color: var(--text-dim);">Progress</span>
+      <span style="font-size: 12px; color: var(--accent-teal); font-weight: 700;" id="proc-pct">0%</span>
+    </div>
+    <div id="proc-steps"></div>
+  </div>
+</div>
+
+<!-- Phase 3: Success -->
+<div id="upload-done" class="hidden">
+  <div class="glass-card--solid glass-card--no-hover success-card">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Report Analyzed Successfully!</div>
+    <div class="success-sub">20 parameters extracted · 9 abnormal values · Health Score: 62/100</div>
+    <div class="success-btns">
+      <a href="{{ url_for('results') }}" class="btn btn-primary btn-lg">View Full Results →</a>
+      <button class="btn btn-secondary btn-lg" id="btn-upload-again">Upload Another</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/upload.js', v=15) }}"></script>
+{% endblock %}

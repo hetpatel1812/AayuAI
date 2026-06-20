@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% block title %}Report History — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/history.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="history-header">
+  <div class="page-header-left">
+    <h1>Report History</h1>
+    <p>View all past medical reports for your family members</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">+ Upload New Report</a>
+  </div>
+</div>
+
+<div class="history-filters">
+  <button class="pill active">All Members</button>
+  <button class="pill">Self (Het)</button>
+  <button class="pill">Dad</button>
+  <button class="pill">Mom</button>
+</div>
+
+<div class="glass-card--solid history-card">
+  <div class="history-table-header">
+    <div class="history-table-title">
+      <div class="avatar avatar-sm avatar-teal">H</div>
+      Self (Het) — 21y Male
+    </div>
+    <span class="text-sm text-muted">4 Reports Total</span>
+  </div>
+  <table class="data-table history-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Lab Name</th>
+        <th>Health Score</th>
+        <th>Key Findings</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="font-semibold">12 Jul 2024</td>
+        <td>SRL Diagnostics</td>
+        <td>
+          <div class="history-score" style="color: var(--status-warning);">
+            62<span class="text-xs text-muted font-normal">/100</span>
+          </div>
+        </td>
+        <td><span class="text-danger font-semibold">9 Abnormal</span> · TSH, Vit D, Glucose</td>
+        <td>
+          <div class="history-actions">
+            <button class="btn btn-sm btn-secondary">View</button>
+            <button class="btn btn-sm btn-ghost">Export</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-semibold">05 May 2024</td>
+        <td>Dr Lal PathLabs</td>
+        <td>
+          <div class="history-score" style="color: var(--status-warning);">
+            58<span class="text-xs text-muted font-normal">/100</span>
+          </div>
+        </td>
+        <td><span class="text-danger font-semibold">11 Abnormal</span></td>
+        <td>
+          <div class="history-actions">
+            <button class="btn btn-sm btn-secondary">View</button>
+            <button class="btn btn-sm btn-ghost">Export</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-semibold">18 Mar 2024</td>
+        <td>SRL Diagnostics</td>
+        <td>
+          <div class="history-score" style="color: var(--status-warning);">
+            55<span class="text-xs text-muted font-normal">/100</span>
+          </div>
+        </td>
+        <td><span class="text-danger font-semibold">12 Abnormal</span></td>
+        <td>
+          <div class="history-actions">
+            <button class="btn btn-sm btn-secondary">View</button>
+            <button class="btn btn-sm btn-ghost">Export</button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="font-semibold">10 Jan 2024</td>
+        <td>Thyrocare</td>
+        <td>
+          <div class="history-score" style="color: var(--status-high);">
+            48<span class="text-xs text-muted font-normal">/100</span>
+          </div>
+        </td>
+        <td><span class="text-danger font-semibold">15 Abnormal</span></td>
+        <td>
+          <div class="history-actions">
+            <button class="btn btn-sm btn-secondary">View</button>
+            <button class="btn btn-sm btn-ghost">Export</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="glass-card--solid history-card">
+  <div class="history-table-header">
+    <div class="history-table-title">
+      <div class="avatar avatar-sm avatar-blue">D</div>
+      Dad — 55y Male
+    </div>
+    <span class="text-sm text-muted">3 Reports Total</span>
+  </div>
+  <table class="data-table history-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Lab Name</th>
+        <th>Health Score</th>
+        <th>Key Findings</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="font-semibold">20 Jun 2024</td>
+        <td>Thyrocare</td>
+        <td>
+          <div class="history-score" style="color: var(--status-high);">
+            48<span class="text-xs text-muted font-normal">/100</span>
+          </div>
+        </td>
+        <td><span class="text-danger font-semibold">HbA1c 7.2%</span></td>
+        <td>
+          <div class="history-actions">
+            <button class="btn btn-sm btn-secondary">View</button>
+            <button class="btn btn-sm btn-ghost">Export</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

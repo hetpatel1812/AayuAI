@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Ask Aayu AI — Chat{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Ask Aayu AI</h1>
+    <p>Context-aware — knows your full report</p>
+  </div>
+</div>
+
+<!-- Context Banner -->
+<div class="alert alert-info chat-context">
+  <span class="alert-icon">📋</span>
+  <span><strong>Context loaded:</strong> Self (Het) · Jul 2024 · 20 parameters · 9 abnormal · Groq (Llama 3.3 70B) + ChromaDB RAG</span>
+</div>
+
+<!-- Chat Window -->
+<div class="glass-card--solid glass-card--no-hover" style="padding: 0; overflow: hidden;">
+  <div class="chat-window" id="chat-window"></div>
+</div>
+
+<!-- Suggestions -->
+<div class="chat-suggestions" id="chat-suggestions"></div>
+
+<!-- Input -->
+<div class="chat-input-bar">
+  <input class="chat-input" id="chat-input" placeholder="Ask about your report... e.g. Why is my TSH high?" autocomplete="off">
+  <button class="btn btn-primary chat-send" id="chat-send">Send →</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/demo-data.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js', v=15) }}"></script>
+{% endblock %}

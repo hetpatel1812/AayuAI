@@ -1,0 +1,115 @@
+/*
+ * Aayu AI — Report History CSS
+ */
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-lg);
+}
+
+.history-filters {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.history-card {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: var(--space-xl);
+}
+
+.history-table-header {
+  padding: 16px 20px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-glass);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-table-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-table {
+  width: 100%;
+}
+
+.history-table th {
+  background: transparent;
+  padding: 12px 20px;
+}
+
+.history-table td {
+  padding: 16px 20px;
+}
+
+.history-score {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.history-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  background: var(--border-glass);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 24px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: -21px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-teal);
+  box-shadow: 0 0 0 3px var(--bg-secondary);
+}
+
+.timeline-date {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.timeline-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}

@@ -1,0 +1,87 @@
+/*
+ * Aayu AI — Dashboard CSS
+ */
+
+.dash-stats { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 14px; 
+  margin-bottom: 20px; 
+}
+.dash-body { 
+  display: grid; 
+  grid-template-columns: 280px 1fr; 
+  gap: 16px; 
+  margin-bottom: 20px; 
+}
+.score-center { 
+  display: flex; 
+  justify-content: center; 
+  margin-bottom: 16px; 
+}
+.dash-table-wrap { 
+  overflow: hidden; 
+  border-radius: var(--radius-lg); 
+}
+.dash-table-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 14px 18px; 
+  border-bottom: 1px solid var(--border-glass); 
+}
+.dash-table-header-title { 
+  font-size: 13px; 
+  font-weight: 700; 
+  color: var(--text-primary); 
+}
+.dash-table-scroll { 
+  max-height: 320px; 
+  overflow-y: auto; 
+}
+.dash-table-footer { 
+  display: flex; 
+  gap: 10px; 
+  padding: 12px 18px; 
+  border-top: 1px solid var(--border-glass); 
+}
+.family-grid { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 14px; 
+}
+.family-member { 
+  display: flex; 
+  gap: 12px; 
+  align-items: center; 
+  background: var(--bg-tertiary); 
+  border-radius: var(--radius-md); 
+  padding: 14px; 
+}
+.family-info { flex: 1; }
+.family-name { 
+  font-size: 13px; 
+  font-weight: 700; 
+  color: var(--text-primary); 
+}
+.family-meta { 
+  font-size: 11px; 
+  color: var(--text-muted); 
+}
+.family-cond { 
+  font-size: 10px; 
+  color: var(--status-warning); 
+  font-weight: 600; 
+  margin-top: 2px; 
+}
+.family-score { 
+  font-size: 13px; 
+  font-weight: 700; 
+  margin-top: 3px; 
+}
+
+@media (max-width: 1024px) {
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
+  .dash-body { grid-template-columns: 1fr; }
+  .family-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Health Trends — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/trends.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Health Trends</h1>
+    <p>Track how your values change across reports</p>
+  </div>
+</div>
+
+<!-- Parameter selector -->
+<div class="trend-btns" id="trend-btns"></div>
+
+<!-- Main chart + data cards -->
+<div class="trends-layout">
+  <div class="glass-card--solid glass-card--no-hover">
+    <div class="trend-info" id="trend-title">Hemoglobin — Jan to Jul 2024</div>
+    <div class="trend-range" id="trend-range">Normal: 13.5–17.5 g/dL</div>
+    <canvas id="trend-chart"></canvas>
+  </div>
+  <div class="trend-cards" id="trend-cards"></div>
+</div>
+
+<!-- Multi chart -->
+<div class="glass-card--solid glass-card--no-hover">
+  <div style="font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px;">All Parameters — Combined Trend</div>
+  <canvas id="multi-chart"></canvas>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.LIVE_HISTORY = {{ history_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/trends.js', v=15) }}"></script>
+{% endblock %}

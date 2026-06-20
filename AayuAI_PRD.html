@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aayu AI — Product Requirements Document</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #F8FAFC;
+  --white: #FFFFFF;
+  --navy: #0B1437;
+  --navy2: #1E2D5A;
+  --teal: #00B8A9;
+  --teal-light: #E6F7F6;
+  --blue: #3B6FE8;
+  --blue-light: #EEF2FD;
+  --amber: #F59E0B;
+  --amber-light: #FEF3C7;
+  --red: #EF4444;
+  --red-light: #FEE2E2;
+  --green: #10B981;
+  --green-light: #D1FAE5;
+  --purple: #8B5CF6;
+  --purple-light: #EDE9FE;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --muted: #64748B;
+  --light: #94A3B8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* NAV */
+.top-nav {
+  background: var(--navy);
+  padding: 14px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: white;
+}
+
+.nav-logo span { color: var(--teal); }
+
+.nav-meta {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-badge {
+  background: rgba(0,184,169,0.15);
+  border: 1px solid rgba(0,184,169,0.3);
+  color: var(--teal);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nav-version {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  padding: 70px 60px 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '+';
+  position: absolute;
+  right: 80px;
+  top: 40px;
+  font-size: 200px;
+  color: rgba(0,184,169,0.04);
+  font-family: 'Sora', sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: 52px;
+  font-weight: 800;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 16px;
+}
+
+.hero h1 span {
+  color: var(--teal);
+}
+
+.hero-desc {
+  color: rgba(255,255,255,0.55);
+  font-size: 15px;
+  max-width: 560px;
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+.hero-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  gap: 0;
+  max-width: 700px;
+}
+
+.meta-item {
+  padding: 14px 20px;
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.03);
+}
+
+.meta-item:first-child { border-radius: 8px 0 0 8px; }
+.meta-item:last-child { border-radius: 0 8px 8px 0; }
+
+.meta-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.meta-value.teal { color: var(--teal); }
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 0;
+}
+
+/* SIDEBAR */
+.sidebar {
+  padding: 40px 0 40px 30px;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  margin-bottom: 28px;
+}
+
+.sidebar-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--light);
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+
+.sidebar-link {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  transition: all 0.15s;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+
+.sidebar-link:hover {
+  background: var(--white);
+  color: var(--teal);
+  border-left-color: var(--teal);
+}
+
+/* MAIN */
+.main {
+  padding: 40px 50px 80px 40px;
+  min-width: 0;
+}
+
+/* SECTIONS */
+.prd-section {
+  margin-bottom: 60px;
+  scroll-margin-top: 80px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--border);
+}
+
+.section-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--teal);
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.section-header h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.3px;
+}
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.card p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* PRIORITY BADGES */
+.priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.p0 { background: var(--red-light); color: var(--red); }
+.p1 { background: var(--amber-light); color: #B45309; }
+.p2 { background: var(--purple-light); color: var(--purple); }
+.free { background: var(--green-light); color: #065F46; }
+.vision { background: var(--blue-light); color: var(--blue); }
+
+/* HIGHLIGHT BOX */
+.highlight {
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+
+.highlight.teal { background: var(--teal-light); border-left: 3px solid var(--teal); }
+.highlight.blue { background: var(--blue-light); border-left: 3px solid var(--blue); }
+.highlight.amber { background: var(--amber-light); border-left: 3px solid var(--amber); }
+.highlight.red { background: var(--red-light); border-left: 3px solid var(--red); }
+.highlight.green { background: var(--green-light); border-left: 3px solid var(--green); }
+
+.highlight-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.highlight p { font-size: 13px; color: var(--muted); }
+
+/* REPORT INPUT — KEY SECTION */
+.input-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.input-method {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.input-method.primary {
+  border-color: var(--teal);
+  background: linear-gradient(135deg, #E6F7F6, white);
+}
+
+.input-method::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.input-method:nth-child(1)::before { background: var(--blue); }
+.input-method:nth-child(2)::before { background: var(--amber); }
+.input-method:nth-child(3)::before { background: var(--teal); }
+
+.method-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+.method-title {
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+.method-tool {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--navy);
+  color: var(--teal);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.method-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* FLOW DIAGRAM */
+.flow {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+.flow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.flow-row:last-child { margin-bottom: 0; }
+
+.flow-node {
+  background: var(--navy);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.flow-node.teal { background: var(--teal); color: white; }
+.flow-node.blue { background: var(--blue); color: white; }
+.flow-node.amber { background: var(--amber); color: white; }
+.flow-node.green { background: var(--green); color: white; }
+.flow-node.red { background: var(--red); color: white; }
+.flow-node.light { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+.flow-arrow {
+  color: var(--light);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.flow-label {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* TECH TABLE */
+.tech-table { width: 100%; border-collapse: collapse; }
+.tech-table th {
+  background: var(--navy);
+  color: rgba(255,255,255,0.7);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.tech-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: top;
+}
+.tech-table tr:last-child td { border-bottom: none; }
+.tech-table tr:hover td { background: var(--bg); }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--navy);
+  color: var(--teal);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+/* USER STORIES */
+.story {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  align-items: start;
+}
+
+.story-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--light);
+  padding-top: 2px;
+  white-space: nowrap;
+}
+
+.story-text { font-size: 13px; }
+.story-text strong { color: var(--navy); }
+
+/* SCHEMA */
+.schema-block {
+  background: var(--navy);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.schema-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  margin-bottom: 14px;
+}
+
+.schema-row {
+  display: grid;
+  grid-template-columns: 160px 100px 1fr;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 12px;
+}
+
+.schema-row:last-child { border-bottom: none; }
+.schema-row .col-name { font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,0.9); }
+.schema-row .col-type { color: #F59E0B; font-family: 'JetBrains Mono', monospace; }
+.schema-row .col-desc { color: rgba(255,255,255,0.4); }
+
+/* API */
+.endpoint {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.method-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.GET { background: var(--green-light); color: #065F46; }
+.POST { background: var(--blue-light); color: var(--blue); }
+.DELETE { background: var(--red-light); color: var(--red); }
+
+.endpoint-path {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--navy);
+}
+
+.endpoint-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.endpoint-body {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* TIMELINE */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 0;
+}
+
+.tl-week {
+  padding: 16px 16px 0 0;
+  text-align: right;
+}
+
+.week-num {
+  font-family: 'Sora', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+.week-tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--light);
+}
+
+.tl-content {
+  border-left: 2px solid var(--border);
+  padding: 0 0 28px 20px;
+  position: relative;
+}
+
+.tl-content::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px var(--teal);
+}
+
+.tl-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-top: 10px;
+}
+
+.tl-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.task-item {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 3px 0;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.task-item::before {
+  content: '→';
+  color: var(--teal);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* RISK TABLE */
+.risk-table { width: 100%; border-collapse: collapse; }
+.risk-table th {
+  background: var(--bg);
+  color: var(--muted);
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border);
+}
+.risk-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: top;
+}
+.risk-table tr:last-child td { border-bottom: none; }
+
+.risk-level {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.risk-high { background: var(--red-light); color: var(--red); }
+.risk-med { background: var(--amber-light); color: #B45309; }
+.risk-low { background: var(--green-light); color: #065F46; }
+
+/* NON-FUNC */
+.nfr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.nfr-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.nfr-icon { font-size: 22px; margin-bottom: 8px; display: block; }
+.nfr-card h3 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.nfr-card p { font-size: 12px; color: var(--muted); }
+
+/* METRICS */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.metric-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+}
+
+.metric-val {
+  font-family: 'Sora', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-desc { font-size: 11px; color: var(--muted); }
+
+/* FUTURE SCOPE */
+.future-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+.future-item:last-child { border-bottom: none; }
+.future-phase {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--teal);
+  white-space: nowrap;
+  min-width: 60px;
+}
+.future-item p { font-size: 13px; color: var(--muted); }
+.future-item strong { color: var(--navy); }
+
+/* FOOTER */
+.doc-footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 24px;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 24px 20px; }
+  .hero { padding: 40px 24px; }
+  .hero h1 { font-size: 32px; }
+  .hero-meta-grid { grid-template-columns: repeat(2, 1fr); }
+  .input-flow { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="nav-logo">Aayu <span>AI</span></div>
+  <div class="nav-meta">
+    <span class="nav-badge">PRD v1.0</span>
+    <span class="nav-version">7th Sem Major Project · 2026</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Product Requirements Document · Aayu (आयु) = Life in Sanskrit</div>
+  <h1>Aayu <span>AI</span></h1>
+  <p class="hero-desc">AI-powered medical report analyzer for every Indian family. Upload PDF, scanned image, or phone camera photo — understand your blood test results in plain language, in your own language.</p>
+  <div class="hero-meta-grid">
+    <div class="meta-item"><div class="meta-label">Version</div><div class="meta-value teal">1.0.0</div></div>
+    <div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">Planning</div></div>
+    <div class="meta-item"><div class="meta-label">Timeline</div><div class="meta-value">8 Weeks</div></div>
+    <div class="meta-item"><div class="meta-label">Stack</div><div class="meta-value">Flask + AI</div></div>
+    <div class="meta-item"><div class="meta-label">Cost</div><div class="meta-value teal">₹0</div></div>
+    <div class="meta-item"><div class="meta-label">Batch</div><div class="meta-value">2027</div></div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <a class="sidebar-link">1. Problem Statement</a>
+      <a class="sidebar-link">2. Target Users</a>
+      <a class="sidebar-link">3. Goals & Metrics</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Product</div>
+      <a class="sidebar-link">4. Report Input Methods</a>
+      <a class="sidebar-link">5. Core Features</a>
+      <a class="sidebar-link">6. Additional Features</a>
+      <a class="sidebar-link">7. User Stories</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Technical</div>
+      <a class="sidebar-link">8. System Architecture</a>
+      <a class="sidebar-link">9. Tech Stack</a>
+      <a class="sidebar-link">10. Database Schema</a>
+      <a class="sidebar-link">11. API Design</a>
+      <a class="sidebar-link">12. Web Pages</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Execution</div>
+      <a class="sidebar-link">13. Build Timeline</a>
+      <a class="sidebar-link">14. Non-Functional Req.</a>
+      <a class="sidebar-link">15. Risks</a>
+      <a class="sidebar-link">16. Future Scope</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- 1. PROBLEM STATEMENT -->
+    <section class="prd-section" id="s1">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <h2>Problem Statement</h2>
+      </div>
+      <div class="highlight teal">
+        <div class="highlight-title">The Core Problem</div>
+        <p>Every Indian family gets blood tests done regularly. Nobody understands them. You get a paper full of numbers — Hemoglobin, Creatinine, TSH, SGPT — and either ignore it or pay a doctor ₹500+ just to explain what the numbers mean. India has 1 dermatologist per 1.5 lakh people and a massive primary healthcare gap. Aayu AI fills this gap.</p>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <h3>📊 77 Million Diabetics</h3>
+          <p>India is the diabetes capital of the world. Millions get HbA1c, glucose, and insulin tests done but cannot interpret the results or track trends.</p>
+        </div>
+        <div class="card">
+          <h3>💊 Unread Reports</h3>
+          <p>Most blood test reports are filed away unread. The patient understands "normal" or "abnormal" but not what to do about it or why it matters.</p>
+        </div>
+        <div class="card">
+          <h3>🌾 Rural Healthcare Gap</h3>
+          <p>70% of India is rural. Specialist doctors are inaccessible. People travel hours to see a doctor just to get a 5-minute report explanation.</p>
+        </div>
+        <div class="card">
+          <h3>🗣️ Language Barrier</h3>
+          <p>Lab reports are in English. Most patients in Gujarat, UP, Rajasthan, and Bihar cannot read English medical terminology.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. TARGET USERS -->
+    <section class="prd-section" id="s2">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <h2>Target Users & Personas</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <span class="priority p0">Primary User</span>
+          <h3>👨‍👩‍👧 Indian Family Member</h3>
+          <p>Age 25–55. Gets annual health checkups. Has family members with diabetes, thyroid, BP. Wants to understand reports without visiting a doctor. Comfortable with smartphone.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">Secondary User</span>
+          <h3>👴 Senior Citizen</h3>
+          <p>Age 60+. Regular blood tests for chronic conditions. Cannot read English. Needs Hindi/Gujarati explanation. Family member uploads on their behalf.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">Secondary User</span>
+          <h3>🏥 Rural Patient</h3>
+          <p>Gets tests done at local lab. Takes photo with phone. Cannot afford specialist consultation just for report explanation. Needs instant free guidance.</p>
+        </div>
+        <div class="card">
+          <span class="priority p2">Tertiary User</span>
+          <h3>🩺 AYUSH Practitioner</h3>
+          <p>Local Ayurvedic or homeopathic doctor who needs quick reference for allopathic lab values to counsel patients better.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. GOALS & METRICS -->
+    <section class="prd-section" id="s3">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <h2>Goals & Success Metrics</h2>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-val">100+</div><div class="metric-desc">Blood parameters supported in knowledge base</div></div>
+        <div class="metric-card"><div class="metric-val">3</div><div class="metric-desc">Input methods: PDF, image, phone camera</div></div>
+        <div class="metric-card"><div class="metric-val">3</div><div class="metric-desc">Languages: English, Hindi, Gujarati</div></div>
+        <div class="metric-card"><div class="metric-val">90%</div><div class="metric-desc">Target extraction accuracy on common lab formats</div></div>
+        <div class="metric-card"><div class="metric-val">&lt;10s</div><div class="metric-desc">Report analysis response time target</div></div>
+        <div class="metric-card"><div class="metric-val">₹0</div><div class="metric-desc">Monthly infrastructure cost</div></div>
+      </div>
+    </section>
+
+    <!-- 4. REPORT INPUT METHODS — KEY UPDATE -->
+    <section class="prd-section" id="s4">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <h2>Report Input Methods ⭐</h2>
+      </div>
+
+      <div class="highlight blue">
+        <div class="highlight-title">🔑 Key Architecture Decision</div>
+        <p>Three different tools handle three different input types. Gemini 1.5 Flash Vision handles phone camera photos — the most common real-world use case. This is the core innovation of the report analysis pipeline.</p>
+      </div>
+
+      <div class="input-flow">
+
+        <div class="input-method">
+          <span class="method-icon">📄</span>
+          <div class="method-title">Digital PDF Report</div>
+          <span class="method-tool">pdfplumber</span>
+          <p class="method-desc">Lab-generated PDF from SRL, Thyrocare, Dr. Lal PathLabs, Metropolis. Text is already digital — pdfplumber extracts it directly with 99% accuracy. No OCR needed.</p>
+        </div>
+
+        <div class="input-method">
+          <span class="method-icon">🖨️</span>
+          <div class="method-title">Scanned Image</div>
+          <span class="method-tool">EasyOCR</span>
+          <p class="method-desc">Flat scan of a printed report (JPG/PNG). Clear, well-lit, straight image. OpenCV preprocesses (grayscale, denoise, contrast) before EasyOCR extracts text.</p>
+        </div>
+
+        <div class="input-method primary">
+          <span class="method-icon">📱</span>
+          <div class="method-title">Phone Camera Photo ✨</div>
+          <span class="method-tool">Gemini 1.5 Flash Vision</span>
+          <p class="method-desc">Real-world photo taken with phone — tilted, shadowed, angled, blurry. Gemini Vision understands the image semantically. No preprocessing needed. Works where EasyOCR fails. FREE tier: 1,500 req/day.</p>
+        </div>
+
+      </div>
+
+      <div class="highlight green">
+        <div class="highlight-title">Why Gemini Vision for Phone Photos</div>
+        <p>Traditional OCR (EasyOCR, Tesseract) reads pixels. Gemini Vision <strong>understands</strong> images. It handles perspective distortion, shadows, partial blur, and handwritten annotations that break any OCR engine. Since it's already in our free stack as the fallback LLM, using it for vision adds zero extra cost.</p>
+      </div>
+
+      <!-- Pipeline flow -->
+      <div class="flow">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:18px;">Complete Input Pipeline</div>
+
+        <div class="flow-row">
+          <div class="flow-node light">User Upload</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">File Type Detection</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-label">PDF / Scanned Image / Phone Photo</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0;">
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:var(--blue);font-weight:700;margin-bottom:4px;">PDF Branch</div>
+            pdfplumber → raw text
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:#B45309;font-weight:700;margin-bottom:4px;">Scanned Image Branch</div>
+            OpenCV preprocess → EasyOCR → raw text
+          </div>
+          <div style="background:var(--teal-light);border:1px solid var(--teal);border-radius:8px;padding:12px;font-size:12px;">
+            <div style="color:var(--teal);font-weight:700;margin-bottom:4px;">Phone Camera Branch ⭐</div>
+            Gemini 1.5 Flash Vision → structured JSON directly
+          </div>
+        </div>
+
+        <div class="flow-row">
+          <div class="flow-node teal">Structured Parameter Data</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node blue">Status Classifier</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node green">RAG + Groq LLM</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node amber">Dashboard Output</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="highlight amber">
+          <div class="highlight-title">Gemini Vision Prompt Strategy</div>
+          <p>For phone photos, send this exact prompt to Gemini Vision API:<br><br>
+          <code>"Extract all blood test parameters from this image. Return JSON array: [{test_name, value, unit, ref_range_low, ref_range_high}]. If a field is unclear, return null."</code><br><br>
+          Gemini returns structured JSON directly — no NLP parsing needed. This skips the entire spaCy pipeline for phone camera inputs.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CORE FEATURES -->
+    <section class="prd-section" id="s5">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <h2>Core Features — P0 (Must Have)</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Three-Mode Report Upload</h3>
+          <p>PDF, scanned image, and phone camera photo — all handled. Auto-detect input type and route to correct pipeline.</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Parameter Extraction</h3>
+          <p>Extract every test name, value, unit, and reference range. Handle 15+ common Indian lab report formats (SRL, Thyrocare, Metropolis, Dr. Lal, local labs).</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Color-Coded Status</h3>
+          <p>🟢 Normal / 🔴 High / 🔵 Low / 🚨 Critical for each parameter with exact deviation percentage from normal range.</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Plain Language Explanation</h3>
+          <p>RAG + Groq LLM explains what each test measures, why it matters, and what your specific value means — zero jargon.</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Critical Value Alert</h3>
+          <p>Red banner with "See doctor immediately" if any value is critically abnormal (e.g. K+ > 6.5, glucose > 400, Hb < 7).</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Specialist Recommendation</h3>
+          <p>Based on abnormal organ markers, recommend correct specialist: Nephrologist, Cardiologist, Endocrinologist, Hematologist, etc.</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>User Authentication</h3>
+          <p>Register/Login with email. Secure password hashing (bcrypt). JWT session management. Required for history and family features.</p>
+        </div>
+        <div class="card">
+          <span class="priority p0">P0</span>
+          <h3>Report Storage</h3>
+          <p>All uploaded reports and extracted data saved to SQLite per user. Reports are private and never shared.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. ADDITIONAL FEATURES -->
+    <section class="prd-section" id="s6">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <h2>Additional Features — P1 & P2</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>📊 Health Score Dashboard</h3>
+          <p>Overall score 0–100 computed from all parameters. Sub-scores for Kidney, Liver, Heart, Blood, Thyroid, Vitamins health.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>📈 Trend Graphs</h3>
+          <p>Upload 2+ reports → Chart.js line graph shows how each parameter changed over time. Detect improving or worsening trends.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>👨‍👩‍👧 Family Health Vault</h3>
+          <p>Add Dad, Mom, Grandpa as separate profiles with their age and gender. Separate report history per member with age-adjusted normal ranges.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>🍛 Indian Diet Recommendations</h3>
+          <p>Low iron → "Eat palak, rajma, pomegranate". High cholesterol → "Avoid ghee, eat oats and methi". India-specific food database.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>🔄 Report Comparison</h3>
+          <p>Select any two reports → side-by-side diff showing what improved, what worsened, percentage change per parameter.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>💬 AI Chatbot (Report Q&A)</h3>
+          <p>"Why is my creatinine high?" → Groq LLM answers with context from your specific report values, not generic info.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>📄 PDF Export</h3>
+          <p>Download a clean, simplified version of your report — color-coded, explained in plain language — to share with family or doctor. Generated via ReportLab.</p>
+        </div>
+        <div class="card">
+          <span class="priority p1">P1</span>
+          <h3>💊 Medicine-Report Correlation</h3>
+          <p>Enter current medications → system flags known interactions with lab values (e.g. Metformin → low B12, Statins → elevated CK).</p>
+        </div>
+        <div class="card">
+          <span class="priority p2">P2 ⭐ WOW</span>
+          <h3>🌐 Multilingual Output</h3>
+          <p>Generate full explanation in English, Hindi (हिंदी), or Gujarati (ગુજરાતી). Uses IndicTrans2 from HuggingFace — free, high quality for Indian languages.</p>
+        </div>
+        <div class="card">
+          <span class="priority p2">P2 ⭐ WOW</span>
+          <h3>🧬 Disease Risk Predictor</h3>
+          <p>After 3+ reports uploaded → XGBoost model predicts risk percentage for Diabetes, Anemia, Kidney Disease, Thyroid Disorder based on trends.</p>
+        </div>
+        <div class="card">
+          <span class="priority p2">P2</span>
+          <h3>⏰ Retest Reminder</h3>
+          <p>Based on health profile → AI suggests when to retest: "Recheck HbA1c in 3 months." Sends email reminder via Flask-Mail (Gmail SMTP, free).</p>
+        </div>
+        <div class="card">
+          <span class="priority p2">P2</span>
+          <h3>🏥 Nearby Specialist Finder</h3>
+          <p>Detect user city from profile → suggest relevant specialists using a curated database (no Google Maps API cost).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. USER STORIES -->
+    <section class="prd-section" id="s7">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <h2>User Stories</h2>
+      </div>
+      <div class="story">
+        <span class="story-id">US-01</span>
+        <span class="story-text"><strong>As a user,</strong> I want to upload a PDF blood test report so that I can get an instant plain-language explanation of all my results.</span>
+        <span class="priority p0">P0</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-02</span>
+        <span class="story-text"><strong>As a user,</strong> I want to take a photo of my report with my phone camera so that I don't need to scan or convert it to PDF.</span>
+        <span class="priority p0">P0</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-03</span>
+        <span class="story-text"><strong>As a user,</strong> I want to see which parameters are High, Low, or Normal in color so that I can quickly spot what needs attention.</span>
+        <span class="priority p0">P0</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-04</span>
+        <span class="story-text"><strong>As a user,</strong> I want to get an emergency alert if any value is critically abnormal so that I know when to see a doctor immediately.</span>
+        <span class="priority p0">P0</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-05</span>
+        <span class="story-text"><strong>As a user,</strong> I want to upload reports for my parents separately so that I can track each family member's health independently.</span>
+        <span class="priority p1">P1</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-06</span>
+        <span class="story-text"><strong>As a user,</strong> I want to see a graph of my hemoglobin over the past 6 months so that I can see if my anemia is getting better or worse.</span>
+        <span class="priority p1">P1</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-07</span>
+        <span class="story-text"><strong>As a user,</strong> I want to get the report explained in Gujarati so that my elderly parents can understand it themselves.</span>
+        <span class="priority p2">P2</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-08</span>
+        <span class="story-text"><strong>As a user,</strong> I want to ask "Why is my creatinine high?" in the chatbot so that I can understand my specific condition better.</span>
+        <span class="priority p1">P1</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-09</span>
+        <span class="story-text"><strong>As a user,</strong> I want to download a simplified PDF of my report so that I can share it with a family doctor who doesn't have time to read the full lab report.</span>
+        <span class="priority p1">P1</span>
+      </div>
+      <div class="story">
+        <span class="story-id">US-10</span>
+        <span class="story-text"><strong>As a user,</strong> I want to know which foods I should eat or avoid based on my abnormal values so that I can make immediate lifestyle changes.</span>
+        <span class="priority p1">P1</span>
+      </div>
+    </section>
+
+    <!-- 8. ARCHITECTURE -->
+    <section class="prd-section" id="s8">
+      <div class="section-header">
+        <div class="section-num">08</div>
+        <h2>System Architecture</h2>
+      </div>
+      <div class="flow">
+        <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Full System Flow</div>
+
+        <div class="flow-row">
+          <div class="flow-node light">Browser Upload</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node blue">Flask Route /upload</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">File Type Detector</div>
+        </div>
+        <div style="color:var(--muted);font-size:12px;padding:8px 0 8px 20px;">PDF → pdfplumber &nbsp;|&nbsp; Clear Image → OpenCV + EasyOCR &nbsp;|&nbsp; Phone Photo → Gemini Vision API</div>
+
+        <div class="flow-row">
+          <div class="flow-node teal">Raw Text / JSON</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">Parameter Parser (spaCy + Regex)</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">Structured Parameters List</div>
+        </div>
+        <div style="color:var(--muted);font-size:12px;padding:8px 0 8px 20px;">Note: Gemini Vision branch skips parser — returns structured JSON directly</div>
+
+        <div class="flow-row">
+          <div class="flow-node light">Status Classifier</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node red">CRITICAL check</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">ChromaDB RAG Lookup</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node green">Groq API (Llama 3.3 70B)</div>
+        </div>
+
+        <div class="flow-row">
+          <div class="flow-node green">Explanation Generated</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">Health Score Engine</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node light">Diet + Specialist Rules</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node amber">SQLite Save</div>
+        </div>
+
+        <div class="flow-row">
+          <div class="flow-node amber">Flask Render Results</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-node teal">Dashboard (Bootstrap + Chart.js)</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="highlight teal">
+          <div class="highlight-title">Translation Layer (Optional, on demand)</div>
+          <p>User selects Hindi or Gujarati → Generated English explanation passed to IndicTrans2 (HuggingFace Inference API, free) → Translated text rendered on dashboard. Cached in DB so same report isn't re-translated on revisit.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. TECH STACK -->
+    <section class="prd-section" id="s9">
+      <div class="section-header">
+        <div class="section-num">09</div>
+        <h2>Tech Stack — 100% Free</h2>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="tech-table">
+          <thead>
+            <tr>
+              <th>Layer</th>
+              <th>Tool</th>
+              <th>Purpose</th>
+              <th>Free Limit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>PDF Analysis</strong></td><td><code>pdfplumber</code></td><td>Extract text from digital PDF reports</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>Image OCR</strong></td><td><code>EasyOCR</code> + <code>OpenCV</code></td><td>OCR for clean scanned images</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>📱 Phone Photo ⭐</strong></td><td><code>Gemini 1.5 Flash Vision</code></td><td>Understand real-world phone camera photos</td><td>1,500 req/day free</td></tr>
+            <tr><td><strong>Primary LLM</strong></td><td><code>Groq API</code> (Llama 3.3 70B)</td><td>Explanations, chatbot, health summary</td><td>14,400 req/day free</td></tr>
+            <tr><td><strong>Fallback LLM</strong></td><td><code>Gemini 1.5 Flash</code></td><td>If Groq hits rate limit</td><td>1,500 req/day free</td></tr>
+            <tr><td><strong>Embeddings</strong></td><td><code>sentence-transformers</code> all-MiniLM-L6-v2</td><td>Embed medical knowledge base for RAG</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>Vector DB</strong></td><td><code>ChromaDB</code></td><td>Store and retrieve medical KB embeddings</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>NLP Parsing</strong></td><td><code>spaCy</code> + Regex</td><td>Extract parameters from raw text (PDF/OCR path)</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>Translation</strong></td><td><code>IndicTrans2</code> (HuggingFace)</td><td>English → Hindi / Gujarati</td><td>Unlimited (HF Inference)</td></tr>
+            <tr><td><strong>ML Models</strong></td><td><code>XGBoost</code> + <code>scikit-learn</code></td><td>Disease risk predictor, health score</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>PDF Generation</strong></td><td><code>ReportLab</code></td><td>Generate simplified downloadable report</td><td>Unlimited (local)</td></tr>
+            <tr><td><strong>Web Framework</strong></td><td><code>Flask</code></td><td>Backend routes, templates, API</td><td>Unlimited (open-source)</td></tr>
+            <tr><td><strong>Frontend</strong></td><td><code>Bootstrap 5</code> + <code>Chart.js</code></td><td>UI, responsive layout, trend graphs</td><td>Unlimited (free CDN)</td></tr>
+            <tr><td><strong>Database</strong></td><td><code>SQLite</code> + <code>SQLAlchemy</code></td><td>Users, reports, parameters storage</td><td>Unlimited (local file)</td></tr>
+            <tr><td><strong>Auth</strong></td><td><code>Flask-Login</code> + <code>bcrypt</code></td><td>Session management, password hashing</td><td>Unlimited (open-source)</td></tr>
+            <tr><td><strong>Email</strong></td><td><code>Flask-Mail</code> + Gmail SMTP</td><td>Retest reminders</td><td>500 emails/day (Gmail free)</td></tr>
+            <tr><td><strong>Hosting</strong></td><td><code>HuggingFace Spaces</code></td><td>Deploy Flask app</td><td>Forever free (2 CPU, 16GB RAM)</td></tr>
+            <tr><td><strong>CI/CD</strong></td><td><code>GitHub Actions</code></td><td>Auto deploy on push to main</td><td>2,000 min/month free</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="highlight green">
+          <div class="highlight-title">🔑 Two API Keys Needed (Both Free)</div>
+          <p><strong>Groq:</strong> console.groq.com → Sign up → Get API key (no card needed)<br>
+          <strong>Google AI Studio:</strong> aistudio.google.com → Get Gemini API key (no card needed)<br>
+          Store both in <code>.env</code> file. Never commit to GitHub.</p>
+        </div>
+        <div class="highlight amber">
+          <div class="highlight-title">⚡ Rate Limit Strategy</div>
+          <p>Primary: Groq (14,400/day) for LLM text tasks.<br>
+          Vision: Gemini (1,500/day) for phone photos.<br>
+          If Groq hits limit → auto-switch to Gemini Flash for text.<br>
+          Both together handle 1,000+ users/day comfortably.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. DATABASE SCHEMA -->
+    <section class="prd-section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <h2>Database Schema</h2>
+      </div>
+
+      <div class="schema-block">
+        <div class="schema-title">TABLE: users</div>
+        <div class="schema-row"><span class="col-name">id</span><span class="col-type">INTEGER PK</span><span class="col-desc">Auto increment primary key</span></div>
+        <div class="schema-row"><span class="col-name">name</span><span class="col-type">TEXT</span><span class="col-desc">Full name</span></div>
+        <div class="schema-row"><span class="col-name">email</span><span class="col-type">TEXT UNIQUE</span><span class="col-desc">Login identifier</span></div>
+        <div class="schema-row"><span class="col-name">password_hash</span><span class="col-type">TEXT</span><span class="col-desc">bcrypt hashed password</span></div>
+        <div class="schema-row"><span class="col-name">city</span><span class="col-type">TEXT</span><span class="col-desc">For nearby specialist suggestions</span></div>
+        <div class="schema-row"><span class="col-name">preferred_lang</span><span class="col-type">TEXT</span><span class="col-desc">en / hi / gu — default for explanations</span></div>
+        <div class="schema-row"><span class="col-name">created_at</span><span class="col-type">DATETIME</span><span class="col-desc">Registration timestamp</span></div>
+      </div>
+
+      <div class="schema-block">
+        <div class="schema-title">TABLE: family_members</div>
+        <div class="schema-row"><span class="col-name">id</span><span class="col-type">INTEGER PK</span><span class="col-desc">Auto increment</span></div>
+        <div class="schema-row"><span class="col-name">user_id</span><span class="col-type">INTEGER FK</span><span class="col-desc">Owner (users.id)</span></div>
+        <div class="schema-row"><span class="col-name">name</span><span class="col-type">TEXT</span><span class="col-desc">"Self", "Dad", "Mom", "Grandpa"</span></div>
+        <div class="schema-row"><span class="col-name">age</span><span class="col-type">INTEGER</span><span class="col-desc">Used for age-adjusted reference ranges</span></div>
+        <div class="schema-row"><span class="col-name">gender</span><span class="col-type">TEXT</span><span class="col-desc">M / F — for gender-specific ranges</span></div>
+        <div class="schema-row"><span class="col-name">conditions</span><span class="col-type">TEXT</span><span class="col-desc">Known conditions: "diabetic,hypertensive" (optional)</span></div>
+      </div>
+
+      <div class="schema-block">
+        <div class="schema-title">TABLE: reports</div>
+        <div class="schema-row"><span class="col-name">id</span><span class="col-type">INTEGER PK</span><span class="col-desc">Auto increment</span></div>
+        <div class="schema-row"><span class="col-name">member_id</span><span class="col-type">INTEGER FK</span><span class="col-desc">family_members.id</span></div>
+        <div class="schema-row"><span class="col-name">input_type</span><span class="col-type">TEXT</span><span class="col-desc">"pdf" / "scan" / "phone_photo" — tracks which pipeline was used</span></div>
+        <div class="schema-row"><span class="col-name">upload_path</span><span class="col-type">TEXT</span><span class="col-desc">Path to original uploaded file</span></div>
+        <div class="schema-row"><span class="col-name">raw_text</span><span class="col-type">TEXT</span><span class="col-desc">Extracted text (for PDF/scan path)</span></div>
+        <div class="schema-row"><span class="col-name">vision_json</span><span class="col-type">TEXT</span><span class="col-desc">Raw JSON from Gemini Vision (for phone photo path)</span></div>
+        <div class="schema-row"><span class="col-name">health_score</span><span class="col-type">REAL</span><span class="col-desc">Computed 0–100 overall score</span></div>
+        <div class="schema-row"><span class="col-name">kidney_score</span><span class="col-type">REAL</span><span class="col-desc">Sub-score: kidney health</span></div>
+        <div class="schema-row"><span class="col-name">liver_score</span><span class="col-type">REAL</span><span class="col-desc">Sub-score: liver health</span></div>
+        <div class="schema-row"><span class="col-name">blood_score</span><span class="col-type">REAL</span><span class="col-desc">Sub-score: blood/CBC health</span></div>
+        <div class="schema-row"><span class="col-name">language</span><span class="col-type">TEXT</span><span class="col-desc">Language used for explanation: en / hi / gu</span></div>
+        <div class="schema-row"><span class="col-name">lab_name</span><span class="col-type">TEXT</span><span class="col-desc">Detected lab name (SRL, Thyrocare, etc.)</span></div>
+        <div class="schema-row"><span class="col-name">report_date</span><span class="col-type">DATE</span><span class="col-desc">Date test was conducted</span></div>
+        <div class="schema-row"><span class="col-name">uploaded_at</span><span class="col-type">DATETIME</span><span class="col-desc">Upload timestamp</span></div>
+      </div>
+
+      <div class="schema-block">
+        <div class="schema-title">TABLE: parameters</div>
+        <div class="schema-row"><span class="col-name">id</span><span class="col-type">INTEGER PK</span><span class="col-desc">Auto increment</span></div>
+        <div class="schema-row"><span class="col-name">report_id</span><span class="col-type">INTEGER FK</span><span class="col-desc">reports.id</span></div>
+        <div class="schema-row"><span class="col-name">test_name</span><span class="col-type">TEXT</span><span class="col-desc">"Hemoglobin", "Creatinine", "TSH", etc.</span></div>
+        <div class="schema-row"><span class="col-name">value</span><span class="col-type">REAL</span><span class="col-desc">Numeric result</span></div>
+        <div class="schema-row"><span class="col-name">unit</span><span class="col-type">TEXT</span><span class="col-desc">"g/dL", "mg/dL", "mIU/L", etc.</span></div>
+        <div class="schema-row"><span class="col-name">ref_low</span><span class="col-type">REAL</span><span class="col-desc">Lower bound of normal range</span></div>
+        <div class="schema-row"><span class="col-name">ref_high</span><span class="col-type">REAL</span><span class="col-desc">Upper bound of normal range</span></div>
+        <div class="schema-row"><span class="col-name">status</span><span class="col-type">TEXT</span><span class="col-desc">NORMAL / HIGH / LOW / CRITICAL</span></div>
+        <div class="schema-row"><span class="col-name">deviation_pct</span><span class="col-type">REAL</span><span class="col-desc">% deviation from normal range midpoint</span></div>
+        <div class="schema-row"><span class="col-name">explanation_en</span><span class="col-type">TEXT</span><span class="col-desc">English explanation (Groq generated)</span></div>
+        <div class="schema-row"><span class="col-name">explanation_hi</span><span class="col-type">TEXT</span><span class="col-desc">Hindi translation (IndicTrans2, cached)</span></div>
+        <div class="schema-row"><span class="col-name">explanation_gu</span><span class="col-type">TEXT</span><span class="col-desc">Gujarati translation (IndicTrans2, cached)</span></div>
+        <div class="schema-row"><span class="col-name">diet_tip</span><span class="col-type">TEXT</span><span class="col-desc">Indian food recommendation</span></div>
+        <div class="schema-row"><span class="col-name">specialist</span><span class="col-type">TEXT</span><span class="col-desc">Recommended specialist type</span></div>
+        <div class="schema-row"><span class="col-name">category</span><span class="col-type">TEXT</span><span class="col-desc">"CBC", "KFT", "LFT", "Lipid", "Thyroid", "Vitamins"</span></div>
+      </div>
+
+      <div class="schema-block">
+        <div class="schema-title">TABLE: chat_history</div>
+        <div class="schema-row"><span class="col-name">id</span><span class="col-type">INTEGER PK</span><span class="col-desc">Auto increment</span></div>
+        <div class="schema-row"><span class="col-name">report_id</span><span class="col-type">INTEGER FK</span><span class="col-desc">Context report for this chat</span></div>
+        <div class="schema-row"><span class="col-name">role</span><span class="col-type">TEXT</span><span class="col-desc">"user" / "assistant"</span></div>
+        <div class="schema-row"><span class="col-name">message</span><span class="col-type">TEXT</span><span class="col-desc">Message content</span></div>
+        <div class="schema-row"><span class="col-name">created_at</span><span class="col-type">DATETIME</span><span class="col-desc">Timestamp</span></div>
+      </div>
+    </section>
+
+    <!-- 11. API DESIGN -->
+    <section class="prd-section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <h2>Flask API Design</h2>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge POST">POST</span><span class="endpoint-path">/upload</span><span class="endpoint-desc">Upload report (PDF / image / phone photo)</span></div>
+        <div class="endpoint-body">Body: multipart/form-data — file, member_id, language, report_date<br>Returns: JSON with report_id, extracted parameters, health_score, redirect URL</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge GET">GET</span><span class="endpoint-path">/result/&lt;report_id&gt;</span><span class="endpoint-desc">Render full results dashboard</span></div>
+        <div class="endpoint-body">Returns: HTML page with color-coded parameters, explanations, health score, diet tips, specialist suggestion</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge POST">POST</span><span class="endpoint-path">/chat</span><span class="endpoint-desc">Ask AI chatbot about a report</span></div>
+        <div class="endpoint-body">Body: JSON — report_id, message, history[]. Returns: JSON with assistant_reply from Groq (context-aware to report)</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge GET">GET</span><span class="endpoint-path">/history/&lt;member_id&gt;</span><span class="endpoint-desc">Get all reports with trend data for member</span></div>
+        <div class="endpoint-body">Returns: JSON with list of reports, parameter_trends[] for Chart.js rendering</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge POST">POST</span><span class="endpoint-path">/translate</span><span class="endpoint-desc">Translate report explanations</span></div>
+        <div class="endpoint-body">Body: JSON — report_id, target_lang (hi/gu). Returns: translated explanations, cached in DB for future requests</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge GET">GET</span><span class="endpoint-path">/export/&lt;report_id&gt;</span><span class="endpoint-desc">Download simplified PDF report</span></div>
+        <div class="endpoint-body">Returns: PDF file generated by ReportLab with color-coded, plain-language summary</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge GET">GET</span><span class="endpoint-path">/compare</span><span class="endpoint-desc">Compare two reports side by side</span></div>
+        <div class="endpoint-body">Params: report_id_1, report_id_2. Returns: diff JSON with improved/worsened/unchanged parameters</div>
+      </div>
+      <div class="endpoint">
+        <div class="endpoint-header"><span class="method-badge DELETE">DELETE</span><span class="endpoint-path">/report/&lt;report_id&gt;</span><span class="endpoint-desc">Delete a report and all its data</span></div>
+        <div class="endpoint-body">Soft delete — marks as deleted, retains data for 30 days, then purges</div>
+      </div>
+    </section>
+
+    <!-- 12. WEB PAGES -->
+    <section class="prd-section" id="s12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <h2>Web Pages (Flask Routes)</h2>
+      </div>
+      <div class="card-grid">
+        <div class="card"><span class="priority free">Route: /</span><h3>🏠 Landing Page</h3><p>Hero section, how it works (3 steps), features, trust stats, CTA to register. No login needed.</p></div>
+        <div class="card"><span class="priority free">Route: /register & /login</span><h3>🔐 Auth Pages</h3><p>Simple register/login forms. Flask-Login session management. Redirect to dashboard after login.</p></div>
+        <div class="card"><span class="priority free">Route: /dashboard</span><h3>📊 Dashboard</h3><p>Overview: family members, recent reports, health score trends, quick upload button.</p></div>
+        <div class="card"><span class="priority free">Route: /upload</span><h3>📤 Upload Report</h3><p>Drag-drop zone. Select member, language, date. Auto-detect file type. Live progress bar during analysis.</p></div>
+        <div class="card"><span class="priority free">Route: /result/&lt;id&gt;</span><h3>📋 Results Page</h3><p>Full report analysis. Color-coded parameter table, health score, critical alerts, explanations, diet tips, specialist suggestion, export button.</p></div>
+        <div class="card"><span class="priority free">Route: /history</span><h3>📈 Report History</h3><p>All past reports per member. Filter by date range. Click report to view full result.</p></div>
+        <div class="card"><span class="priority free">Route: /trends</span><h3>📉 Trend Graphs</h3><p>Select parameter + member → Chart.js line graph across all reports. Spot patterns over months.</p></div>
+        <div class="card"><span class="priority free">Route: /compare</span><h3>🔄 Compare Reports</h3><p>Pick two reports → side-by-side table showing changes, percentage delta, improved/worsened badges.</p></div>
+        <div class="card"><span class="priority free">Route: /chat/&lt;id&gt;</span><h3>💬 AI Chatbot</h3><p>Chat interface. Context: your selected report. Ask anything about your specific values. Groq-powered.</p></div>
+        <div class="card"><span class="priority free">Route: /family</span><h3>👨‍👩‍👧 Family Profiles</h3><p>Add/edit family members. Set age, gender, conditions. View health overview per person.</p></div>
+      </div>
+    </section>
+
+    <!-- 13. TIMELINE -->
+    <section class="prd-section" id="s13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <h2>8-Week Build Timeline</h2>
+      </div>
+      <div class="timeline-grid">
+        <div class="tl-week"><div class="week-num">W1</div><div class="week-tag">Foundation</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Project Setup + Knowledge Base</h3>
+            <div class="task-item">Flask project structure, SQLite DB, SQLAlchemy models for all 5 tables</div>
+            <div class="task-item">Build parameters.json — 100+ tests: CBC, LFT, KFT, Lipid, Thyroid, Vitamins, Electrolytes</div>
+            <div class="task-item">Setup ChromaDB, embed knowledge base with sentence-transformers</div>
+            <div class="task-item">Get both API keys: Groq (console.groq.com) + Gemini (aistudio.google.com)</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W2</div><div class="week-tag">Input Pipeline</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Three-Mode Report Processing</h3>
+            <div class="task-item">pdfplumber integration + text extraction testing on 5+ lab formats</div>
+            <div class="task-item">EasyOCR + OpenCV preprocessing pipeline for scanned images</div>
+            <div class="task-item">Gemini 1.5 Flash Vision API for phone camera photos — prompt engineering</div>
+            <div class="task-item">spaCy + Regex parameter parser for PDF/scan path</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W3</div><div class="week-tag">AI Engine</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>RAG + LLM Explanation Engine</h3>
+            <div class="task-item">Status classifier: NORMAL / HIGH / LOW / CRITICAL with deviation %</div>
+            <div class="task-item">LangChain RAG pipeline: ChromaDB retrieval + Groq LLM generation</div>
+            <div class="task-item">Groq → Gemini fallback logic when rate limit hit</div>
+            <div class="task-item">Diet recommendation + specialist suggestion rule engine</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W4</div><div class="week-tag">Core Web App</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Flask App + Auth + Core Pages</h3>
+            <div class="task-item">Landing, Register, Login pages (Bootstrap 5 medical template)</div>
+            <div class="task-item">Upload page with drag-drop, file type auto-detection, progress bar</div>
+            <div class="task-item">Results dashboard: color-coded table, health score card, explanations, critical alert banner</div>
+            <div class="task-item">Flask-Login auth, bcrypt password hashing</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W5</div><div class="week-tag">Family + History</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Family Vault + Trend Graphs</h3>
+            <div class="task-item">Family member CRUD — add/edit profiles with age/gender</div>
+            <div class="task-item">Report history page per member</div>
+            <div class="task-item">Chart.js trend graphs for parameter tracking over time</div>
+            <div class="task-item">Report comparison page (side-by-side diff)</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W6</div><div class="week-tag">Language + Chat</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Multilingual + AI Chatbot + PDF Export</h3>
+            <div class="task-item">IndicTrans2 translation for Hindi + Gujarati (HuggingFace Inference API)</div>
+            <div class="task-item">Translation caching in DB (don't re-translate same report)</div>
+            <div class="task-item">AI Chatbot page — Groq with report context in system prompt</div>
+            <div class="task-item">ReportLab PDF export — simplified color-coded downloadable report</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W7</div><div class="week-tag">ML Features</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Disease Risk Predictor + Medicine Correlation</h3>
+            <div class="task-item">XGBoost risk model — train on public health datasets (PIMA, UCI Heart, etc.)</div>
+            <div class="task-item">Integrate risk prediction into results page (requires 3+ reports)</div>
+            <div class="task-item">Medicine-report correlation JSON lookup table (50+ common medicines)</div>
+            <div class="task-item">Flask-Mail + Gmail SMTP retest reminder email</div>
+          </div>
+        </div>
+
+        <div class="tl-week"><div class="week-num">W8</div><div class="week-tag">Launch</div></div>
+        <div class="tl-content">
+          <div class="tl-card"><h3>Testing + Deployment + Documentation</h3>
+            <div class="task-item">Test with 15+ real lab report PDFs and phone photos across different formats</div>
+            <div class="task-item">Deploy on HuggingFace Spaces (free, Flask supported)</div>
+            <div class="task-item">GitHub README with demo GIF, architecture diagram, setup instructions</div>
+            <div class="task-item">Final project report + presentation slides</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. NON-FUNCTIONAL REQUIREMENTS -->
+    <section class="prd-section" id="s14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <h2>Non-Functional Requirements</h2>
+      </div>
+      <div class="nfr-grid">
+        <div class="nfr-card"><span class="nfr-icon">⚡</span><h3>Performance</h3><p>PDF analysis &lt;5s. Phone photo (Gemini Vision) &lt;10s. Dashboard load &lt;2s. Chatbot reply &lt;3s.</p></div>
+        <div class="nfr-card"><span class="nfr-icon">🔒</span><h3>Security</h3><p>All reports private per user. bcrypt passwords. No report data logged to any external service. .env API keys never committed.</p></div>
+        <div class="nfr-card"><span class="nfr-icon">📱</span><h3>Responsive</h3><p>Bootstrap 5 grid system. Works on mobile, tablet, desktop. Phone camera upload flow optimized for mobile UX.</p></div>
+        <div class="nfr-card"><span class="nfr-icon">🔁</span><h3>Reliability</h3><p>Groq → Gemini fallback. If both APIs down, show cached explanation from DB. Never show blank results.</p></div>
+        <div class="nfr-card"><span class="nfr-icon">🌐</span><h3>Accessibility</h3><p>Color-coded results also have text labels (not color-only). Hindi/Gujarati improves accessibility for non-English users.</p></div>
+        <div class="nfr-card"><span class="nfr-icon">📦</span><h3>Scalability</h3><p>SQLite handles up to 100K records. ChromaDB scales locally. HuggingFace Spaces allows upgrade to GPU if needed.</p></div>
+      </div>
+    </section>
+
+    <!-- 15. RISKS -->
+    <section class="prd-section" id="s15">
+      <div class="section-header">
+        <div class="section-num">15</div>
+        <h2>Risks & Mitigations</h2>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <table class="risk-table">
+          <thead><tr><th>Risk</th><th>Level</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Different lab report formats</strong> — SRL, Thyrocare, local labs all format differently. Parser may miss values.</td>
+              <td><span class="risk-level risk-high">High</span></td>
+              <td>Test on 15+ real reports from Week 2. Use Gemini Vision as fallback for any format — it handles layout variation naturally.</td>
+            </tr>
+            <tr>
+              <td><strong>Groq API rate limit</strong> hit during demo or heavy usage.</td>
+              <td><span class="risk-level risk-med">Medium</span></td>
+              <td>Auto-switch to Gemini 1.5 Flash when Groq returns 429. Both keys in .env with try-except fallback in code.</td>
+            </tr>
+            <tr>
+              <td><strong>Gemini Vision misreads</strong> handwritten or very blurry phone photos.</td>
+              <td><span class="risk-level risk-med">Medium</span></td>
+              <td>Show confidence flag. Allow user to manually correct extracted values before analysis. EasyOCR as secondary attempt.</td>
+            </tr>
+            <tr>
+              <td><strong>Medical accuracy</strong> — wrong explanation could mislead user.</td>
+              <td><span class="risk-level risk-high">High</span></td>
+              <td>Add disclaimer: "This is educational, not medical advice. Consult a doctor for treatment." RAG grounds responses in verified medical KB, not hallucination.</td>
+            </tr>
+            <tr>
+              <td><strong>IndicTrans2 translation quality</strong> for medical terms in Gujarati.</td>
+              <td><span class="risk-level risk-med">Medium</span></td>
+              <td>Keep English technical terms (test names, values) untranslated. Only translate explanatory sentences. Use deep-translator as backup.</td>
+            </tr>
+            <tr>
+              <td><strong>HuggingFace Spaces cold start</strong> — app sleeps after inactivity, slow first load.</td>
+              <td><span class="risk-level risk-low">Low</span></td>
+              <td>Acceptable for demo. For college presentation, keep app warm by visiting it 1 hour before. Render.com as backup host.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 16. FUTURE SCOPE -->
+    <section class="prd-section" id="s16">
+      <div class="section-header">
+        <div class="section-num">16</div>
+        <h2>Future Scope</h2>
+      </div>
+      <div class="card">
+        <div class="future-item"><span class="future-phase">v1.1</span><p><strong>WhatsApp Bot Integration</strong> — Send report photo on WhatsApp, get explanation as WhatsApp message back. Using Twilio WhatsApp Sandbox (free for dev).</p></div>
+        <div class="future-item"><span class="future-phase">v1.2</span><p><strong>Prescription Reader</strong> — Upload doctor's prescription → decode medicine names, dosage, frequency, purpose in plain language.</p></div>
+        <div class="future-item"><span class="future-phase">v2.0</span><p><strong>Mobile App (PWA)</strong> — Convert Flask app to Progressive Web App. Installable on Android/iOS. Camera capture built-in. Offline mode for viewing past reports.</p></div>
+        <div class="future-item"><span class="future-phase">v2.1</span><p><strong>Doctor Dashboard</strong> — Separate doctor login. Patients share reports via link. Doctor can annotate and send back notes. Telemedicine lite.</p></div>
+        <div class="future-item"><span class="future-phase">v3.0</span><p><strong>ABDM Integration</strong> — Connect to Ayushman Bharat Digital Mission health ID. Pull past reports automatically from national health registry.</p></div>
+        <div class="future-item"><span class="future-phase">v3.1</span><p><strong>Hospital API Partnerships</strong> — Direct integration with SRL, Thyrocare APIs. Reports auto-imported to Aayu AI as soon as lab uploads them.</p></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  Aayu AI · PRD v1.0 · 7th Sem Major Project · LDRP-ITR, Gandhinagar · 2027 Batch · Total Infrastructure Cost: ₹0/month
+</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Compare Reports — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/compare.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Compare Reports</h1>
+    <p>Side-by-side — track what improved and worsened</p>
+  </div>
+</div>
+
+<!-- Report Cards -->
+<div class="compare-cards">
+  <div class="glass-card--solid glass-card--no-hover cmp-card">
+    <svg id="cmp-ring-1" width="70" height="70"></svg>
+    <div>
+      <div class="cmp-label">Report A</div>
+      <div class="cmp-date">January 2024</div>
+      <div class="cmp-meta">Self (Het) · SRL Diagnostics</div>
+    </div>
+  </div>
+  <div class="glass-card--solid glass-card--no-hover cmp-card">
+    <svg id="cmp-ring-2" width="70" height="70"></svg>
+    <div>
+      <div class="cmp-label">Report B</div>
+      <div class="cmp-date">July 2024</div>
+      <div class="cmp-meta">Self (Het) · SRL Diagnostics</div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div class="alert alert-success summary-bar">
+  <span class="alert-icon">📈</span>
+  <span><strong>Net improvement: +7 health score points</strong> · 6 improved · 1 worsened (Uric Acid ↑) · Overall trend: Positive</span>
+</div>
+
+<!-- Comparison Table -->
+<div class="glass-card--solid glass-card--no-hover table-wrap" style="padding: 0;">
+  <table class="data-table">
+    <thead>
+      <tr><th>Parameter</th><th>Jan 2024</th><th>Jul 2024</th><th>Change</th><th>Trend</th></tr>
+    </thead>
+    <tbody id="cmp-tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.LIVE_HISTORY = {{ history_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/compare.js', v=15) }}"></script>
+{% endblock %}

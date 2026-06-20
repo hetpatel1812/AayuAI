@@ -1,0 +1,303 @@
+/*
+ * Aayu AI — Design System Base
+ * Crisp Light Mode (Medical & Trustworthy)
+ */
+
+/* ── Fonts ──────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Tiro+Devanagari+Hindi:wght@400&display=swap');
+
+/* ── CSS Variables ──────────────────────────────────── */
+:root {
+  /* Background */
+  --bg-primary: #F1F5F9;       /* Slightly darker slate to contrast with white cards */
+  --bg-secondary: #FFFFFF;     /* Pure white */
+  --bg-tertiary: #E2E8F0;      /* Darker slate for tertiary elements */
+  --bg-elevated: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-glass-light: rgba(255, 255, 255, 0.6);
+
+  /* Accent Colors */
+  --accent-teal: #0D9488;      /* Medical teal */
+  --accent-teal-dim: rgba(13, 148, 136, 0.1);
+  --accent-teal-glow: rgba(13, 148, 136, 0.15);
+  --accent-emerald: #059669;
+  --accent-blue: #2563EB;
+  --accent-purple: #7C3AED;
+
+  /* Status Colors */
+  --status-normal: #10B981;
+  --status-normal-bg: rgba(16, 185, 129, 0.1);
+  --status-high: #EF4444;
+  --status-high-bg: rgba(239, 68, 68, 0.1);
+  --status-low: #3B82F6;
+  --status-low-bg: rgba(59, 130, 246, 0.1);
+  --status-critical: #E11D48;
+  --status-critical-bg: rgba(225, 29, 72, 0.1);
+  --status-warning: #F59E0B;
+  --status-warning-bg: rgba(245, 158, 11, 0.1);
+
+  /* Text */
+  --text-primary: #0F172A;     /* Darkest slate */
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --text-dim: #94A3B8;
+  --text-dark: #000000;
+
+  /* Borders */
+  --border-glass: rgba(15, 23, 42, 0.08);
+  --border-subtle: rgba(15, 23, 42, 0.04);
+  --border-active: rgba(13, 148, 136, 0.3);
+
+  /* Shadows & Glows */
+  --glow-teal: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  --glow-teal-strong: 0 4px 14px rgba(13, 148, 136, 0.2);
+  --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-elevated: 0 10px 25px rgba(15, 23, 42, 0.05), 0 4px 6px rgba(15, 23, 42, 0.03);
+  --shadow-float: 0 20px 40px rgba(15, 23, 42, 0.08);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+  --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Sidebar */
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 72px;
+  --topbar-height: 0px;
+}
+
+/* ── Reset ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F1F5F9; /* Clean light gray iOS-style background */
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--accent-teal);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-emerald);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  outline: none;
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-dim);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ── Selection ──────────────────────────────────────── */
+::selection {
+  background: var(--accent-teal-dim);
+  color: var(--accent-teal);
+}
+
+/* ── Typography Utilities ───────────────────────────── */
+.font-display { font-family: 'Outfit', sans-serif; }
+.font-body { font-family: 'Inter', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+.font-sanskrit { font-family: 'Tiro Devanagari Hindi', serif; }
+
+.text-xs { font-size: 10px; }
+.text-sm { font-size: 12px; }
+.text-base { font-size: 14px; }
+.text-lg { font-size: 16px; }
+.text-xl { font-size: 20px; }
+.text-2xl { font-size: 24px; }
+.text-3xl { font-size: 32px; }
+.text-4xl { font-size: 40px; }
+.text-5xl { font-size: 52px; }
+.text-6xl { font-size: 64px; }
+
+.font-light { font-weight: 300; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.font-black { font-weight: 900; }
+
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-dim { color: var(--text-dim); }
+.text-teal { color: var(--accent-teal); }
+.text-emerald { color: var(--accent-emerald); }
+.text-blue { color: var(--accent-blue); }
+.text-danger { color: var(--status-high); }
+.text-warning { color: var(--status-warning); }
+
+.uppercase {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Layout Utilities ───────────────────────────────── */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+.gap-xl { gap: var(--space-xl); }
+
+.grid { display: grid; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+
+.hidden { display: none !important; }
+.block { display: block; }
+.inline-block { display: inline-block; }
+
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+.overflow-hidden { overflow: hidden; }
+.overflow-auto { overflow-y: auto; }
+
+.shrink-0 { flex-shrink: 0; }
+
+/* ── Animations ─────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in { animation: fadeIn 0.5s ease forwards; }
+.animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+.animate-fade-in-down { animation: fadeInDown 0.5s ease forwards; }
+.animate-slide-left { animation: slideInLeft 0.5s ease forwards; }
+.animate-slide-right { animation: slideInRight 0.5s ease forwards; }
+.animate-scale-in { animation: scaleIn 0.4s ease forwards; }
+.animate-pulse { animation: pulse 2s ease-in-out infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
