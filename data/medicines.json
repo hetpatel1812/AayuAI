@@ -1,0 +1,45 @@
+[
+  {
+    "condition": "Iron Deficiency Anemia",
+    "triggers": [{"parameter": "Hemoglobin", "status": "LOW"}, {"parameter": "Serum Iron", "status": "LOW"}],
+    "medicines": [
+      {"name": "Dexorange Syrup / Capsules", "type": "Hematinic", "purpose": "Rapid iron replenishment"},
+      {"name": "Orofer XT", "type": "Iron Supplement", "purpose": "High absorption iron with folic acid"},
+      {"name": "Livogen Z", "type": "Iron + Zinc", "purpose": "Iron deficiency with zinc support"}
+    ]
+  },
+  {
+    "condition": "Vitamin D Deficiency",
+    "triggers": [{"parameter": "Vitamin D", "status": "LOW"}],
+    "medicines": [
+      {"name": "UPRISE-D3 60K", "type": "Vitamin Supplement", "purpose": "Weekly high-dose Vitamin D3 replenishment"},
+      {"name": "Calcirol Sachet", "type": "Cholecalciferol Granules", "purpose": "Vitamin D3 mixed with milk/water"},
+      {"name": "Shelcal-HD", "type": "Calcium + Vit D3", "purpose": "Bone strength support"}
+    ]
+  },
+  {
+    "condition": "Vitamin B12 Deficiency",
+    "triggers": [{"parameter": "Vitamin B12", "status": "LOW"}],
+    "medicines": [
+      {"name": "Neurobion Forte", "type": "B-Complex", "purpose": "General B-vitamin support for nerves"},
+      {"name": "Nurokind-OD", "type": "Methylcobalamin", "purpose": "Direct B12 replenishment"},
+      {"name": "Methycobal", "type": "Vitamin B12", "purpose": "Neuropathy prevention"}
+    ]
+  },
+  {
+    "condition": "Hypothyroidism",
+    "triggers": [{"parameter": "TSH", "status": "HIGH"}],
+    "medicines": [
+      {"name": "Thyronorm (various mcg)", "type": "Thyroxine", "purpose": "Thyroid hormone replacement"},
+      {"name": "Eltroxin", "type": "Levothyroxine", "purpose": "Standard thyroid hormone replacement"}
+    ]
+  },
+  {
+    "condition": "High Uric Acid (Hyperuricemia)",
+    "triggers": [{"parameter": "Uric Acid", "status": "HIGH"}],
+    "medicines": [
+      {"name": "Zyloric (Allopurinol)", "type": "Uric Acid Reducer", "purpose": "Prevent uric acid production"},
+      {"name": "Feburic (Febuxostat)", "type": "Xanthine Oxidase Inhibitor", "purpose": "Lowers uric acid levels"}
+    ]
+  }
+]

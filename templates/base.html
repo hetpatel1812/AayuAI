@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Aayu AI{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/utils.css', v=15) }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Mobile Toggle -->
+<button class="mobile-toggle" id="mobile-toggle" onclick="document.querySelector('.app-sidebar').classList.toggle('open')">☰</button>
+
+<!-- ═══ Sidebar ═══ -->
+<aside class="app-sidebar" id="app-sidebar">
+  <div class="sidebar-logo">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" style="width:32px; height:32px; object-fit:contain; border-radius:6px;">
+    <div>
+      <div class="sidebar-logo-text">Aayu <span>AI</span></div>
+      <div class="sidebar-logo-sub">आयु • Life Intelligence</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Overview</div>
+      <a href="{{ url_for('dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">⬡</span> Dashboard
+      </a>
+      <a href="{{ url_for('upload') }}" class="nav-item {% if request.endpoint == 'upload' %}active{% endif %}">
+        <span class="nav-icon">↑</span> Upload Report
+      </a>
+    </div>
+
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Analysis</div>
+      <a href="{{ url_for('history') }}" class="nav-item {% if request.endpoint == 'history' %}active{% endif %}">
+        <span class="nav-icon">◷</span> History
+      </a>
+      <a href="{{ url_for('results') }}" class="nav-item {% if request.endpoint == 'results' %}active{% endif %}">
+        <span class="nav-icon">◈</span> Results
+      </a>
+      <a href="{{ url_for('trends') }}" class="nav-item {% if request.endpoint == 'trends' %}active{% endif %}">
+        <span class="nav-icon">⟋</span> Trends
+      </a>
+      <a href="{{ url_for('compare') }}" class="nav-item {% if request.endpoint == 'compare' %}active{% endif %}">
+        <span class="nav-icon">⇌</span> Compare
+      </a>
+    </div>
+
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-label">Manage</div>
+      <a href="{{ url_for('family') }}" class="nav-item {% if request.endpoint == 'family' %}active{% endif %}">
+        <span class="nav-icon">◉</span> Family Vault
+      </a>
+      <a href="{{ url_for('chat') }}" class="nav-item {% if request.endpoint == 'chat' %}active{% endif %}">
+        <span class="nav-icon">◎</span> Ask Aayu AI
+      </a>
+      <a href="{{ url_for('profile') }}" class="nav-item {% if request.endpoint == 'profile' %}active{% endif %}">
+        <span class="nav-icon">👤</span> Profile
+      </a>
+    </div>
+  </nav>
+
+  <div class="sidebar-user">
+    <a href="{{ url_for('profile') }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; flex: 1; min-width: 0;">
+      <div class="avatar avatar-md avatar-teal" style="flex-shrink: 0;">{{ user.name[0] if user else 'U' }}</div>
+      <div class="sidebar-user-info" style="min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        <div class="sidebar-user-name" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ user.name if user else 'User' }}</div>
+        <div class="sidebar-user-meta" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ user.city if user and user.city else 'India' }}</div>
+      </div>
+    </a>
+    <a href="{{ url_for('logout') }}" class="sidebar-logout" title="Logout">⏻</a>
+  </div>
+</aside>
+
+<!-- ═══ Main Content ═══ -->
+<main class="app-main">
+  {% block content %}{% endblock %}
+</main>
+
+<script src="{{ url_for('static', filename='js/utils.js', v=16) }}"></script>
+
+{% block extra_js %}{% endblock %}
+<script>
+  // Close mobile sidebar when clicking a nav link
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelector('.app-sidebar').classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>

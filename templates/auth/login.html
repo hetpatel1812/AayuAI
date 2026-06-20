@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Aayu AI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+
+<div class="auth-page">
+  <!-- Brand Panel -->
+  <div class="auth-brand">
+    <div class="auth-brand-logo">
+      <div class="auth-brand-icon">🌿</div>
+      <div class="auth-brand-name">Aayu <span>AI</span></div>
+    </div>
+    <div class="auth-brand-tagline">
+      Understand your blood tests<br>in plain language
+    </div>
+    <div class="auth-brand-sub">
+      AI-powered medical report analyzer for every Indian family. Free forever.
+    </div>
+    <div class="auth-features">
+      <div class="auth-feature">
+        <div class="auth-feature-icon">📄</div>
+        <span>Upload PDF, scan, or phone photo</span>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon">🤖</div>
+        <span>AI explains every value in plain language</span>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon">👨‍👩‍👧</div>
+        <span>Track health for your entire family</span>
+      </div>
+      <div class="auth-feature">
+        <div class="auth-feature-icon">🌐</div>
+        <span>English, Hindi, Gujarati support</span>
+      </div>
+    </div>
+    <div class="auth-brand-sanskrit">आयु</div>
+  </div>
+
+  <!-- Login Form -->
+  <div class="auth-form-panel" style="position: relative;">
+    <a href="{{ url_for('index') }}" class="auth-back">← Back to Home</a>
+
+    <div class="auth-form-container">
+      <div class="auth-form-header">
+        <h1>Welcome Back</h1>
+        <p>Log in to access your health dashboard</p>
+      </div>
+
+      {% if error %}
+      <div class="auth-error">{{ error }}</div>
+      {% endif %}
+
+      <form class="auth-form" method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+          <label class="input-label" for="email">Email Address</label>
+          <input class="input" type="email" id="email" name="email" placeholder="Enter your email address" required>
+        </div>
+
+        <div class="form-group">
+          <label class="input-label" for="password">Password</label>
+          <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-bottom: 20px;">
+          <input type="checkbox" id="remember" name="remember" style="width: 16px; height: 16px; accent-color: var(--accent-teal); cursor: pointer;">
+          <label for="remember" style="font-size: 13px; color: var(--text-secondary); cursor: pointer; user-select: none; font-weight: 500;">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top: 8px;">
+          Log In →
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="{{ url_for('register') }}">Create one free →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

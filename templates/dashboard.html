@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Dashboard</h1>
+    <p>Family health overview · Latest: {{ today_short }}</p>
+  </div>
+  <div class="page-header-actions" style="display: flex; gap: 8px;">
+    <a href="{{ url_for('trends') }}" class="btn btn-secondary">⟋ Health Trends</a>
+    <a href="{{ url_for('compare') }}" class="btn btn-secondary">⇌ Compare Reports</a>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">+ Upload Report</a>
+  </div>
+</div>
+
+<!-- Dashboard Hero Welcome Banner -->
+<div class="dash-hero animate-fade-in-down">
+  <div class="dash-hero-content">
+    <span class="dash-hero-badge">⚡ Life Intelligence Cockpit</span>
+    <h1>Namaste, {{ user.name }}</h1>
+    <p>Track your biomarker trends, optimize daily nutrition, and consult your dedicated Aayu AI chatbot for clinical insights.</p>
+    <div class="dash-hero-actions">
+      <a href="{{ url_for('upload') }}" class="btn btn-primary btn-hero-primary">+ Analyze New Report</a>
+      <a href="{{ url_for('chat') }}" class="btn btn-secondary btn-hero-secondary">💬 Consult Aayu AI</a>
+    </div>
+  </div>
+  <div class="dash-hero-visual">
+    <div class="visual-glow"></div>
+    <div class="visual-shield">🛡️</div>
+  </div>
+</div>
+
+<!-- Alert Banner -->
+<div class="alert alert-warning" id="dash-alert" style="margin-bottom: 20px; display: none; border-radius: var(--radius-lg); font-weight: 500;"></div>
+
+<!-- Stat Cards -->
+<div class="dash-stats" id="dash-stats"></div>
+
+<!-- Main Body Grid -->
+<div class="dash-body">
+  <!-- Health Score Panel -->
+  <div class="glass-card--solid glass-card--no-hover score-card-panel animate-scale-in">
+    <div class="stat-label" style="text-align: center; font-size: 12px; margin-bottom: 12px;">Health Score Index</div>
+    <div class="score-center">
+      <svg id="dash-ring" width="140" height="140"></svg>
+    </div>
+    <div id="dash-subscores"></div>
+  </div>
+
+  <!-- Latest Report Biomarkers Card -->
+  <div class="glass-card--solid glass-card--no-hover list-card-panel animate-scale-in" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+    <div class="dash-table-header">
+      <div class="dash-table-header-title">Latest Biomarkers — Self ({{ user.name }})</div>
+      <div style="display: flex; gap: 8px; align-items: center;" id="dash-header-badges"></div>
+    </div>
+    
+    <!-- Parameter Cards List Scroll -->
+    <div class="dash-table-scroll">
+      <div id="dash-params-grid" class="dash-params-grid"></div>
+    </div>
+    
+    <div class="dash-table-footer">
+      <a href="{{ url_for('results') }}" class="btn btn-primary" style="flex: 1; padding: 12px 20px; justify-content: center; font-weight: 700;">View Detailed Results →</a>
+      <a href="{{ url_for('history') }}" class="btn btn-secondary" style="flex: 1; padding: 12px 20px; justify-content: center; font-weight: 700;">◷ Full History</a>
+    </div>
+  </div>
+</div>
+
+<!-- Family Vault Preview -->
+<div class="glass-card--solid glass-card--no-hover vault-card-panel animate-scale-in">
+  <div class="stat-label" style="margin-bottom: 16px; font-size: 12px;">Family Vault Insights</div>
+  <div class="family-grid" id="dash-family"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.LIVE_DATA = {{ report_json | safe }};
+  window.LIVE_FAMILY = {{ family_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js', v=15) }}"></script>
+{% endblock %}

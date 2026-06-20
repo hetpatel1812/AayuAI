@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Family Vault — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/family.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Family Vault</h1>
+    <p>Manage health profiles for all family members</p>
+  </div>
+  <div class="page-header-actions">
+    <button class="btn btn-primary">+ Add Member</button>
+  </div>
+</div>
+
+<!-- Family Cards -->
+<div class="fam-grid" id="fam-grid"></div>
+
+<!-- Family Summary Table -->
+<div class="glass-card--solid glass-card--no-hover table-wrap" style="padding: 0;">
+  <div class="table-header">
+    <div class="table-header-title">Family Health Summary</div>
+  </div>
+  <table class="data-table">
+    <thead>
+      <tr><th>Member</th><th>Age</th><th>Last Report</th><th>Score</th><th>Key Concern</th><th>Action</th></tr>
+    </thead>
+    <tbody id="fam-tbody"></tbody>
+  </table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.LIVE_FAMILY = {{ family_json | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/family.js', v=16) }}"></script>
+{% endblock %}

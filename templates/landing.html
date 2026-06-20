@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayu AI — Understand Your Blood Tests in Plain Language</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+  <meta name="description" content="AI-powered medical report analyzer for every Indian family. Upload PDF, scanned image, or phone camera photo — understand your blood test results in plain language.">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/splash.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css', v=15) }}">
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash-overlay" class="splash-overlay">
+  <div class="splash-corner splash-corner--tl"></div>
+  <div class="splash-corner splash-corner--br"></div>
+  <canvas id="splash-canvas" class="splash-canvas"></canvas>
+  <div class="splash-content">
+    <div class="splash-sanskrit">आयु</div>
+    <div class="splash-ai">Aayu AI</div>
+    <div class="splash-tagline">Decoding your health in Your language</div>
+    <div class="splash-dots">
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+      <div class="splash-dot"></div>
+    </div>
+  </div>
+  <button id="splash-skip" class="splash-skip">SKIP</button>
+</div>
+
+<!-- Navbar -->
+<nav class="landing-nav" id="landing-nav">
+  <div class="landing-logo">
+    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+    <div class="landing-logo-text">Aayu<span>AI</span></div>
+  </div>
+  <div class="landing-nav-links">
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#input-modes" class="nav-link">Input Modes</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#privacy" class="nav-link">Privacy</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+  </div>
+  <div class="nav-actions">
+    <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm" style="margin-right: 12px;">Log In</a>
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Get Started →</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="landing-hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        🧬 आयु (Aayu) = Life in Sanskrit
+      </div>
+      <h1 class="hero-title">
+        Understand Your<br>
+        Blood Tests in<br>
+        <span class="highlight">Your Language</span>
+      </h1>
+      <p class="hero-desc">
+        Upload a PDF, scanned image, or phone camera photo of your blood test report — 
+        get instant AI-powered analysis with explanations in English, Hindi, or Gujarati. 
+        Free forever.
+      </p>
+      <div class="hero-actions">
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+          Get Started Free →
+        </a>
+        <a href="#how-it-works" class="btn btn-secondary btn-lg">
+          See How It Works
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">100+</div>
+          <div class="hero-stat-label">Parameters Supported</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">3</div>
+          <div class="hero-stat-label">Languages</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">90%</div>
+          <div class="hero-stat-label">Accuracy</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">₹0</div>
+          <div class="hero-stat-label">Cost Forever</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-phone-mockup">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            
+            <div class="mock-header">
+              <span class="mock-title">Health Score</span>
+              <span class="badge badge-warning">9 Abnormal</span>
+            </div>
+
+            <svg class="mock-score-ring" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(15,23,42,0.06)" stroke-width="8"/>
+              <circle cx="40" cy="40" r="34" fill="none" stroke="#F59E0B" stroke-width="8"
+                      stroke-dasharray="213.6" stroke-dashoffset="81.2"
+                      stroke-linecap="round" transform="rotate(-90 40 40)"/>
+              <text x="40" y="38" text-anchor="middle" font-family="Outfit" font-size="20" font-weight="800" fill="#F59E0B">62</text>
+              <text x="40" y="50" text-anchor="middle" font-size="9" fill="#94A3B8">/100</text>
+            </svg>
+
+            <div class="mock-params">
+              <div class="mock-param">
+                <span class="mock-param-name">Hemoglobin</span>
+                <span class="mock-param-value" style="color: var(--status-low);">11.2 g/dL</span>
+              </div>
+              <div class="mock-param">
+                <span class="mock-param-name">TSH</span>
+                <span class="mock-param-value" style="color: var(--status-high);">5.8 mIU/L</span>
+              </div>
+              <div class="mock-param">
+                <span class="mock-param-name">Vitamin D</span>
+                <span class="mock-param-value" style="color: var(--status-low);">14 ng/mL</span>
+              </div>
+              <div class="mock-param">
+                <span class="mock-param-name">Creatinine</span>
+                <span class="mock-param-value" style="color: var(--status-normal);">0.9 mg/dL</span>
+              </div>
+              <div class="mock-param" style="margin-top: 12px; background: rgba(5, 150, 105, 0.1); border-color: rgba(5, 150, 105, 0.2);">
+                <span class="mock-param-name" style="color: var(--accent-emerald);">Diet Tip</span>
+                <span class="mock-param-value" style="font-size: 11px; font-family: 'Inter';">Eat palak, rajma</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="section" id="how-it-works">
+  <div class="section-eyebrow">How It Works</div>
+  <h2 class="section-heading reveal">Three Simple Steps</h2>
+  <p class="section-desc">Upload your blood test report in any format — AI does the rest in under 10 seconds.</p>
+
+  <div class="steps-grid">
+    <div class="step-card reveal reveal-delay-1">
+      <div class="step-num">1</div>
+      <div class="step-icon">📤</div>
+      <h3>Upload Report</h3>
+      <p>Upload your PDF, take a photo with your phone, or scan your printed report. Any lab format works.</p>
+    </div>
+    <div class="step-card reveal reveal-delay-2">
+      <div class="step-num">2</div>
+      <div class="step-icon">🤖</div>
+      <h3>AI Analyzes</h3>
+      <p>Our AI extracts every parameter, classifies values, and generates plain language explanations using RAG + LLM.</p>
+    </div>
+    <div class="step-card reveal reveal-delay-3">
+      <div class="step-num">3</div>
+      <div class="step-icon">📊</div>
+      <h3>Get Insights</h3>
+      <p>See your health score, abnormal values, diet tips, specialist recommendations, and track trends over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Input Modes -->
+<section class="section" id="input-modes" style="padding-top: 60px;">
+  <div class="section-eyebrow">Input Methods</div>
+  <h2 class="section-heading reveal">Upload Any Way You Want</h2>
+  <p class="section-desc">Three intelligent pipelines handle any type of blood test report from any Indian lab.</p>
+
+  <div class="modes-grid">
+    <div class="mode-card mode-card--pdf reveal reveal-delay-1">
+      <div class="mode-icon">📄</div>
+      <h3>Digital PDF</h3>
+      <p>Lab-generated PDFs from Apollo, Lal PathLabs, Metropolis, etc. Highest accuracy, instant parsing.</p>
+    </div>
+    <div class="mode-card mode-card--phone recommended reveal reveal-delay-2">
+      <div class="mode-recommend-badge">RECOMMENDED</div>
+      <div class="mode-icon">📱</div>
+      <h3>Phone Camera</h3>
+      <p>Just snap a photo of your printed report. Our vision models enhance the image and extract the data.</p>
+    </div>
+    <div class="mode-card mode-card--scan reveal reveal-delay-3">
+      <div class="mode-icon">🖨️</div>
+      <h3>Scanned Image</h3>
+      <p>Upload flatbed scans (JPG/PNG). Advanced OCR handles tables, columns, and variable layouts perfectly.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section" id="features" style="padding-top: 60px;">
+  <div class="section-eyebrow">Features</div>
+  <h2 class="section-heading reveal">Everything You Need</h2>
+  <p class="section-desc">From instant analysis to family health tracking — all powered by AI, all free.</p>
+
+  <div class="features-grid">
+    <div class="feature-card reveal reveal-delay-1">
+      <div class="feature-icon">📊</div>
+      <h3>Health Score Dashboard</h3>
+      <p>Overall score 0–100 with sub-scores for Kidney, Liver, Heart, Blood, Thyroid, and Vitamins.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-2">
+      <div class="feature-icon">📈</div>
+      <h3>Trend Tracking</h3>
+      <p>Upload multiple reports — see how every parameter changes over time. Detect improving or worsening trends.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-3">
+      <div class="feature-icon">👨‍👩‍👧</div>
+      <h3>Family Health Vault</h3>
+      <p>Manage Dad, Mom, Grandpa as separate profiles with independent health histories and age-adjusted ranges.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-4">
+      <div class="feature-icon">💬</div>
+      <h3>AI Chatbot</h3>
+      <p>"Why is my TSH high?" — ask anything and get context-aware answers about your specific report values.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-5">
+      <div class="feature-icon">🍛</div>
+      <h3>Indian Diet Tips</h3>
+      <p>Low iron → "Eat palak, rajma, pomegranate." India-specific food recommendations for every abnormal value.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-6">
+      <div class="feature-icon">🌐</div>
+      <h3>Multilingual</h3>
+      <p>Get explanations in English, Hindi (हिंदी), or Gujarati (ગુજરાતી). Powered by IndicTrans2.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-7">
+      <div class="feature-icon">🔄</div>
+      <h3>Report Comparison</h3>
+      <p>Select any two reports — see side-by-side what improved, what worsened, with percentage changes.</p>
+    </div>
+    <div class="feature-card reveal reveal-delay-8">
+      <div class="feature-icon">🚨</div>
+      <h3>Critical Alerts</h3>
+      <p>Instantly flagged if any value is dangerously abnormal with "See doctor immediately" guidance.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">📄</div>
+      <h3>PDF Export</h3>
+      <p>Download a clean, simplified report — color-coded and explained — to share with your doctor or family.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY GUARANTEE -->
+<section class="section" id="privacy">
+  <div class="privacy-banner reveal">
+    <div class="privacy-icon">🛡️</div>
+    <div class="privacy-content">
+      <h3>Your Health Data is 100% Private</h3>
+      <p>We believe medical records belong to you. Your reports are analyzed entirely in memory and <strong>instantly deleted</strong> once your results are generated. We do not store, sell, or share your data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-heading reveal">
+    <h2 class="section-title">Common Questions</h2>
+    <p class="section-subtitle">Everything you need to know about how Aayu AI works.</p>
+  </div>
+  
+  <div class="faq-container">
+    <details class="faq-item reveal" open>
+      <summary class="faq-question">Is Aayu AI a substitute for a real doctor?</summary>
+      <div class="faq-answer">No. Aayu AI is an educational tool designed to help you understand complex medical terminology. It does not provide medical diagnoses or prescribe treatments. Always consult your healthcare provider.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-question">Is it actually free?</summary>
+      <div class="faq-answer">Yes, 100% free forever. This is a student-built project aimed at making health information accessible to every Indian family, without any subscription walls.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-question">What languages do you support?</summary>
+      <div class="faq-answer">We currently provide full RAG-powered explanations in English, Hindi (हिंदी), and Gujarati (ગુજરાતી) using state-of-the-art IndicTrans2 models.</div>
+    </details>
+    <details class="faq-item reveal">
+      <summary class="faq-question">Can I upload handwritten reports?</summary>
+      <div class="faq-answer">Our OCR works best with typed, computer-generated lab reports (PDFs or clear photos). Handwritten doctor notes or prescriptions may not be parsed accurately.</div>
+    </details>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar reveal">
+  <div class="stats-grid">
+    <div>
+      <div class="stats-value">100+</div>
+      <div class="stats-label">Blood Parameters</div>
+    </div>
+    <div>
+      <div class="stats-value">3</div>
+      <div class="stats-label">Indian Languages</div>
+    </div>
+    <div>
+      <div class="stats-value">&lt;10s</div>
+      <div class="stats-label">Analysis Time</div>
+    </div>
+    <div>
+      <div class="stats-value">₹0</div>
+      <div class="stats-label">Forever Free</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <h2 class="cta-heading">Ready to Understand<br>Your Health Better?</h2>
+  <p class="cta-desc">Join thousands of Indian families who trust Aayu AI for their health reports.</p>
+  <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg" style="position: relative; z-index: 1;">
+    Create Free Account →
+  </a>
+</section>
+
+<div class="disclaimer-bar">
+  ⚕️ Disclaimer: Aayu AI provides educational health insights only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider.
+</div>
+
+<footer class="landing-footer reveal">
+  <div class="footer-grid">
+    <div class="footer-col footer-brand">
+      <div class="landing-logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+        <div class="landing-logo-text">Aayu<span>AI</span></div>
+      </div>
+      <p class="footer-desc">Decoding your health in plain language. AI-powered medical report analyzer for every Indian family.</p>
+      <div class="footer-copyright">
+        © {{ current_year }} Aayu AI. All rights reserved.
+      </div>
+    </div>
+    
+    <div class="footer-col">
+      <h4 class="footer-heading">Product</h4>
+      <a href="#how-it-works" class="footer-link">How It Works</a>
+      <a href="#input-modes" class="footer-link">Input Modes</a>
+      <a href="#features" class="footer-link">Features</a>
+      <a href="#faq" class="footer-link">FAQ</a>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">Legal</h4>
+      <a href="{{ url_for('privacy') }}" class="footer-link">Privacy Policy</a>
+      <a href="{{ url_for('terms') }}" class="footer-link">Terms of Service</a>
+      <a href="{{ url_for('security') }}" class="footer-link">Security Info</a>
+    </div>
+
+    <div class="footer-col">
+      <h4 class="footer-heading">Connect</h4>
+      <a href="https://github.com" class="footer-link" target="_blank">GitHub</a>
+      <a href="#" class="footer-link">Twitter</a>
+      <a href="mailto:hello@aayu.ai" class="footer-link">Contact Us</a>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/splash.js', v=2) }}"></script>
+<script>
+  // Navbar scroll effect
+  window.addEventListener('scroll', function() {
+    const nav = document.getElementById('landing-nav');
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+
+  // Scroll Reveal Animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { root: null, rootMargin: '0px', threshold: 0.15 });
+    
+    document.querySelectorAll('.reveal').forEach((el) => {
+      observer.observe(el);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+/*
+ * Aayu AI — Family Vault CSS
+ */
+
+.fam-grid { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
+  margin-bottom: 20px; 
+}
+.fam-card { 
+  cursor: pointer; 
+  transition: all var(--transition-base); 
+  border: 2px solid var(--border-glass); 
+  border-radius: var(--radius-xl); 
+  padding: 20px; 
+  background: var(--bg-secondary); 
+}
+.fam-card:hover { border-color: rgba(255,255,255,0.12); }
+.fam-card.selected { border-color: var(--accent-teal); }
+.fam-top { 
+  display: flex; 
+  align-items: center; 
+  gap: 14px; 
+  margin-bottom: 16px; 
+}
+.fam-name { 
+  font-size: 15px; 
+  font-weight: 700; 
+  color: var(--text-primary); 
+}
+.fam-meta { 
+  font-size: 12px; 
+  color: var(--text-muted); 
+}
+.fam-cond { 
+  font-size: 11px; 
+  color: var(--status-warning); 
+  font-weight: 600; 
+  margin-top: 2px; 
+}
+.fam-stats { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr; 
+  gap: 8px; 
+  margin-bottom: 12px; 
+}
+.fam-stat { 
+  background: var(--bg-tertiary); 
+  border-radius: var(--radius-md); 
+  padding: 8px; 
+  text-align: center; 
+}
+.fam-stat-value { 
+  font-size: 15px; 
+  font-weight: 800; 
+}
+.fam-stat-label { 
+  font-size: 9px; 
+  color: var(--text-dim); 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
+}
+.fam-concern { 
+  font-size: 12px; 
+  color: var(--status-high); 
+  margin-bottom: 10px; 
+}
+.fam-actions { 
+  display: flex; 
+  gap: 6px; 
+  flex-wrap: wrap; 
+  padding-top: 12px; 
+  border-top: 1px solid var(--border-glass); 
+  display: none; 
+}
+.fam-card.selected .fam-actions { display: flex; }
+.fam-action-btn { 
+  padding: 5px 10px; 
+  border-radius: var(--radius-sm); 
+  border: 1px solid var(--accent-teal); 
+  background: transparent; 
+  color: var(--accent-teal); 
+  font-size: 11px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  transition: all var(--transition-fast); 
+}
+.fam-action-btn:hover { background: var(--accent-teal-dim); }
+.table-wrap { 
+  overflow: hidden; 
+  border-radius: var(--radius-lg); 
+}
+.table-header { 
+  padding: 14px 18px; 
+  border-bottom: 1px solid var(--border-glass); 
+}
+.table-header-title { 
+  font-size: 11px; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  letter-spacing: 0.08em; 
+  color: var(--text-dim); 
+}
+
+@media (max-width: 1024px) { .fam-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 768px) { .fam-grid { grid-template-columns: 1fr; } }

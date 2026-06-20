@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — Aayu AI</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css', v=15) }}">
+  <style>
+    .legal-container { max-width: 800px; margin: 120px auto 60px; padding: 0 40px; }
+    .legal-title { font-family: 'Outfit', sans-serif; font-size: 42px; margin-bottom: 24px; color: var(--text-primary); }
+    .legal-content p, .legal-content li { font-size: 16px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 16px; }
+    .legal-content h2 { font-family: 'Outfit', sans-serif; font-size: 24px; margin: 32px 0 16px; color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+<nav class="landing-nav" id="landing-nav">
+  <a href="{{ url_for('index') }}" style="text-decoration: none;">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+      <div class="landing-logo-text">Aayu<span>AI</span></div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">← Back to Home</a>
+  </div>
+</nav>
+
+<div class="legal-container">
+  <h1 class="legal-title">Terms of Service</h1>
+  <div class="legal-content">
+    <p>Last Updated: {{ today_month_year }}</p>
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing and using Aayu AI, you accept and agree to be bound by the terms and provision of this agreement.</p>
+    <h2>2. Educational Purpose Only</h2>
+    <p><strong>Aayu AI is strictly an educational tool.</strong> It is not a medical device, nor is it a substitute for professional medical advice, diagnosis, or treatment. The insights provided by our AI are generated for informational purposes to help you understand medical terminology.</p>
+    <h2>3. Disclaimer of Liability</h2>
+    <p>Aayu AI, its developers, and affiliated institutions (including LDRP-ITR) shall not be held liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use the service, or from any actions taken based on the information provided by the service.</p>
+    <h2>4. User Responsibilities</h2>
+    <p>You agree to always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read on Aayu AI.</p>
+    <h2>5. Modifications to Service</h2>
+    <p>We reserve the right to modify or discontinue, temporarily or permanently, the service with or without notice.</p>
+  </div>
+</div>
+
+<div class="disclaimer-bar">
+  ⚕️ Disclaimer: Aayu AI provides educational health insights only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider.
+</div>
+
+<footer class="landing-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-brand">
+      <div class="landing-logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+        <div class="landing-logo-text">Aayu<span>AI</span></div>
+      </div>
+      <p class="footer-desc">Decoding your health in plain language. AI-powered medical report analyzer for every Indian family.</p>
+      <div class="footer-copyright">
+        © {{ current_year }} Aayu AI. All rights reserved.
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Product</h4>
+      <a href="{{ url_for('index') }}#how-it-works" class="footer-link">How It Works</a>
+      <a href="{{ url_for('index') }}#input-modes" class="footer-link">Input Modes</a>
+      <a href="{{ url_for('index') }}#features" class="footer-link">Features</a>
+      <a href="{{ url_for('index') }}#faq" class="footer-link">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Legal</h4>
+      <a href="{{ url_for('privacy') }}" class="footer-link">Privacy Policy</a>
+      <a href="{{ url_for('terms') }}" class="footer-link">Terms of Service</a>
+      <a href="{{ url_for('security') }}" class="footer-link">Security Info</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Connect</h4>
+      <a href="https://github.com" class="footer-link" target="_blank">GitHub</a>
+      <a href="#" class="footer-link">Twitter</a>
+      <a href="mailto:hello@aayu.ai" class="footer-link">Contact Us</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', function() {
+    const nav = document.getElementById('landing-nav');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+</script>
+</body>
+</html>

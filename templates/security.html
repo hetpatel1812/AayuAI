@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Info — Aayu AI</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/logo.png') }}" type="image/png">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css', v=15) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css', v=15) }}">
+  <style>
+    .legal-container { max-width: 800px; margin: 120px auto 60px; padding: 0 40px; }
+    .legal-title { font-family: 'Outfit', sans-serif; font-size: 42px; margin-bottom: 24px; color: var(--text-primary); }
+    .legal-content p, .legal-content li { font-size: 16px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 16px; }
+    .legal-content h2 { font-family: 'Outfit', sans-serif; font-size: 24px; margin: 32px 0 16px; color: var(--text-primary); }
+  </style>
+</head>
+<body>
+
+<nav class="landing-nav" id="landing-nav">
+  <a href="{{ url_for('index') }}" style="text-decoration: none;">
+    <div class="landing-logo">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+      <div class="landing-logo-text">Aayu<span>AI</span></div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary btn-sm">← Back to Home</a>
+  </div>
+</nav>
+
+<div class="legal-container">
+  <h1 class="legal-title">Security Information</h1>
+  <div class="legal-content">
+    <p>Last Updated: {{ today_month_year }}</p>
+    <h2>1. In-Memory Processing</h2>
+    <p>Aayu AI uses a strictly in-memory processing pipeline. When you upload a PDF or image, it is temporarily held in RAM for Optical Character Recognition (OCR) and LLM analysis. It is never written to a persistent database or disk drive.</p>
+    <h2>2. Encryption in Transit</h2>
+    <p>All data transmitted between your browser and our servers is secured using industry-standard TLS 1.3 encryption. This ensures that your medical documents cannot be intercepted over public Wi-Fi networks.</p>
+    <h2>3. Authentication</h2>
+    <p>User sessions are securely managed using cryptographically signed cookies. Passwords are salted and hashed using modern algorithms (e.g., bcrypt) and are never stored in plaintext.</p>
+    <h2>4. Infrastructure</h2>
+    <p>Aayu AI is hosted on modern, secure cloud infrastructure that complies with major international security standards. Our environments are routinely updated with the latest security patches.</p>
+  </div>
+</div>
+
+<div class="disclaimer-bar">
+  ⚕️ Disclaimer: Aayu AI provides educational health insights only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider.
+</div>
+
+<footer class="landing-footer">
+  <div class="footer-grid">
+    <div class="footer-col footer-brand">
+      <div class="landing-logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+        <div class="landing-logo-text">Aayu<span>AI</span></div>
+      </div>
+      <p class="footer-desc">Decoding your health in plain language. AI-powered medical report analyzer for every Indian family.</p>
+      <div class="footer-copyright">
+        © {{ current_year }} Aayu AI. All rights reserved.
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Product</h4>
+      <a href="{{ url_for('index') }}#how-it-works" class="footer-link">How It Works</a>
+      <a href="{{ url_for('index') }}#input-modes" class="footer-link">Input Modes</a>
+      <a href="{{ url_for('index') }}#features" class="footer-link">Features</a>
+      <a href="{{ url_for('index') }}#faq" class="footer-link">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Legal</h4>
+      <a href="{{ url_for('privacy') }}" class="footer-link">Privacy Policy</a>
+      <a href="{{ url_for('terms') }}" class="footer-link">Terms of Service</a>
+      <a href="{{ url_for('security') }}" class="footer-link">Security Info</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Connect</h4>
+      <a href="https://github.com" class="footer-link" target="_blank">GitHub</a>
+      <a href="#" class="footer-link">Twitter</a>
+      <a href="mailto:hello@aayu.ai" class="footer-link">Contact Us</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener('scroll', function() {
+    const nav = document.getElementById('landing-nav');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  });
+</script>
+</body>
+</html>

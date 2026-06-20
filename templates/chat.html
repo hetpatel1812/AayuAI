@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Ask Aayu AI — Chat{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css', v=15) }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Ask Aayu AI</h1>
+    <p>Context-aware — knows your full report</p>
+  </div>
+</div>
+
+<!-- Context Banner -->
+{% if report %}
+<div class="alert alert-info chat-context">
+  <span class="alert-icon">📋</span>
+  <span><strong>Context loaded:</strong> Self ({{ user.name }}) · {{ report.test_date }} · {{ param_count }} parameters · {{ abnormal_count }} abnormal · AI Engine</span>
+</div>
+{% else %}
+<div class="alert alert-warning chat-context">
+  <span class="alert-icon">⚠️</span>
+  <span>No report context loaded. Go to <a href="{{ url_for('upload') }}" style="color: inherit; text-decoration: underline; font-weight: 700;">Upload</a> to analyze a report.</span>
+</div>
+{% endif %}
+
+<!-- Chat Window -->
+<div class="glass-card--solid glass-card--no-hover" style="padding: 0; overflow: hidden;">
+  <div class="chat-window" id="chat-window"></div>
+</div>
+
+<!-- Suggestions -->
+<div class="chat-suggestions" id="chat-suggestions"></div>
+
+<!-- Input -->
+<div class="chat-input-bar">
+  <input class="chat-input" id="chat-input" placeholder="Ask about your report... e.g. Why is my TSH high?" autocomplete="off">
+  <button class="btn btn-primary chat-send" id="chat-send">Send →</button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.USER_NAME = "{{ user.name }}";
+  window.REPORT_DATE = "{{ report.test_date if report else '' }}";
+  window.PARAM_COUNT = {{ param_count }};
+  window.ABNORMAL_COUNT = {{ abnormal_count }};
+</script>
+<script src="{{ url_for('static', filename='js/chat.js', v=16) }}"></script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{
+  "CBC": "Hematologist",
+  "KFT": "Nephrologist",
+  "LFT": "Hepatologist / Gastroenterologist",
+  "Glucose": "Endocrinologist / Diabetologist",
+  "Thyroid": "Endocrinologist",
+  "Lipid": "Cardiologist",
+  "Vitamins": "General Physician",
+  "overrides": {
+    "hemoglobin": "Hematologist",
+    "rbc": "Hematologist",
+    "wbc": "Hematologist / Oncologist",
+    "platelets": "Hematologist",
+    "creatinine": "Nephrologist",
+    "urea": "Nephrologist",
+    "uric_acid": "Rheumatologist",
+    "sgpt": "Hepatologist",
+    "sgot": "Hepatologist",
+    "bilirubin": "Gastroenterologist",
+    "glucose": "Endocrinologist",
+    "hba1c": "Endocrinologist / Diabetologist",
+    "tsh": "Endocrinologist",
+    "cholesterol": "Cardiologist",
+    "ldl": "Cardiologist",
+    "hdl": "Cardiologist",
+    "triglycerides": "Cardiologist",
+    "vitamin_d": "General Physician / Orthopedist",
+    "vitamin_b12": "General Physician / Neurologist",
+    "iron": "Hematologist",
+    "calcium": "Endocrinologist",
+    "potassium": "Nephrologist / Cardiologist"
+  }
+}
