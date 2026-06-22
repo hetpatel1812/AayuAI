@@ -14,7 +14,7 @@
         <a href="/upload" class="btn btn-primary" style="margin-top:20px; display:inline-block;">Upload Report</a>
       </div>
     `;
-    const alertBanner = document.querySelector('.alert-warning');
+    const alertBanner = document.getElementById('dash-alert');
     if(alertBanner) alertBanner.style.display = 'none';
     
     // Update header
@@ -36,9 +36,14 @@
   const abnormalCount = abnormalParams.length;
 
   // Update Alert Banner
-  const alertBanner = document.querySelector('.alert-warning');
+  const alertBanner = document.getElementById('dash-alert');
   if (alertBanner) {
+    alertBanner.style.display = 'flex';
     if (abnormalCount > 0) {
+      alertBanner.className = 'alert alert-warning';
+      alertBanner.style.background = '';
+      alertBanner.style.border = '';
+      alertBanner.style.color = '';
       const topTests = abnormalParams.slice(0, 5).map(p => p.test).join(', ');
       alertBanner.innerHTML = `
         <span class="alert-icon">⚠️</span>
@@ -102,24 +107,52 @@
     renderSubScores('dash-subscores', subScores);
   }
 
-  // Table (first 12 params)
-  const dashTableBody = document.getElementById('dash-table-body');
-  if (dashTableBody) {
+  // Parameter Grid Cards (first 10 parameters)
+  const paramsGrid = document.getElementById('dash-params-grid');
+  if (paramsGrid) {
     // Show abnormal first, then rest
-    const sortedParams = [...DATA.params].sort((a,b) => (a.status==='NORMAL'?1:0) - (b.status==='NORMAL'?1:0)).slice(0, 12);
-    dashTableBody.innerHTML = sortedParams.map(p => {
-      const rowClass = p.status === 'HIGH' ? 'row-high' : p.status === 'LOW' ? 'row-low' : '';
+    const sortedParams = [...DATA.params].sort((a,b) => (a.status==='NORMAL'?1:0) - (b.status==='NORMAL'?1:0)).slice(0, 10);
+    paramsGrid.innerHTML = sortedParams.map(p => {
       const vc = statusColor(p.status);
       const range = (p.refLow && p.refHigh) ? `${p.refLow}–${p.refHigh}` : p.refHigh ? `< ${p.refHigh}` : '-';
-      return `<tr class="${rowClass}">
-        <td style="font-weight:600; color:var(--text-primary);">${p.test}</td>
-        <td style="font-weight:800; color:${vc};">${p.value} <span style="font-size:10px; color:var(--text-dim);">${p.unit}</span></td>
-        <td>${range}</td>
-        <td>${statusBadge(p.status)}</td>
-      </tr>`;
+      
+      const catIcons = {
+        'CBC': '🩸',
+        'KFT': '💧',
+        'LFT': '☘️',
+        'Glucose': '🍬',
+        'Lipid': '🥑',
+        'Thyroid': '⚡',
+        'Vitamins': '💊',
+        'Other': '🔬'
+      };
+      const icon = catIcons[p.cat] || '🔬';
+      
+      const cardStatusClass = p.status === 'HIGH' ? 'param-status-high' : p.status === 'LOW' ? 'param-status-low' : 'param-status-normal';
+
+      return `
+        <div class="dash-param-item ${cardStatusClass}" onclick="window.location.href='/results/${DATA.id}'">
+          <div class="param-item-left">
+            <div class="param-icon">${icon}</div>
+            <div>
+              <div class="param-name">${p.test}</div>
+              <span class="badge-mini">${p.cat || 'Other'}</span>
+            </div>
+          </div>
+          <div class="param-item-right">
+            <div class="param-value" style="color: ${vc};">
+              ${p.value} <span class="param-unit">${p.unit}</span>
+            </div>
+            <div class="param-meta">
+              <span style="font-size: 10px; color: var(--text-dim);">Normal: ${range}</span>
+              <div style="margin-top: 3px;">${statusBadge(p.status)}</div>
+            </div>
+          </div>
+        </div>
+      `;
     }).join('');
     
-    const badgesContainer = document.querySelector('.dash-table-header div');
+    const badgesContainer = document.getElementById('dash-header-badges');
     if(badgesContainer) {
         badgesContainer.innerHTML = `
             <span class="badge ${abnormalCount > 0 ? 'badge-high' : 'badge-normal'}">${abnormalCount} Abnormal</span>

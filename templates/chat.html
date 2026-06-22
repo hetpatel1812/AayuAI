@@ -14,10 +14,17 @@
 </div>
 
 <!-- Context Banner -->
+{% if report %}
 <div class="alert alert-info chat-context">
   <span class="alert-icon">📋</span>
-  <span><strong>Context loaded:</strong> Self (Het) · Jul 2024 · 20 parameters · 9 abnormal · Groq (Llama 3.3 70B) + ChromaDB RAG</span>
+  <span><strong>Context loaded:</strong> Self ({{ user.name }}) · {{ report.test_date }} · {{ param_count }} parameters · {{ abnormal_count }} abnormal · AI Engine</span>
 </div>
+{% else %}
+<div class="alert alert-warning chat-context">
+  <span class="alert-icon">⚠️</span>
+  <span>No report context loaded. Go to <a href="{{ url_for('upload') }}" style="color: inherit; text-decoration: underline; font-weight: 700;">Upload</a> to analyze a report.</span>
+</div>
+{% endif %}
 
 <!-- Chat Window -->
 <div class="glass-card--solid glass-card--no-hover" style="padding: 0; overflow: hidden;">
@@ -35,6 +42,11 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/demo-data.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chat.js', v=15) }}"></script>
+<script>
+  window.USER_NAME = "{{ user.name }}";
+  window.REPORT_DATE = "{{ report.test_date if report else '' }}";
+  window.PARAM_COUNT = {{ param_count }};
+  window.ABNORMAL_COUNT = {{ abnormal_count }};
+</script>
+<script src="{{ url_for('static', filename='js/chat.js', v=16) }}"></script>
 {% endblock %}

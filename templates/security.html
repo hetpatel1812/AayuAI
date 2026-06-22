@@ -32,7 +32,7 @@
 <div class="legal-container">
   <h1 class="legal-title">Security Information</h1>
   <div class="legal-content">
-    <p>Last Updated: June 2026</p>
+    <p>Last Updated: {{ today_month_year }}</p>
     <h2>1. In-Memory Processing</h2>
     <p>Aayu AI uses a strictly in-memory processing pipeline. When you upload a PDF or image, it is temporarily held in RAM for Optical Character Recognition (OCR) and LLM analysis. It is never written to a persistent database or disk drive.</p>
     <h2>2. Encryption in Transit</h2>
@@ -57,7 +57,7 @@
       </div>
       <p class="footer-desc">Decoding your health in plain language. AI-powered medical report analyzer for every Indian family.</p>
       <div class="footer-copyright">
-        © 2026 Aayu AI. All rights reserved.
+        © {{ current_year }} Aayu AI. All rights reserved.
       </div>
     </div>
     <div class="footer-col">

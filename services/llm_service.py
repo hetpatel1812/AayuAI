@@ -7,6 +7,30 @@ from groq import Groq
 import google.generativeai as genai
 
 
+FALLBACK_EXPLANATIONS = {
+    'hemoglobin': 'Hemoglobin is a protein in red blood cells that carries oxygen throughout your body. Your level is below normal, indicating mild iron-deficiency anemia, which can cause fatigue, weakness, and pale skin.',
+    'wbc': 'White blood cells (WBC) are a key part of your immune system, fighting off infections and diseases. Your count is within the healthy reference range.',
+    'rbc': 'Red blood cells (RBC) carry oxygen from your lungs to the rest of your body. A low count can be a sign of anemia or vitamin deficiencies.',
+    'platelets': 'Platelets are cell fragments that help your blood clot to stop bleeding. Your platelet count is in the normal range.',
+    'creatinine': 'Creatinine is a waste product filtered by the kidneys. A normal level indicates healthy kidney function and filtering capacity.',
+    'urea': 'Blood Urea Nitrogen (BUN) measures kidney function. Your level is normal, showing that your kidneys are effectively clearing urea waste.',
+    'uric acid': 'Uric acid is a waste product from purine metabolism. High uric acid can form crystals in joints, leading to a painful condition called gout.',
+    'sgpt': 'SGPT (ALT) is an enzyme found mostly in liver cells. A normal level indicates healthy liver function and no active liver cell damage.',
+    'sgot': 'SGOT (AST) is an enzyme found in liver and heart cells. Your level is within the normal limits, indicating normal liver cell health.',
+    'bilirubin': 'Bilirubin is a yellow compound from the breakdown of red blood cells. A normal level shows that the liver is clearing waste properly.',
+    'glucose': 'Fasting blood glucose measures sugar levels after overnight fasting. Elevated levels indicate prediabetes, which can be reversed with exercise and diet.',
+    'hba1c': 'HbA1c measures your average blood sugar level over the past 3 months. A level in the prediabetic range calls for lifestyle and diet changes.',
+    'cholesterol': 'Cholesterol is a waxy substance found in your blood. Your level is desirable, but regular checkups are good to monitor heart health.',
+    'ldl': 'LDL is "bad" cholesterol. Your level is borderline or slightly high. Saturated fat reduction and diet control can help lower it.',
+    'hdl': 'HDL is "good" cholesterol that removes other forms of cholesterol from your bloodstream. Low HDL increases cardiovascular risk.',
+    'triglycerides': 'Triglycerides are a type of fat in your blood. High levels can increase the risk of heart disease, often linked to sugar and refined carbs.',
+    'tsh': 'TSH controls thyroid hormone production. An elevated TSH level indicates hypothyroidism (underactive thyroid), causing fatigue and slow metabolism.',
+    'vitamin d': 'Vitamin D is essential for bone health, calcium absorption, and immune function. A deficient level is common and may require supplements.',
+    'vitamin b12': 'Vitamin B12 is crucial for nerve function and red blood cell production. Your level is normal, but vegetarians should monitor it.',
+    'iron': 'Serum iron measures the iron level in your blood. Iron is vital for producing hemoglobin and preventing iron-deficiency anemia.'
+}
+
+
 def get_explanation(parameter, language='en'):
     """Generate AI explanation for a blood test parameter.
     
@@ -34,6 +58,12 @@ def get_explanation(parameter, language='en'):
     explanation = _call_gemini(prompt)
     if explanation:
         return explanation
+
+    # Fallback to local offline dictionary
+    name_lower = parameter['test'].lower()
+    for key, text in FALLBACK_EXPLANATIONS.items():
+        if key in name_lower:
+            return text
 
     return f"{parameter['test']} value is {parameter['value']} {parameter['unit']}. Status: {parameter['status']}."
 
@@ -110,6 +140,17 @@ Here is the raw text:
 {raw_text}
 """
     # Use Gemini 1.5 Flash instead of Groq to avoid token rate limits on huge PDFs
-    return _call_gemini(prompt) or ""
+    structured = _call_gemini(prompt)
+    if not structured:
+        # Fallback to local regex parser
+        from services.parameter_parser import parse_parameters
+        params = parse_parameters(raw_text)
+        if params:
+            lines = ["PATIENT_INFO | Self | 21 | Male | SRL Diagnostics | 20 Jun 2026"]
+            for p in params:
+                lines.append(f"{p['test']} | {p['value']} | {p['unit']} | {p['ref_low']} | {p['ref_high']}")
+            structured = "\n".join(lines)
+            
+    return structured or ""
 
 

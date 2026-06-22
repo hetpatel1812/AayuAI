@@ -13,13 +13,21 @@
   </div>
 </div>
 
+{% if current_user.reports|length < 2 %}
+<div class="glass-card--solid glass-card--no-hover" style="text-align: center; padding: 60px 40px; max-width: 600px; margin: 40px auto;">
+  <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+  <h3 style="font-family: 'Outfit'; margin-bottom: 10px; color: var(--text-primary); font-size: 20px; font-weight: 700;">Not Enough Data</h3>
+  <p style="color: var(--text-dim); margin-bottom: 24px;">You need to upload at least 2 blood test reports to compare them side-by-side.</p>
+  <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload Another Report →</a>
+</div>
+{% else %}
 <!-- Report Cards -->
 <div class="compare-cards">
   <div class="glass-card--solid glass-card--no-hover cmp-card">
     <svg id="cmp-ring-1" width="70" height="70"></svg>
     <div>
       <div class="cmp-label">Report A</div>
-      <div class="cmp-date">January 2024</div>
+      <div class="cmp-date" id="cmp-date-a">Report A Date</div>
       <div class="cmp-meta">Self (Het) · SRL Diagnostics</div>
     </div>
   </div>
@@ -27,7 +35,7 @@
     <svg id="cmp-ring-2" width="70" height="70"></svg>
     <div>
       <div class="cmp-label">Report B</div>
-      <div class="cmp-date">July 2024</div>
+      <div class="cmp-date" id="cmp-date-b">Report B Date</div>
       <div class="cmp-meta">Self (Het) · SRL Diagnostics</div>
     </div>
   </div>
@@ -43,11 +51,12 @@
 <div class="glass-card--solid glass-card--no-hover table-wrap" style="padding: 0;">
   <table class="data-table">
     <thead>
-      <tr><th>Parameter</th><th>Jan 2024</th><th>Jul 2024</th><th>Change</th><th>Trend</th></tr>
+      <tr><th>Parameter</th><th id="cmp-th-a">Report A</th><th id="cmp-th-b">Report B</th><th>Change</th><th>Trend</th></tr>
     </thead>
     <tbody id="cmp-tbody"></tbody>
   </table>
 </div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
@@ -55,4 +64,21 @@
   window.LIVE_HISTORY = {{ history_json | safe }};
 </script>
 <script src="{{ url_for('static', filename='js/compare.js', v=15) }}"></script>
+<script>
+  // Set compare dates dynamically
+  (function() {
+    var elA = document.getElementById('cmp-date-a');
+    if (!elA) return;
+    var now = new Date();
+    var sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+    var fmtA = sixMonthsAgo.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var fmtB = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var shortA = sixMonthsAgo.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    var shortB = now.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    elA.textContent = fmtA;
+    document.getElementById('cmp-date-b').textContent = fmtB;
+    document.getElementById('cmp-th-a').textContent = shortA;
+    document.getElementById('cmp-th-b').textContent = shortB;
+  })();
+</script>
 {% endblock %}

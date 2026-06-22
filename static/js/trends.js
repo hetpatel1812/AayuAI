@@ -7,15 +7,16 @@
 
   // Check if enough data
   if (HISTORY.reports.length < 2) {
-      document.querySelector('.dash-body').innerHTML = `
-        <div style="grid-column: 1 / -1; padding: 60px 40px; text-align: center; color: var(--text-dim); background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;">
-          <h3 style="margin-bottom:10px; font-family: 'Outfit'; color: var(--text-primary);">Not enough data for trends</h3>
-          <p>You need to upload at least 2 blood test reports to unlock longitudinal trend charts.</p>
-          <a href="/upload" class="btn btn-primary" style="margin-top:20px; display:inline-block;">Upload Another Report</a>
-        </div>
-      `;
-      const sidebar = document.querySelector('.dash-sidebar');
-      if (sidebar) sidebar.style.display = 'none';
+      const container = document.querySelector('.trends-layout') || document.querySelector('.app-main');
+      if (container) {
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; padding: 60px 40px; text-align: center; color: var(--text-dim); background: var(--bg-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;">
+              <h3 style="margin-bottom:10px; font-family: 'Outfit'; color: var(--text-primary);">Not enough data for trends</h3>
+              <p>You need to upload at least 2 blood test reports to unlock longitudinal trend charts.</p>
+              <a href="/upload" class="btn btn-primary" style="margin-top:20px; display:inline-block;">Upload Another Report</a>
+            </div>
+          `;
+      }
       return;
   }
 

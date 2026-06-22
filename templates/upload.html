@@ -26,7 +26,7 @@
       </div>
       <div class="config-item">
         <div class="config-label">Test Date</div>
-        <div style="font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-secondary);">July 15, 2024</div>
+        <div style="font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-secondary);">{{ today_full }}</div>
       </div>
       <div class="config-item">
         <div class="config-label">Language</div>
@@ -44,24 +44,16 @@
     <div class="upload-mode" data-mode="pdf">
       <div class="mode-emoji">📄</div>
       <div class="mode-title">Digital PDF</div>
-      <span class="mode-tech" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">pdfplumber</span>
+      <span class="mode-tech" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">Digital Text</span>
       <p class="mode-desc">Lab PDF from SRL, Thyrocare, Dr. Lal, Metropolis. Text extracted directly.</p>
       <div class="mode-acc" style="color: var(--accent-blue);">✓ 99% accuracy</div>
     </div>
     <div class="upload-mode" data-mode="scan">
       <div class="mode-emoji">🖨️</div>
       <div class="mode-title">Scanned Image</div>
-      <span class="mode-tech" style="background: rgba(245,158,11,0.15); color: var(--status-warning);">EasyOCR</span>
+      <span class="mode-tech" style="background: rgba(245,158,11,0.15); color: var(--status-warning);">Optical Scan</span>
       <p class="mode-desc">Clear flat scan or printed photo. OpenCV preprocessing applied.</p>
       <div class="mode-acc" style="color: var(--status-warning);">✓ 85% accuracy</div>
-    </div>
-    <div class="upload-mode" data-mode="phone">
-      <span class="recommend-tag">Recommended</span>
-      <div class="mode-emoji">📱</div>
-      <div class="mode-title">Phone Camera Photo</div>
-      <span class="mode-tech" style="background: var(--accent-teal-dim); color: var(--accent-teal);">Gemini Vision</span>
-      <p class="mode-desc">Tilted, shadowed, blurry — all OK. Gemini Vision understands images.</p>
-      <div class="mode-acc" style="color: var(--accent-teal);">✓ 90% accuracy</div>
     </div>
   </div>
 
@@ -79,7 +71,7 @@
     </div>
     
     <div style="text-align: center; margin-top: 20px;">
-      <button type="button" class="btn btn-secondary" id="btn-analyze" disabled style="opacity: 0.5;">Select a mode first</button>
+      <button type="button" class="btn btn-secondary" id="btn-analyze" disabled style="opacity: 0.5;">Analyse</button>
     </div>
   </form>
 </div>
@@ -104,9 +96,13 @@
     <div class="success-icon">✅</div>
     <div class="success-title">Report Analyzed Successfully!</div>
     <div class="success-sub">20 parameters extracted · 9 abnormal values · Health Score: 62/100</div>
-    <div class="success-btns">
-      <a href="{{ url_for('results') }}" class="btn btn-primary btn-lg">View Full Results →</a>
-      <button class="btn btn-secondary btn-lg" id="btn-upload-again">Upload Another</button>
+    <div class="success-btns" style="display: flex; flex-direction: column; gap: 12px; max-width: 320px; margin: 0 auto;">
+      <a href="" class="btn btn-primary btn-lg" id="btn-success-results" style="width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;">📋 View Detailed Results →</a>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="font-size: 13px; font-weight: 600; padding: 10px 14px; justify-content: center; display: inline-flex; align-items: center; gap: 6px;">⬡ Dashboard</a>
+        <a href="{{ url_for('trends') }}" class="btn btn-secondary" style="font-size: 13px; font-weight: 600; padding: 10px 14px; justify-content: center; display: inline-flex; align-items: center; gap: 6px;">⟋ Trends</a>
+      </div>
+      <button class="btn btn-ghost" id="btn-upload-again" style="margin-top: 8px; font-size: 13px; color: var(--text-dim); text-decoration: underline; background: transparent; border: none; cursor: pointer;">Upload Another Report</button>
     </div>
   </div>
 </div>

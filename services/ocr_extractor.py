@@ -52,14 +52,21 @@ def extract_text_from_image(image_path):
         str: Extracted text content.
     """
     try:
-        processed = preprocess_image(image_path)
-        if processed is None:
-            return None
-
         reader = _get_reader()
-        results = reader.readtext(processed, detail=0, paragraph=True)
-        text = '\n'.join(results)
-        return text.strip() if text.strip() else None
+        text = None
+        
+        # Try with preprocessed image first
+        processed = preprocess_image(image_path)
+        if processed is not None:
+            results = reader.readtext(processed, detail=0, paragraph=True)
+            text = '\n'.join(results).strip()
+            
+        # Fallback to raw image if preprocessed OCR failed or yielded very low text content
+        if not text or len(text) < 20:
+            results = reader.readtext(image_path, detail=0, paragraph=True)
+            text = '\n'.join(results).strip()
+            
+        return text if text else None
 
     except Exception as e:
         print(f"OCR extraction error: {e}")

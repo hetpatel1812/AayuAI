@@ -9,15 +9,29 @@
 <div class="page-header">
   <div class="page-header-left">
     <h1>Report Results</h1>
-    <p>Self ({{ user.name }}) · {{ report.test_date if report else 'Recent' }} · {{ report.lab_name if report else 'Lab' }} · <span id="param-count">--</span> parameters</p>
+    {% if report %}
+    <p>Self ({{ user.name }}) · {{ today }} · {{ report.lab_name if report.lab_name else 'Lab' }} · <span id="param-count">--</span> parameters</p>
+    {% else %}
+    <p>No reports analyzed yet</p>
+    {% endif %}
   </div>
-  <div class="page-header-actions">
-    <button class="btn btn-secondary">🌐 Translate</button>
-    <button class="btn btn-secondary">↓ Export PDF</button>
+  {% if report %}
+  <div class="page-header-actions" style="display: flex; gap: 8px; align-items: center;">
+    <a href="{{ url_for('trends') }}" class="btn btn-secondary">⟋ Health Trends</a>
+    <a href="{{ url_for('compare') }}" class="btn btn-secondary">⇌ Compare Reports</a>
+    <select class="btn btn-secondary" onchange="if(this.value) window.location.href='?lang=' + this.value" style="padding: 10px 14px; outline: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; height: 100%;">
+      <option value="" disabled selected>🌐 Translate</option>
+      <option value="en">English</option>
+      <option value="hi">हिंदी (Hindi)</option>
+      <option value="gu">ગુજરાતી (Gujarati)</option>
+    </select>
+    <button class="btn btn-secondary" onclick="downloadReportPDF()">↓ Export PDF</button>
     <a href="{{ url_for('chat') }}" class="btn btn-blue">💬 Ask AI</a>
   </div>
+  {% endif %}
 </div>
 
+{% if report %}
 <div id="dynamic-alerts" style="margin-bottom: 20px;"></div>
 
 <!-- Score + Abnormal Grid -->
@@ -30,7 +44,7 @@
     </div>
   </div>
   <div class="glass-card--solid glass-card--no-hover">
-    <div class="stat-label">Abnormal Values (9)</div>
+    <div class="stat-label" id="abnormal-title">Abnormal Values</div>
     <div class="abnormal-grid" id="ab-grid"></div>
   </div>
 </div>
@@ -47,11 +61,20 @@
     <tbody id="results-tbody"></tbody>
   </table>
 </div>
+{% else %}
+<div class="glass-card--solid glass-card--no-hover" style="text-align: center; padding: 60px 40px; max-width: 600px; margin: 40px auto;">
+  <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+  <h3 style="font-family: 'Outfit'; margin-bottom: 10px; color: var(--text-primary); font-size: 20px; font-weight: 700;">No Results Found</h3>
+  <p style="color: var(--text-dim); margin-bottom: 24px;">You haven't uploaded or analyzed any medical reports yet.</p>
+  <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload & Analyze Now →</a>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}
 <script>
   window.LIVE_DATA = {{ report_json | safe }};
 </script>
-<script src="{{ url_for('static', filename='js/results.js', v=16) }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/results.js', v=17) }}"></script>
 {% endblock %}

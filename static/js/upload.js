@@ -18,7 +18,7 @@
       const icons = {pdf: '📄', scan: '🖨️', phone: '📱'};
       const titles = {pdf: 'Ready for PDF upload', scan: 'Ready for scanned image', phone: 'Ready for phone camera photo'};
       const descs = {pdf: 'Drag and drop your PDF here or click to browse.', scan: 'Clear flat scan image required.', phone: 'Any photo — tilted, shadowed, blurry all OK.'};
-      const tools = {pdf: 'pdfplumber', scan: 'EasyOCR', phone: 'Gemini Vision'};
+      const tools = {pdf: 'Digital', scan: 'OCR', phone: 'Vision'};
       
       const dzIcon = document.getElementById('dz-icon');
       if(dzIcon) dzIcon.textContent = icons[selectedMode];
@@ -31,7 +31,7 @@
       
       const btn = document.getElementById('btn-analyze');
       if(btn) {
-        btn.textContent = '→ Analyze with ' + tools[selectedMode];
+        btn.textContent = 'Analyse';
         btn.disabled = false;
         btn.style.opacity = '1';
         btn.className = 'btn btn-primary';
@@ -83,6 +83,11 @@
     btnUploadAgain.addEventListener('click', () => {
       document.getElementById('upload-done').classList.add('hidden');
       document.getElementById('upload-main').classList.remove('hidden');
+      // Reset form and file input
+      const form = document.getElementById('upload-form');
+      if (form) form.reset();
+      const fileDisplay = document.getElementById('file-name-display');
+      if (fileDisplay) fileDisplay.textContent = '';
     });
   }
 
@@ -97,15 +102,15 @@
     document.getElementById('upload-main').classList.add('hidden');
     document.getElementById('upload-proc').classList.remove('hidden');
 
-    const subs = {pdf: 'Using pdfplumber to extract PDF text...', scan: 'Running OpenCV + EasyOCR...', phone: 'Sending to Gemini 1.5 Flash Vision API...'};
+    const subs = {pdf: 'Extracting digital PDF text...', scan: 'Running OCR scan...', phone: 'Analyzing image...'};
     document.getElementById('proc-sub').textContent = subs[selectedMode];
 
     const steps = [
       'Detecting file format...',
-      selectedMode === 'phone' ? 'Sending to Gemini Vision API...' : selectedMode === 'pdf' ? 'Extracting text via pdfplumber...' : 'Running OpenCV + EasyOCR...',
+      selectedMode === 'phone' ? 'Analyzing image...' : selectedMode === 'pdf' ? 'Extracting digital PDF text...' : 'Running OCR scan...',
       'Parsing 20 blood parameters...',
       'Classifying NORMAL / HIGH / LOW / CRITICAL...',
-      'Generating explanations via Groq (Llama 3.3 70B)...',
+      'Generating explanations via clinical AI model...',
       'Building health score and diet tips...',
       'Analysis complete!'
     ];
@@ -167,7 +172,7 @@
           if (lastDot) { lastDot.className = 'step-dot done'; lastDot.textContent = '✓'; }
           
           setTimeout(() => {
-            // Redirect to results with the real report ID
+            // Redirect immediately to the results page
             window.location.href = '/results/' + data.report_id;
           }, 800);
         }, 500);

@@ -1,7 +1,7 @@
 from services.llm_service import structure_raw_text
 from test_pdf import extract
 
-path = "d:\\Aayu AI\\uploads\\d1f48193-4db7-4d07-8bb4-c95c46acc752_sterling-accuris-pathology-sample-report-unlocked.pdf"
+path = "uploads/d1f48193-4db7-4d07-8bb4-c95c46acc752_sterling-accuris-pathology-sample-report-unlocked.pdf"
 raw_text = extract(path)
 print("Raw text length:", len(raw_text))
 

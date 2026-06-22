@@ -61,12 +61,17 @@
       <form class="auth-form" method="POST" action="{{ url_for('login') }}">
         <div class="form-group">
           <label class="input-label" for="email">Email Address</label>
-          <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required>
+          <input class="input" type="email" id="email" name="email" placeholder="Enter your email address" required>
         </div>
 
         <div class="form-group">
           <label class="input-label" for="password">Password</label>
           <input class="input" type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+
+        <div class="form-group" style="flex-direction: row; align-items: center; gap: 8px; margin-bottom: 20px;">
+          <input type="checkbox" id="remember" name="remember" style="width: 16px; height: 16px; accent-color: var(--accent-teal); cursor: pointer;">
+          <label for="remember" style="font-size: 13px; color: var(--text-secondary); cursor: pointer; user-select: none; font-weight: 500;">Remember Me</label>
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg w-full" style="margin-top: 8px;">

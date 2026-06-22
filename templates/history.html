@@ -3,33 +3,52 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css', v=15) }}">
+<style>
+  .history-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .history-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  .history-empty-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .history-empty-desc {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .score-color-high { color: var(--status-high); }
+  .score-color-warning { color: var(--status-warning); }
+  .score-color-normal { color: var(--status-normal); }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="history-header">
   <div class="page-header-left">
     <h1>Report History</h1>
-    <p>View all past medical reports for your family members</p>
+    <p>View all past medical reports · {{ reports|length }} report{{ 's' if reports|length != 1 else '' }} found</p>
   </div>
   <div class="page-header-actions">
     <a href="{{ url_for('upload') }}" class="btn btn-primary">+ Upload New Report</a>
   </div>
 </div>
 
-<div class="history-filters">
-  <button class="pill active">All Members</button>
-  <button class="pill">Self (Het)</button>
-  <button class="pill">Dad</button>
-  <button class="pill">Mom</button>
-</div>
-
+{% if reports|length > 0 %}
+<!-- Reports Table -->
 <div class="glass-card--solid history-card">
   <div class="history-table-header">
     <div class="history-table-title">
-      <div class="avatar avatar-sm avatar-teal">H</div>
-      Self (Het) — 21y Male
+      <div class="avatar avatar-sm avatar-teal">{{ user.name[0].upper() if user.name else 'U' }}</div>
+      {{ user.name }} — Reports
     </div>
-    <span class="text-sm text-muted">4 Reports Total</span>
+    <span class="text-sm text-muted">{{ reports|length }} Report{{ 's' if reports|length != 1 else '' }} Total</span>
   </div>
   <table class="data-table history-table">
     <thead>
@@ -42,110 +61,60 @@
       </tr>
     </thead>
     <tbody>
+      {% for report in reports %}
       <tr>
-        <td class="font-semibold">12 Jul 2024</td>
-        <td>SRL Diagnostics</td>
+        <td class="font-semibold">{{ report.test_date }}</td>
+        <td>{{ report.lab_name }}</td>
         <td>
-          <div class="history-score" style="color: var(--status-warning);">
-            62<span class="text-xs text-muted font-normal">/100</span>
+          <div class="history-score {% if report.health_score < 50 %}score-color-high{% elif report.health_score < 75 %}score-color-warning{% else %}score-color-normal{% endif %}">
+            {{ report.health_score }}<span class="text-xs text-muted font-normal">/100</span>
           </div>
         </td>
-        <td><span class="text-danger font-semibold">9 Abnormal</span> · TSH, Vit D, Glucose</td>
+        <td>
+          {% if report.abnormal_count > 0 %}
+            <span class="text-danger font-semibold">{{ report.abnormal_count }} Abnormal</span>
+            {% if report.abnormal_names %} · {{ report.abnormal_names }}{% endif %}
+          {% else %}
+            <span style="color: var(--status-normal); font-weight: 600;">All Normal ✓</span>
+          {% endif %}
+        </td>
         <td>
           <div class="history-actions">
-            <button class="btn btn-sm btn-secondary">View</button>
-            <button class="btn btn-sm btn-ghost">Export</button>
+            <a href="{{ url_for('results', report_id=report.id) }}" class="btn btn-sm btn-secondary">View</a>
+            <button class="btn btn-sm btn-ghost" onclick="exportReport({{ report.id }})">Export</button>
           </div>
         </td>
       </tr>
-      <tr>
-        <td class="font-semibold">05 May 2024</td>
-        <td>Dr Lal PathLabs</td>
-        <td>
-          <div class="history-score" style="color: var(--status-warning);">
-            58<span class="text-xs text-muted font-normal">/100</span>
-          </div>
-        </td>
-        <td><span class="text-danger font-semibold">11 Abnormal</span></td>
-        <td>
-          <div class="history-actions">
-            <button class="btn btn-sm btn-secondary">View</button>
-            <button class="btn btn-sm btn-ghost">Export</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="font-semibold">18 Mar 2024</td>
-        <td>SRL Diagnostics</td>
-        <td>
-          <div class="history-score" style="color: var(--status-warning);">
-            55<span class="text-xs text-muted font-normal">/100</span>
-          </div>
-        </td>
-        <td><span class="text-danger font-semibold">12 Abnormal</span></td>
-        <td>
-          <div class="history-actions">
-            <button class="btn btn-sm btn-secondary">View</button>
-            <button class="btn btn-sm btn-ghost">Export</button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td class="font-semibold">10 Jan 2024</td>
-        <td>Thyrocare</td>
-        <td>
-          <div class="history-score" style="color: var(--status-high);">
-            48<span class="text-xs text-muted font-normal">/100</span>
-          </div>
-        </td>
-        <td><span class="text-danger font-semibold">15 Abnormal</span></td>
-        <td>
-          <div class="history-actions">
-            <button class="btn btn-sm btn-secondary">View</button>
-            <button class="btn btn-sm btn-ghost">Export</button>
-          </div>
-        </td>
-      </tr>
+      {% endfor %}
     </tbody>
   </table>
 </div>
 
-<div class="glass-card--solid history-card">
-  <div class="history-table-header">
-    <div class="history-table-title">
-      <div class="avatar avatar-sm avatar-blue">D</div>
-      Dad — 55y Male
-    </div>
-    <span class="text-sm text-muted">3 Reports Total</span>
+{% else %}
+<!-- Empty State -->
+<div class="glass-card--solid glass-card--no-hover">
+  <div class="history-empty">
+    <div class="history-empty-icon">📋</div>
+    <div class="history-empty-title">No Reports Yet</div>
+    <div class="history-empty-desc">Upload your first blood test report to start tracking your health history.</div>
+    <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload Your First Report →</a>
   </div>
-  <table class="data-table history-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Lab Name</th>
-        <th>Health Score</th>
-        <th>Key Findings</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="font-semibold">20 Jun 2024</td>
-        <td>Thyrocare</td>
-        <td>
-          <div class="history-score" style="color: var(--status-high);">
-            48<span class="text-xs text-muted font-normal">/100</span>
-          </div>
-        </td>
-        <td><span class="text-danger font-semibold">HbA1c 7.2%</span></td>
-        <td>
-          <div class="history-actions">
-            <button class="btn btn-sm btn-secondary">View</button>
-            <button class="btn btn-sm btn-ghost">Export</button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Export report — opens a print-friendly version of the results page
+  function exportReport(reportId) {
+    // Open the results page for that report in a new tab for printing
+    var win = window.open('/results/' + reportId, '_blank');
+    // Give it a moment to load, then trigger print
+    if (win) {
+      win.addEventListener('load', function() {
+        setTimeout(function() { win.print(); }, 800);
+      });
+    }
+  }
+</script>
 {% endblock %}
