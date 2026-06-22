@@ -22,7 +22,7 @@ from database_models import db, User, Report, Parameter
 from services.vision_extractor import extract_text_from_photo
 from services.pdf_extractor import extract_text_from_pdf
 from services.ocr_extractor import extract_text_from_image
-from services.llm_service import get_explanation, structure_raw_text
+from services.llm_service import get_explanation, structure_raw_text, answer_chat_question
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'aayu-ai-dev-secret-key-2026')
@@ -508,6 +508,12 @@ def results(report_id=None):
     return render_template('results.html', user=current_user, report_json=json.dumps(report_data), report=report)
 
 
+def _safe_float(val):
+    try:
+        return float(str(val).replace('<', '').replace('>', '').strip())
+    except ValueError:
+        return 0.0
+
 def _get_history_json():
     reports = Report.query.filter_by(user_id=current_user.id).order_by(Report.created_at.asc()).all()
     history_data = {
@@ -533,7 +539,7 @@ def _get_history_json():
             'date': date_str,
             'score': r.health_score,
             'params': {p.test_name: {
-                'value': float(p.value.replace('<', '').replace('>', '')) if p.value.replace('.', '').replace('<', '').replace('>', '').replace('-', '').isdigit() else 0,
+                'value': _safe_float(p.value),
                 'unit': p.unit,
                 'status': p.status,
                 'refLow': p.ref_low,
@@ -625,39 +631,15 @@ def api_chat():
         for p in params:
             param_vals[p.test_name.lower()] = p
 
-    # Match queries to parameters
-    matched_param = None
-    test_keys = ['hemoglobin', 'glucose', 'tsh', 'vitamin d', 'vitamin b12', 'uric acid', 'cholesterol', 'platelets', 'wbc', 'rbc', 'creatinine', 'urea', 'sgpt', 'sgot', 'bilirubin', 'hba1c', 'ldl', 'hdl', 'triglycerides', 'iron']
-    
-    for key in test_keys:
-        if key in msg:
-            for name, p in param_vals.items():
-                if key in name:
-                    matched_param = p
-                    break
-            if matched_param:
-                break
-
-    if matched_param:
-        reply = f"Regarding your **{matched_param.test_name}**: your level is **{matched_param.value} {matched_param.unit}**, which is classified as **{matched_param.status}**."
-        if matched_param.ref_low or matched_param.ref_high:
-            range_str = f" ({matched_param.ref_low}–{matched_param.ref_high} {matched_param.unit})" if matched_param.ref_low and matched_param.ref_high else f" (< {matched_param.ref_high} {matched_param.unit})"
-            reply += f" The normal range is {range_str}."
-        if matched_param.explanation:
-            reply += f"\n\n🤖 **AI Explanation:** {matched_param.explanation}"
-        if matched_param.diet_tip:
-            reply += f"\n\n🍛 **Indian Diet Tip:** {matched_param.diet_tip}"
+    if report:
+        context_lines = []
+        for name, p in param_vals.items():
+            context_lines.append(f"{p.test_name}: {p.value} {p.unit} ({p.status})")
+        report_context = "\n".join(context_lines)
     else:
-        # Generic context-aware fallback
-        if report:
-            abnormal = [p for p in param_vals.values() if p.status != 'NORMAL']
-            if abnormal:
-                ab_list = ", ".join([f"**{p.test_name}** ({p.value} {p.unit})" for p in abnormal[:4]])
-                reply = f"Based on your report from **{report.test_date}**, I found abnormal levels for: {ab_list}. Which of these would you like me to explain?"
-            else:
-                reply = f"All parameters in your report from **{report.test_date}** are within the normal range! What would you like to discuss today?"
-        else:
-            reply = "I don't see any analyzed report context in your profile. Please upload a report in the **Upload Section** first, and I will be happy to explain your results and answer questions!"
+        report_context = "No report available. The user hasn't uploaded a report yet."
+        
+    reply = answer_chat_question(data.get('message', ''), report_context, current_user.lang)
 
     return jsonify({'reply': reply})
 

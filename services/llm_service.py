@@ -153,4 +153,24 @@ Here is the raw text:
             
     return structured or ""
 
+def answer_chat_question(question, report_context, language='en'):
+    """Use Groq to answer a general medical question based on the user's report."""
+    lang_instruction = {
+        'en': 'Reply in simple English.',
+        'hi': 'Reply in simple Hindi (Devanagari script).',
+        'gu': 'Reply in simple Gujarati (Gujarati script).'
+    }.get(language, 'Reply in simple English.')
 
+    prompt = f"""You are Aayu AI, a helpful medical assistant for an Indian family. {lang_instruction}
+    
+The patient's latest blood test report context:
+{report_context}
+
+The user asks: "{question}"
+
+Answer the user's question clearly and concisely (under 100 words). If their question is about their report, use the context. If it is a general health question, answer it helpfully. Always be polite and add an Indian dietary or lifestyle tip if applicable.
+"""
+    response = _call_groq(prompt)
+    if response:
+        return response
+    return "I'm currently unable to connect to the AI service. Please try again later."
