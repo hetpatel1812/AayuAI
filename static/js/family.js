@@ -16,7 +16,7 @@
           <div class="avatar avatar-xl" style="background:${m.color};">${m.initial}</div>
           <div>
             <div class="fam-name">${m.name}</div>
-            <div class="fam-meta">${m.age}y · ${m.gender === 'M' ? 'Male' : 'Female'}</div>
+            <div class="fam-meta">${m.age}y · ${m.gender}</div>
             ${m.conditions ? `<div class="fam-cond">⚠ ${m.conditions}</div>` : ''}
           </div>
         </div>

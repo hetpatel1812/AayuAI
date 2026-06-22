@@ -169,7 +169,7 @@
         <div class="avatar avatar-lg" style="background:${m.color};">${m.initial}</div>
         <div class="family-info">
           <div class="family-name">${m.name}</div>
-          <div class="family-meta">${m.age}y · ${m.gender === 'M' ? 'Male' : 'Female'}</div>
+          <div class="family-meta">${m.age}y · ${m.gender}</div>
           ${m.conditions ? `<div class="family-cond">⚠ ${m.conditions}</div>` : ''}
           <div class="family-score" style="color:${m.color};">${m.score}/100 · ${m.reports} reports</div>
         </div>
