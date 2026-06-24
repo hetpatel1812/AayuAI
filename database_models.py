@@ -12,6 +12,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     city = db.Column(db.String(100), nullable=True)
     lang = db.Column(db.String(10), default='en')
+    sms_notifications = db.Column(db.Boolean, default=True)
+    email_notifications = db.Column(db.Boolean, default=True)
     
     reports = db.relationship('Report', backref='user', lazy=True)
 

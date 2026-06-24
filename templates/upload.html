@@ -2,7 +2,7 @@
 {% block title %}Upload Report — Aayu AI{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css', v=15) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css', v=16) }}">
 {% endblock %}
 
 {% block content %}
@@ -20,8 +20,11 @@
     <div class="upload-config">
       <div class="config-item">
         <div class="config-label">Patient</div>
-        <div class="member-pills">
-          <div class="member-pill active" style="background: #00D4AA;" data-member="{{ user.name[0].upper() if user.name else 'U' }}" title="{{ user.name }}">{{ user.name[0].upper() if user.name else 'U' }}</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="member-pills" style="gap: 0;">
+            <div class="member-pill active" style="background: #00D4AA; width: 36px; height: 36px; font-size: 14px;" data-member="{{ user.name[0].upper() if user.name else 'U' }}" title="{{ user.name }}">{{ user.name[0].upper() if user.name else 'U' }}</div>
+          </div>
+          <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">{{ user.name if user.name else 'User' }}</span>
         </div>
       </div>
       <div class="config-item">
@@ -29,12 +32,8 @@
         <div style="font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-secondary);">{{ today_full }}</div>
       </div>
       <div class="config-item">
-        <div class="config-label">Language</div>
-        <div class="lang-pills">
-          <button class="lang-pill active">English</button>
-          <button class="lang-pill">हिंदी</button>
-          <button class="lang-pill">ગુજ</button>
-        </div>
+        <div class="config-label">Tags / Notes</div>
+        <input type="text" name="tags" id="tags-input" form="upload-form" placeholder="e.g. Fasting, Post-meal" style="width: 100%; font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-primary); outline: none; transition: border-color var(--transition-fast);">
       </div>
     </div>
   </div>
@@ -71,7 +70,7 @@
     </div>
     
     <div style="text-align: center; margin-top: 20px;">
-      <button type="button" class="btn btn-secondary" id="btn-analyze" disabled style="opacity: 0.5;">Analyse</button>
+      <button type="button" class="btn btn-secondary" id="btn-analyze" disabled style="opacity: 0.5;">Analyze</button>
     </div>
   </form>
 </div>
@@ -109,5 +108,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/upload.js', v=15) }}"></script>
+<script src="{{ url_for('static', filename='js/upload.js', v=16) }}"></script>
 {% endblock %}

@@ -1,0 +1,189 @@
+ {% extends "base.html" %}
+{% block title %}Diet Tips — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Diet Plan Specific Styles */
+  .diet-hero {
+    background: linear-gradient(135deg, var(--accent-teal) 0%, #065f46 100%);
+    color: #ffffff;
+    border-radius: var(--radius-xl);
+    padding: 40px 30px;
+    text-align: center;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-elevated);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .diet-hero::before {
+    content: "🥗";
+    position: absolute;
+    font-size: 140px;
+    opacity: 0.1;
+    right: -20px;
+    bottom: -40px;
+    transform: rotate(-15deg);
+  }
+  
+  .diet-hero h2 {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .diet-hero p {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 600px;
+    margin: 0 auto 24px auto;
+    line-height: 1.6;
+  }
+  
+  .diet-content-card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-card);
+    padding: 32px 40px;
+    line-height: 1.7;
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+  
+  /* Markdown Formatting Classes */
+  .diet-h3 {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    color: var(--accent-teal);
+    font-size: 20px;
+    font-weight: 800;
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .diet-h4 {
+    margin-top: 24px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Indian Diet Tips</h1>
+    <p>Customized meal plans and lifestyle suggestions powered by Groq AI</p>
+  </div>
+</div>
+
+{% if report %}
+<div style="max-width: 840px; margin: 0 auto;" class="animate-fade-in-up">
+  <div class="diet-hero">
+    <h2>Personalized Indian Diet Plan</h2>
+    <p>
+      Based on your latest report, we can generate a comprehensive diet plan tailored specifically to help normalize your out-of-range values and optimize your overall wellness.
+    </p>
+    
+    <button id="btn-generate-diet" class="btn btn-primary btn-lg" onclick="generateDietPlan({{ report.id }})" style="background: #ffffff; color: var(--accent-teal); font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+      Generate Diet Plan
+    </button>
+  </div>
+  
+  <div id="diet-plan-content" class="diet-content-card" style="display: none;">
+  </div>
+</div>
+{% else %}
+<div class="glass-card--solid glass-card--no-hover empty-state animate-fade-in-up" style="max-width: 600px; margin: 40px auto;">
+  <div class="empty-state-icon">📋</div>
+  <h3>No Report Found</h3>
+  <p>You need to upload and analyze a report before we can generate a diet plan.</p>
+  <a href="{{ url_for('upload') }}" class="btn btn-primary" style="margin-top: 16px;">Upload Report →</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    {% if report %}
+    const reportId = {{ report.id }};
+    const lang = '{{ user.lang if user else "en" }}';
+    const cacheKey = 'diet_plan_' + reportId + '_' + lang;
+    const cachedPlan = localStorage.getItem(cacheKey);
+    
+    if (cachedPlan) {
+      const btn = document.getElementById('btn-generate-diet');
+      const content = document.getElementById('diet-plan-content');
+      if (btn && content) {
+        btn.textContent = 'Regenerate Diet Plan';
+        btn.style.background = '#ffffff';
+        btn.style.color = 'var(--text-primary)';
+        
+        content.style.display = 'block';
+        content.innerHTML = cachedPlan;
+      }
+    }
+    {% endif %}
+  });
+
+  function generateDietPlan(reportId) {
+    const btn = document.getElementById('btn-generate-diet');
+    const content = document.getElementById('diet-plan-content');
+    
+    if (!btn || !content) return;
+    
+    btn.disabled = true;
+    btn.textContent = 'Generating... Please wait';
+    btn.style.opacity = '0.7';
+    
+    // Pass user's language setting
+    const lang = '{{ user.lang if user else "en" }}';
+
+    fetch(`/api/diet_plan/${reportId}?lang=${lang}`)
+      .then(res => res.json())
+      .then(data => {
+        btn.disabled = false;
+        btn.textContent = 'Diet Plan Generated ✅ (Regenerate)';
+        btn.style.opacity = '1';
+        
+        content.style.display = 'block';
+        
+        if (data.error) {
+          content.innerHTML = `<span style="color: var(--status-high-color);">Error: ${data.error}</span>`;
+          return;
+        }
+
+        // Apply new styling classes to markdown
+        let html = data.diet_plan
+          .replace(/### (.*)/g, '<h4 class="diet-h4">$1</h4>')
+          .replace(/## (.*)/g, '<h3 class="diet-h3">🥬 $1</h3>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/\n/g, '<br>');
+          
+        content.innerHTML = html;
+        
+        // Save to cache
+        const cacheKey = 'diet_plan_' + reportId + '_' + lang;
+        localStorage.setItem(cacheKey, html);
+      })
+      .catch(err => {
+        btn.disabled = false;
+        btn.textContent = 'Retry Generate';
+        btn.style.opacity = '1';
+        content.style.display = 'block';
+        content.innerHTML = `<span style="color: var(--status-high-color);">Error generating diet plan. Please try again.</span>`;
+        console.error(err);
+      });
+  }
+</script>
+{% endblock %}

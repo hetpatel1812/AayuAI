@@ -8,10 +8,13 @@
   // If no report uploaded yet, show empty state
   if (!DATA.id) {
     document.querySelector('.dash-body').innerHTML = `
-      <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-dim);">
-        <h3 style="margin-bottom:10px;">No reports found</h3>
-        <p>Upload your first blood test report to see your dashboard insights.</p>
-        <a href="/upload" class="btn btn-primary" style="margin-top:20px; display:inline-block;">Upload Report</a>
+      <div style="grid-column: 1 / -1;">
+        <div class="glass-card empty-state animate-fade-in-up">
+          <div class="empty-state-icon">📋</div>
+          <h3>No reports found</h3>
+          <p>Upload your first blood test report to see your dashboard insights.</p>
+          <a href="/upload" class="btn btn-primary" style="margin-top: 10px;">+ Upload Report</a>
+        </div>
       </div>
     `;
     const alertBanner = document.getElementById('dash-alert');
@@ -39,21 +42,20 @@
   const alertBanner = document.getElementById('dash-alert');
   if (alertBanner) {
     alertBanner.style.display = 'flex';
+    // Remove any previously set inline styles that were hardcoded
+    alertBanner.style.background = '';
+    alertBanner.style.border = '';
+    alertBanner.style.color = '';
+    
     if (abnormalCount > 0) {
-      alertBanner.className = 'alert alert-warning';
-      alertBanner.style.background = '';
-      alertBanner.style.border = '';
-      alertBanner.style.color = '';
+      alertBanner.className = 'alert alert-warning animate-fade-in-down';
       const topTests = abnormalParams.slice(0, 5).map(p => p.test).join(', ');
       alertBanner.innerHTML = `
         <span class="alert-icon">⚠️</span>
         <span><strong>Action needed:</strong> ${abnormalCount} abnormal values — ${topTests}${abnormalCount > 5 ? ' and more' : ''} require attention.</span>
       `;
     } else {
-      alertBanner.className = 'alert alert-success';
-      alertBanner.style.background = 'rgba(16, 185, 129, 0.1)';
-      alertBanner.style.border = '1px solid rgba(16, 185, 129, 0.2)';
-      alertBanner.style.color = '#047857';
+      alertBanner.className = 'alert alert-success animate-fade-in-down';
       alertBanner.innerHTML = `
         <span class="alert-icon">✅</span>
         <span><strong>All good!</strong> No abnormal values detected in your recent report.</span>

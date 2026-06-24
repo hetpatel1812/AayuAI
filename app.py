@@ -82,6 +82,10 @@ def index():
 def privacy():
     return render_template('privacy.html')
 
+@app.route('/help')
+def help_page():
+    return render_template('help.html')
+
 @app.route('/terms')
 def terms():
     return render_template('terms.html')
@@ -236,8 +240,8 @@ def upload():
         return jsonify({'error': 'No file part'}), 400
         
     file = request.files['file']
-    mode = request.form.get('mode', 'phone')
-    language = request.form.get('lang', 'en')
+    mode = request.form.get('mode', 'scan')
+    language = current_user.lang
     
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
@@ -561,6 +565,14 @@ def compare():
     return render_template('compare.html', user=current_user, history_json=_get_history_json())
 
 
+@app.route('/diet')
+@login_required
+def diet():
+    # Fetch user's latest report
+    report = Report.query.filter_by(user_id=current_user.id).order_by(Report.created_at.desc()).first()
+    return render_template('diet.html', user=current_user, report=report)
+
+
 @app.route('/family')
 @login_required
 def family():
@@ -643,6 +655,72 @@ def api_chat():
 
     return jsonify({'reply': reply})
 
+
+@app.route('/api/diet_plan/<int:report_id>', methods=['GET'])
+@login_required
+def api_diet_plan(report_id):
+    report = Report.query.get_or_404(report_id)
+    if report.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+
+    params = Parameter.query.filter_by(report_id=report.id).all()
+    if not params:
+        return jsonify({'diet_plan': 'No parameters found to generate a diet plan.'})
+
+    context_lines = []
+    for p in params:
+        context_lines.append(f"{p.test_name}: {p.value} {p.unit} ({p.status})")
+    report_context = "\n".join(context_lines)
+
+    from services.llm_service import generate_overall_diet_plan
+    lang = request.args.get('lang', current_user.lang)
+    diet_plan = generate_overall_diet_plan(report_context, lang)
+
+    return jsonify({'diet_plan': diet_plan})
+
+
+@app.route('/settings')
+@login_required
+def settings():
+    return render_template('settings.html', user=current_user)
+
+@app.route('/notifications', methods=['GET', 'POST'])
+@login_required
+def notifications():
+    success = None
+    if request.method == 'POST':
+        sms = request.form.get('sms_notifications') == 'on'
+        email = request.form.get('email_notifications') == 'on'
+        
+        current_user.sms_notifications = sms
+        current_user.email_notifications = email
+        db.session.commit()
+        success = "Notification preferences updated successfully!"
+        
+    return render_template('notifications.html', user=current_user, success=success)
+
+@app.route('/account_security', methods=['GET', 'POST'])
+@login_required
+def account_security():
+    error = None
+    success = None
+    if request.method == 'POST':
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        if not check_password_hash(current_user.password_hash, current_password):
+            error = "Incorrect current password."
+        elif new_password != confirm_password:
+            error = "New passwords do not match."
+        elif len(new_password) < 6:
+            error = "Password must be at least 6 characters."
+        else:
+            current_user.password_hash = generate_password_hash(new_password)
+            db.session.commit()
+            success = "Password updated successfully!"
+            
+    return render_template('account_security.html', user=current_user, error=error, success=success)
 
 if __name__ == '__main__':
     with app.app_context():

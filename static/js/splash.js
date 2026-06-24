@@ -84,7 +84,7 @@
     setTimeout(() => {
       splash.style.display = 'none';
       cancelAnimationFrame(animId);
-    }, 800);
+    }, 3000);
   }
 
   // Init
@@ -93,12 +93,7 @@
   drawParticles();
   window.addEventListener('resize', () => { resize(); createParticles(); });
 
-  // Auto-dismiss after 3.5 seconds
-  setTimeout(dismissSplash, 3500);
-
-  // Skip button
-  const skipBtn = document.getElementById('splash-skip');
-  if (skipBtn) {
-    skipBtn.addEventListener('click', dismissSplash);
-  }
+  // Make entire overlay clickable to dismiss
+  splash.style.cursor = 'pointer';
+  splash.addEventListener('click', dismissSplash);
 })();

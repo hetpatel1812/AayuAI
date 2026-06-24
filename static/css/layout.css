@@ -9,7 +9,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: #ffffff;
+  background: var(--bg-secondary);
   border-right: 1px solid var(--border-glass);
   display: flex;
   flex-direction: column;
@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #ffffff;
+  background: var(--bg-secondary);
 }
 
 .sidebar-user-info {
@@ -214,7 +214,7 @@
   top: 14px;
   left: 14px;
   z-index: 200;
-  background: #ffffff;
+  background: var(--bg-secondary);
   border: 1px solid var(--border-glass);
   color: var(--text-primary);
   width: 40px;

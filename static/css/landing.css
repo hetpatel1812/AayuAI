@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-subtle);
@@ -22,7 +22,7 @@
 
 .landing-nav.scrolled {
   padding: 12px 40px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--bg-glass-light);
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
 }
 
@@ -33,8 +33,8 @@
 }
 
 .landing-logo-img {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   object-fit: contain;
   border-radius: 6px;
 }
@@ -108,7 +108,7 @@
   align-items: center;
   gap: 8px;
   padding: 6px 16px;
-  background: #ffffff;
+  background: var(--bg-elevated);
   border: 1px solid rgba(13, 148, 136, 0.2);
   border-radius: var(--radius-full);
   font-size: 12px;
@@ -187,7 +187,7 @@
 }
 
 .phone-frame {
-  background: #ffffff;
+  background: var(--bg-primary);
   border: 12px solid #1e293b;
   border-radius: 40px;
   height: 580px;
@@ -219,7 +219,7 @@
   padding: 40px 16px 20px;
   height: 100%;
   overflow-y: auto;
-  background: #F8FAFC;
+  background: var(--bg-secondary);
 }
 
 .phone-screen::-webkit-scrollbar {
@@ -258,7 +258,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: #ffffff;
+  background: var(--bg-elevated);
   border-radius: var(--radius-md);
   font-size: 13px;
   border: 1px solid var(--border-subtle);
@@ -328,7 +328,7 @@
 }
 
 .step-card {
-  background: #ffffff;
+  background: var(--bg-elevated);
   border: none;
   border-radius: 24px;
   padding: 24px 20px;
@@ -382,12 +382,14 @@
 /* ── Input Modes ────────────────────────────────────── */
 .modes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .mode-card {
-  background: #ffffff;
+  background: var(--bg-elevated);
   border: none;
   border-radius: 24px;
   padding: 24px;
@@ -469,7 +471,7 @@
 }
 
 .feature-card {
-  background: #ffffff;
+  background: var(--bg-elevated);
   border: none;
   border-radius: 20px;
   padding: 24px 20px;
@@ -547,7 +549,7 @@
 }
 
 .faq-item {
-  background: #ffffff;
+  background: var(--bg-elevated);
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
   overflow: hidden;
@@ -596,7 +598,7 @@ details[open] .faq-question::after {
 
 /* ── Stats Bar ──────────────────────────────────────── */
 .stats-bar {
-  background: #ffffff;
+  background: var(--bg-primary);
   border-top: 1px solid var(--border-glass);
   border-bottom: 1px solid var(--border-glass);
   padding: 48px 40px;

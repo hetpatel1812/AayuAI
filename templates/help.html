@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Help & FAQs — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<style>
+  .help-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+  
+  .faq-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  
+  .faq-question {
+    padding: 20px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: background var(--transition-fast);
+  }
+  
+  .faq-question:hover {
+    background: var(--bg-tertiary);
+  }
+  
+  .faq-icon {
+    font-size: 12px;
+    color: var(--accent-teal);
+    transition: transform 0.3s ease;
+  }
+  
+  .faq-answer {
+    padding: 0 24px 20px 24px;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    display: none;
+    border-top: 1px solid var(--border-glass);
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+  
+  .faq-card.open .faq-answer {
+    display: block;
+  }
+  
+  .faq-card.open .faq-icon {
+    transform: rotate(180deg);
+  }
+  
+  .contact-support {
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(13, 148, 136, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border: 1px solid var(--accent-teal-dim);
+    border-radius: var(--radius-xl);
+    text-align: center;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Help & FAQs</h1>
+    <p>Everything you need to know about using Aayu AI</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="{{ url_for('settings') }}" class="btn btn-secondary">← Back to Settings</a>
+  </div>
+</div>
+
+<div class="help-container animate-fade-in-up">
+  
+  <div class="faq-card">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      How accurate is the AI Analysis?
+      <span class="faq-icon">▼</span>
+    </button>
+    <div class="faq-answer">
+      Our AI is built on state-of-the-art vision models that read lab reports with over 99% accuracy for digital PDFs and 85% for physical scans. However, Aayu AI is an educational tool and does not replace a doctor. Always consult a healthcare professional for a final medical diagnosis.
+    </div>
+  </div>
+
+  <div class="faq-card">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Is my medical data secure?
+      <span class="faq-icon">▼</span>
+    </button>
+    <div class="faq-answer">
+      Yes. Your medical data is securely stored and encrypted. We do not sell your personal health information to any third parties. You can delete your reports or your account at any time.
+    </div>
+  </div>
+
+  <div class="faq-card">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      How do I add a family member?
+      <span class="faq-icon">▼</span>
+    </button>
+    <div class="faq-answer">
+      Go to the "Family Vault" page using the sidebar navigation. Click the "+ Add Member" button, and enter their name and details. Once added, you can select them from the dropdown menu when uploading a new medical report.
+    </div>
+  </div>
+  
+  <div class="faq-card">
+    <button class="faq-question" onclick="toggleFaq(this)">
+      Can I change the app's language?
+      <span class="faq-icon">▼</span>
+    </button>
+    <div class="faq-answer">
+      Yes! Navigate to your Profile page, and select your preferred language (English, Hindi, or Gujarati) from the dropdown menu. Aayu AI will then generate diet plans and health advice in your chosen language.
+    </div>
+  </div>
+
+  <div class="contact-support">
+    <div style="font-size: 32px; margin-bottom: 12px;">📧</div>
+    <h3 style="margin-bottom: 8px; color: var(--text-primary);">Still need help?</h3>
+    <p style="color: var(--text-dim); margin-bottom: 16px;">Our support team is always here for you.</p>
+    <a href="mailto:support@aayu.ai" class="btn btn-primary" style="display: inline-block;">Email Support</a>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function toggleFaq(btn) {
+    const card = btn.parentElement;
+    card.classList.toggle('open');
+  }
+</script>
+{% endblock %}

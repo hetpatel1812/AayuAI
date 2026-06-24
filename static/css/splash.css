@@ -13,13 +13,17 @@
   justify-content: center;
   flex-direction: column;
   overflow: hidden;
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transition: opacity 2.5s ease;
 }
 
 .splash-overlay.fade-out {
   opacity: 0;
-  transform: scale(1.05);
   pointer-events: none;
+}
+
+/* When tapped, make logo zoom in slowly */
+.splash-overlay.fade-out .splash-logo {
+  animation: logoZoomIn 3.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Particle canvas behind text */
@@ -36,17 +40,37 @@
   text-align: center;
 }
 
-/* Sanskrit text */
-.splash-sanskrit {
-  font-family: 'Tiro Devanagari Hindi', serif;
-  font-size: clamp(80px, 15vw, 160px);
-  font-weight: 400;
-  color: #F1F5F9; /* Hardcoded white */
-  line-height: 1;
+/* Brand Row */
+.splash-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+/* Logo Image */
+.splash-logo {
+  width: clamp(70px, 14vw, 130px);
+  height: clamp(70px, 14vw, 130px);
+  object-fit: contain;
   opacity: 0;
   transform: scale(0.85);
   animation: splashReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-  text-shadow: 0 0 80px rgba(0, 212, 170, 0.15);
+  filter: drop-shadow(0 0 30px rgba(0, 212, 170, 0.3));
+}
+
+/* Sanskrit text */
+.splash-sanskrit {
+  font-family: 'Tiro Devanagari Hindi', serif;
+  font-size: clamp(50px, 10vw, 90px);
+  font-weight: 400;
+  color: #F1F5F9;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.85);
+  animation: splashReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  text-shadow: 0 0 40px rgba(0, 212, 170, 0.15);
 }
 
 /* "AI" text */
@@ -126,28 +150,18 @@
 .splash-dot:nth-child(2) { animation: dotPulse 1.4s ease-in-out 2.5s infinite; }
 .splash-dot:nth-child(3) { animation: dotPulse 1.4s ease-in-out 2.7s infinite; }
 
-/* Skip button */
-.splash-skip {
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  z-index: 2;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.1);
-  color: #94A3B8;
-  padding: 6px 16px;
-  border-radius: var(--radius-full);
-  font-size: 11px;
+/* Tap to begin prompt */
+.splash-tap {
+  margin-top: 50px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
   font-weight: 500;
-  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   opacity: 0;
-  animation: splashFadeUp 0.5s ease 2.5s forwards;
-  transition: all var(--transition-fast);
-}
-
-.splash-skip:hover {
-  border-color: #00D4AA;
-  color: #00D4AA;
+  animation: splashFadeUp 0.5s ease 2s forwards, tapPulse 2s ease-in-out 2.5s infinite;
+  pointer-events: none;
 }
 
 /* Gradient corner accents */
@@ -181,6 +195,17 @@
   }
 }
 
+@keyframes logoZoomIn {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(6); /* Cinematic fly-through scale up */
+    opacity: 0;
+  }
+}
+
 @keyframes splashFadeUp {
   to {
     opacity: 1;
@@ -197,4 +222,9 @@
 @keyframes dotPulse {
   0%, 100% { opacity: 0.2; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }

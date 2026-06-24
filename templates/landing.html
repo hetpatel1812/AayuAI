@@ -19,22 +19,25 @@
   <div class="splash-corner splash-corner--br"></div>
   <canvas id="splash-canvas" class="splash-canvas"></canvas>
   <div class="splash-content">
-    <div class="splash-sanskrit">आयु</div>
-    <div class="splash-ai">Aayu AI</div>
+    <div class="splash-brand-row">
+      <div class="splash-sanskrit">आयु</div>
+      <img src="{{ url_for('static', filename='img/logo.png', v=4) }}" class="splash-logo" alt="Aayu AI Logo">
+      <div class="splash-ai">AI</div>
+    </div>
     <div class="splash-tagline">Decoding your health in Your language</div>
     <div class="splash-dots">
       <div class="splash-dot"></div>
       <div class="splash-dot"></div>
       <div class="splash-dot"></div>
     </div>
+    <div class="splash-tap">Tap anywhere to begin</div>
   </div>
-  <button id="splash-skip" class="splash-skip">SKIP</button>
 </div>
 
 <!-- Navbar -->
 <nav class="landing-nav" id="landing-nav">
   <div class="landing-logo">
-    <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Aayu AI" class="landing-logo-img">
+    <img src="{{ url_for('static', filename='img/logo.png', v=4) }}" alt="Aayu AI" class="landing-logo-img">
     <div class="landing-logo-text">Aayu<span>AI</span></div>
   </div>
   <div class="landing-nav-links">
@@ -45,6 +48,7 @@
     <a href="#faq" class="nav-link">FAQ</a>
   </div>
   <div class="nav-actions">
+    <button id="theme-toggle" class="btn btn-secondary btn-sm" style="margin-right: 12px; padding: 0 10px; font-size: 16px; border: none; background: transparent; box-shadow: none;" aria-label="Toggle Dark Mode">🌙</button>
     <a href="{{ url_for('login') }}" class="btn btn-secondary btn-sm" style="margin-right: 12px;">Log In</a>
     <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm">Get Started →</a>
   </div>
@@ -63,7 +67,7 @@
         <span class="highlight">Your Language</span>
       </h1>
       <p class="hero-desc">
-        Upload a PDF, scanned image, or phone camera photo of your blood test report — 
+        Upload a digital PDF or scanned image of your blood test report — 
         get instant AI-powered analysis with explanations in English, Hindi, or Gujarati. 
         Free forever.
       </p>
@@ -156,7 +160,7 @@
       <div class="step-num">1</div>
       <div class="step-icon">📤</div>
       <h3>Upload Report</h3>
-      <p>Upload your PDF, take a photo with your phone, or scan your printed report. Any lab format works.</p>
+      <p>Upload your digital PDF or scan your printed report. Any lab format works.</p>
     </div>
     <div class="step-card reveal reveal-delay-2">
       <div class="step-num">2</div>
@@ -177,7 +181,7 @@
 <section class="section" id="input-modes" style="padding-top: 60px;">
   <div class="section-eyebrow">Input Methods</div>
   <h2 class="section-heading reveal">Upload Any Way You Want</h2>
-  <p class="section-desc">Three intelligent pipelines handle any type of blood test report from any Indian lab.</p>
+  <p class="section-desc">Two intelligent pipelines handle any type of blood test report from any Indian lab.</p>
 
   <div class="modes-grid">
     <div class="mode-card mode-card--pdf reveal reveal-delay-1">
@@ -185,13 +189,7 @@
       <h3>Digital PDF</h3>
       <p>Lab-generated PDFs from Apollo, Lal PathLabs, Metropolis, etc. Highest accuracy, instant parsing.</p>
     </div>
-    <div class="mode-card mode-card--phone recommended reveal reveal-delay-2">
-      <div class="mode-recommend-badge">RECOMMENDED</div>
-      <div class="mode-icon">📱</div>
-      <h3>Phone Camera</h3>
-      <p>Just snap a photo of your printed report. Our vision models enhance the image and extract the data.</p>
-    </div>
-    <div class="mode-card mode-card--scan reveal reveal-delay-3">
+    <div class="mode-card mode-card--scan reveal reveal-delay-2">
       <div class="mode-icon">🖨️</div>
       <h3>Scanned Image</h3>
       <p>Upload flatbed scans (JPG/PNG). Advanced OCR handles tables, columns, and variable layouts perfectly.</p>
@@ -219,34 +217,34 @@
     <div class="feature-card reveal reveal-delay-3">
       <div class="feature-icon">👨‍👩‍👧</div>
       <h3>Family Health Vault</h3>
-      <p>Manage Dad, Mom, Grandpa as separate profiles with independent health histories and age-adjusted ranges.</p>
+      <p>Manage reports for different family members under one account and track their independent health histories.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-4">
+    <div class="feature-card reveal reveal-delay-1">
       <div class="feature-icon">💬</div>
       <h3>AI Chatbot</h3>
       <p>"Why is my TSH high?" — ask anything and get context-aware answers about your specific report values.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-5">
+    <div class="feature-card reveal reveal-delay-2">
       <div class="feature-icon">🍛</div>
       <h3>Indian Diet Tips</h3>
       <p>Low iron → "Eat palak, rajma, pomegranate." India-specific food recommendations for every abnormal value.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-6">
+    <div class="feature-card reveal reveal-delay-3">
       <div class="feature-icon">🌐</div>
       <h3>Multilingual</h3>
       <p>Get explanations in English, Hindi (हिंदी), or Gujarati (ગુજરાતી). Powered by IndicTrans2.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-7">
+    <div class="feature-card reveal reveal-delay-1">
       <div class="feature-icon">🔄</div>
       <h3>Report Comparison</h3>
       <p>Select any two reports — see side-by-side what improved, what worsened, with percentage changes.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-8">
+    <div class="feature-card reveal reveal-delay-2">
       <div class="feature-icon">🚨</div>
       <h3>Critical Alerts</h3>
       <p>Instantly flagged if any value is dangerously abnormal with "See doctor immediately" guidance.</p>
     </div>
-    <div class="feature-card reveal">
+    <div class="feature-card reveal reveal-delay-3">
       <div class="feature-icon">📄</div>
       <h3>PDF Export</h3>
       <p>Download a clean, simplified report — color-coded and explained — to share with your doctor or family.</p>
@@ -304,7 +302,7 @@
       <div class="stats-label">Indian Languages</div>
     </div>
     <div>
-      <div class="stats-value">&lt;10s</div>
+      <div class="stats-value">&lt;15s</div>
       <div class="stats-label">Analysis Time</div>
     </div>
     <div>
@@ -391,6 +389,33 @@
       observer.observe(el);
     });
   });
+
+  // Dark Mode Theme Management
+  function applyTheme() {
+    const isDark = localStorage.getItem('theme') === 'dark';
+    if (isDark) {
+      document.body.classList.add('dark-theme');
+      document.getElementById('theme-toggle').textContent = '☀️';
+    } else {
+      document.body.classList.remove('dark-theme');
+      document.getElementById('theme-toggle').textContent = '🌙';
+    }
+  }
+
+  function toggleTheme() {
+    const isDark = document.body.classList.contains('dark-theme');
+    if (isDark) {
+      localStorage.setItem('theme', 'light');
+    } else {
+      localStorage.setItem('theme', 'dark');
+    }
+    applyTheme();
+  }
+
+  document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+  
+  // Apply theme immediately on load
+  applyTheme();
 </script>
 </body>
 </html>

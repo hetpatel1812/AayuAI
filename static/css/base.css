@@ -84,6 +84,33 @@
   --topbar-height: 0px;
 }
 
+/* ── Dark Theme ─────────────────────────────────────── */
+body.dark-theme {
+  /* Background */
+  --bg-primary: #0f172a;       /* Darkest slate */
+  --bg-secondary: #1e293b;     /* Slightly lighter for cards */
+  --bg-tertiary: #334155;      
+  --bg-elevated: #1e293b;
+  --bg-glass: rgba(30, 41, 59, 0.85);
+  --bg-glass-light: rgba(30, 41, 59, 0.6);
+
+  /* Text */
+  --text-primary: #f8fafc;     
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-dark: #ffffff;
+
+  /* Borders */
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --border-active: rgba(13, 148, 136, 0.5);
+
+  /* Shadows */
+  --shadow-card: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-elevated: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
 /* ── Reset ──────────────────────────────────────────── */
 *,
 *::before,
@@ -101,10 +128,11 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #F1F5F9; /* Clean light gray iOS-style background */
+  background-color: var(--bg-primary); /* Uses theme variable */
   color: var(--text-primary);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -45,7 +45,12 @@ def get_explanation(parameter, language='en'):
     """
     # SKIP LLM FOR NORMAL PARAMETERS TO SAVE TIME & API LIMITS
     if parameter['status'] == 'NORMAL':
-        return f"Your {parameter['test']} is perfectly normal. Keep it up!"
+        if language == 'hi':
+            return f"आपका {parameter['test']} बिल्कुल सामान्य है। ऐसे ही स्वस्थ रहें!"
+        elif language == 'gu':
+            return f"તમારું {parameter['test']} એકદમ સામાન્ય છે. આ જ રીતે સ્વસ્થ રહો!"
+        else:
+            return f"Your {parameter['test']} is perfectly normal. Keep it up!"
 
     prompt = _build_prompt(parameter, language)
 
@@ -155,18 +160,15 @@ Here is the raw text:
 
 def answer_chat_question(question, report_context, language='en'):
     """Use Groq to answer a general medical question based on the user's report."""
-    lang_instruction = {
-        'en': 'Reply in simple English.',
-        'hi': 'Reply in simple Hindi (Devanagari script).',
-        'gu': 'Reply in simple Gujarati (Gujarati script).'
-    }.get(language, 'Reply in simple English.')
-
-    prompt = f"""You are Aayu AI, a helpful medical assistant for an Indian family. {lang_instruction}
+    # We pass the user's profile language as a hint, but primarily instruct the AI to match the question's language.
+    prompt = f"""You are Aayu AI, a helpful medical assistant for an Indian family.
     
 The patient's latest blood test report context:
 {report_context}
 
 The user asks: "{question}"
+
+IMPORTANT INSTRUCTION: Detect the language the user is using in their question (English, Hindi, or Gujarati) and reply in that EXACT SAME language. If they type in Hindi (even if using English alphabet/Hinglish), reply in proper Hindi (Devanagari script). If they type in Gujarati, reply in proper Gujarati script.
 
 Answer the user's question clearly and concisely (under 100 words). If their question is about their report, use the context. If it is a general health question, answer it helpfully. Always be polite and add an Indian dietary or lifestyle tip if applicable.
 """
@@ -174,3 +176,30 @@ Answer the user's question clearly and concisely (under 100 words). If their que
     if response:
         return response
     return "I'm currently unable to connect to the AI service. Please try again later."
+
+def generate_overall_diet_plan(report_context, language='en'):
+    """Use Groq to generate a comprehensive Indian diet plan based on the blood report."""
+    lang_instruction = {
+        'en': 'Reply in simple English.',
+        'hi': 'Reply in simple Hindi (Devanagari script).',
+        'gu': 'Reply in simple Gujarati (Gujarati script).'
+    }.get(language, 'Reply in simple English.')
+
+    prompt = f"""You are an expert Indian Clinical Dietitian. {lang_instruction}
+    
+The patient's latest blood test report reveals the following parameters:
+{report_context}
+
+Based on these specific values (pay special attention to abnormal ones), generate a practical, easy-to-follow daily Indian diet plan.
+Format your response nicely with clear headings, bullet points, and actionable tips. Include:
+1. Foods to Include
+2. Foods to Avoid
+3. A Sample Daily Meal Plan (Breakfast, Lunch, Dinner, Snacks)
+4. Key Lifestyle Advice
+
+Do NOT include any medical disclaimers at the start (just give the plan directly).
+"""
+    response = _call_groq(prompt)
+    if response:
+        return response
+    return "I'm currently unable to connect to the AI service to generate your diet plan. Please try again later."

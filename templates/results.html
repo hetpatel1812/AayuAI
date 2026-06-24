@@ -19,12 +19,6 @@
   <div class="page-header-actions" style="display: flex; gap: 8px; align-items: center;">
     <a href="{{ url_for('trends') }}" class="btn btn-secondary">⟋ Health Trends</a>
     <a href="{{ url_for('compare') }}" class="btn btn-secondary">⇌ Compare Reports</a>
-    <select class="btn btn-secondary" onchange="if(this.value) window.location.href='?lang=' + this.value" style="padding: 10px 14px; outline: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; height: 100%;">
-      <option value="" disabled selected>🌐 Translate</option>
-      <option value="en">English</option>
-      <option value="hi">हिंदी (Hindi)</option>
-      <option value="gu">ગુજરાતી (Gujarati)</option>
-    </select>
     <button class="btn btn-secondary" onclick="downloadReportPDF()">↓ Export PDF</button>
     <a href="{{ url_for('chat') }}" class="btn btn-blue">💬 Ask AI</a>
   </div>
@@ -62,11 +56,11 @@
   </table>
 </div>
 {% else %}
-<div class="glass-card--solid glass-card--no-hover" style="text-align: center; padding: 60px 40px; max-width: 600px; margin: 40px auto;">
-  <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
-  <h3 style="font-family: 'Outfit'; margin-bottom: 10px; color: var(--text-primary); font-size: 20px; font-weight: 700;">No Results Found</h3>
-  <p style="color: var(--text-dim); margin-bottom: 24px;">You haven't uploaded or analyzed any medical reports yet.</p>
-  <a href="{{ url_for('upload') }}" class="btn btn-primary">Upload & Analyze Now →</a>
+<div class="glass-card--solid glass-card--no-hover empty-state animate-fade-in-up" style="max-width: 600px; margin: 40px auto;">
+  <div class="empty-state-icon">📋</div>
+  <h3>No Results Found</h3>
+  <p>You haven't uploaded or analyzed any medical reports yet.</p>
+  <a href="{{ url_for('upload') }}" class="btn btn-primary" style="margin-top: 16px;">Upload & Analyze Now →</a>
 </div>
 {% endif %}
 {% endblock %}
@@ -76,5 +70,5 @@
   window.LIVE_DATA = {{ report_json | safe }};
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="{{ url_for('static', filename='js/results.js', v=17) }}"></script>
+<script src="{{ url_for('static', filename='js/results.js', v=19) }}"></script>
 {% endblock %}

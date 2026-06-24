@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Security Settings — Aayu AI{% endblock %}
+
+{% block extra_css %}
+<style>
+  .security-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding-top: 20px;
+  }
+  
+  .security-form {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-card);
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .security-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .security-header-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-header-left">
+    <h1>Security Settings</h1>
+    <p>Update your password and secure your account</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="{{ url_for('settings') }}" class="btn btn-secondary">← Back to Settings</a>
+  </div>
+</div>
+
+<div class="security-container animate-fade-in-up">
+  <div class="security-form">
+    <div class="security-header">
+      <div class="security-header-icon">🔒</div>
+      <h3 style="font-size: 20px; color: var(--text-primary);">Change Password</h3>
+    </div>
+    
+    {% if error %}
+      <div class="alert alert-danger" style="margin-bottom: 20px;">
+        <div class="alert-icon">⚠️</div>
+        <div>{{ error }}</div>
+      </div>
+    {% endif %}
+    {% if success %}
+      <div class="alert alert-success" style="margin-bottom: 20px;">
+        <div class="alert-icon">✅</div>
+        <div>{{ success }}</div>
+      </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('account_security') }}">
+      <div class="form-group">
+        <label class="input-label">Current Password</label>
+        <div style="position: relative;">
+          <input type="password" id="current_password" name="current_password" class="input" placeholder="Enter current password" required style="padding-right: 40px;">
+          <button type="button" onclick="togglePassword('current_password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0;">👁️</button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="input-label">New Password</label>
+        <div style="position: relative;">
+          <input type="password" id="new_password" name="new_password" class="input" placeholder="Enter new password" required minlength="6" style="padding-right: 40px;">
+          <button type="button" onclick="togglePassword('new_password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0;">👁️</button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="input-label">Confirm New Password</label>
+        <div style="position: relative;">
+          <input type="password" id="confirm_password" name="confirm_password" class="input" placeholder="Confirm new password" required minlength="6" style="padding-right: 40px;">
+          <button type="button" onclick="togglePassword('confirm_password', this)" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0;">👁️</button>
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary w-full" style="padding: 14px; font-size: 15px;">Update Password</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function togglePassword(inputId, btn) {
+  var input = document.getElementById(inputId);
+  if (input.type === "password") {
+    input.type = "text";
+    btn.style.opacity = "0.5";
+  } else {
+    input.type = "password";
+    btn.style.opacity = "1";
+  }
+}
+</script>
+{% endblock %}

@@ -2,7 +2,7 @@
 {% block title %}Dashboard — Aayu AI{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=15) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css', v=16) }}">
 {% endblock %}
 
 {% block content %}
@@ -84,5 +84,5 @@
   window.LIVE_DATA = {{ report_json | safe }};
   window.LIVE_FAMILY = {{ family_json | safe }};
 </script>
-<script src="{{ url_for('static', filename='js/dashboard.js', v=15) }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js', v=16) }}"></script>
 {% endblock %}

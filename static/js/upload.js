@@ -1,7 +1,7 @@
 /**
  * Aayu AI — Upload Page JavaScript
  */
-(function() {
+(function () {
   let selectedMode = null;
 
   // Mode selection
@@ -13,24 +13,24 @@
       document.getElementById('mode-input').value = selectedMode;
 
       const dz = document.getElementById('dropzone');
-      if(dz) dz.classList.add('ready');
-      
-      const icons = {pdf: '📄', scan: '🖨️', phone: '📱'};
-      const titles = {pdf: 'Ready for PDF upload', scan: 'Ready for scanned image', phone: 'Ready for phone camera photo'};
-      const descs = {pdf: 'Drag and drop your PDF here or click to browse.', scan: 'Clear flat scan image required.', phone: 'Any photo — tilted, shadowed, blurry all OK.'};
-      const tools = {pdf: 'Digital', scan: 'OCR', phone: 'Vision'};
-      
+      if (dz) dz.classList.add('ready');
+
+      const icons = { pdf: '📄', scan: '🖨️', phone: '📱' };
+      const titles = { pdf: 'Ready for PDF upload', scan: 'Ready for scanned image', phone: 'Ready for phone camera photo' };
+      const descs = { pdf: 'Drag and drop your PDF here or click to browse.', scan: 'Clear flat scan image required.', phone: 'Any photo — tilted, shadowed, blurry all OK.' };
+      const tools = { pdf: 'Digital', scan: 'OCR', phone: 'Vision' };
+
       const dzIcon = document.getElementById('dz-icon');
-      if(dzIcon) dzIcon.textContent = icons[selectedMode];
-      
+      if (dzIcon) dzIcon.textContent = icons[selectedMode];
+
       const dzTitle = document.getElementById('dz-title');
-      if(dzTitle) dzTitle.textContent = titles[selectedMode];
-      
+      if (dzTitle) dzTitle.textContent = titles[selectedMode];
+
       const dzDesc = document.getElementById('dz-desc');
-      if(dzDesc) dzDesc.textContent = descs[selectedMode];
-      
+      if (dzDesc) dzDesc.textContent = descs[selectedMode];
+
       const btn = document.getElementById('btn-analyze');
-      if(btn) {
+      if (btn) {
         btn.textContent = 'Analyse';
         btn.disabled = false;
         btn.style.opacity = '1';
@@ -42,9 +42,9 @@
   // Member pills
   document.querySelectorAll('.member-pill').forEach(pill => {
     pill.addEventListener('click', () => {
-      document.querySelectorAll('.member-pill').forEach(p => { 
-        p.classList.remove('active'); 
-        p.style.background = '#64748B'; 
+      document.querySelectorAll('.member-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = '#64748B';
       });
       pill.classList.add('active');
       pill.style.background = '#00D4AA';
@@ -56,7 +56,7 @@
     pill.addEventListener('click', () => {
       document.querySelectorAll('.lang-pill').forEach(p => p.classList.remove('active'));
       pill.classList.add('active');
-      const langMap = {'English': 'en', 'हिंदी': 'hi', 'ગુજ': 'gu'};
+      const langMap = { 'English': 'en', 'हिंदी': 'hi', 'ગુજ': 'gu' };
       document.getElementById('lang-input').value = langMap[pill.textContent] || 'en';
     });
   });
@@ -69,6 +69,49 @@
         document.getElementById('file-name-display').textContent = 'Selected: ' + e.target.files[0].name;
       }
     });
+  }
+
+  // Drag and Drop
+  const dropzone = document.getElementById('dropzone');
+  if (dropzone && fileInput) {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, preventDefaults, false);
+      document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, unhighlight, false);
+    });
+
+    dropzone.addEventListener('drop', handleDrop, false);
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function highlight(e) {
+      dropzone.classList.add('dragover');
+    }
+
+    function unhighlight(e) {
+      dropzone.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      let dt = e.dataTransfer;
+      let files = dt.files;
+
+      if (files.length > 0) {
+        fileInput.files = files;
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+      }
+    }
   }
 
   // Analyze button
@@ -102,7 +145,7 @@
     document.getElementById('upload-main').classList.add('hidden');
     document.getElementById('upload-proc').classList.remove('hidden');
 
-    const subs = {pdf: 'Extracting digital PDF text...', scan: 'Running OCR scan...', phone: 'Analyzing image...'};
+    const subs = { pdf: 'Extracting digital PDF text...', scan: 'Running OCR scan...', phone: 'Analyzing image...' };
     document.getElementById('proc-sub').textContent = subs[selectedMode];
 
     const steps = [
@@ -142,7 +185,7 @@
       const dot = document.getElementById('dot-' + c);
       if (step) step.classList.add('active');
       if (dot) { dot.className = 'step-dot running'; dot.textContent = '⟳'; }
-      
+
       const pct = Math.min(95, Math.round((c / total) * 100));
       document.getElementById('proc-pct').textContent = pct + '%';
       document.getElementById('proc-fill').style.width = pct + '%';
@@ -154,36 +197,36 @@
       method: 'POST',
       body: formData
     })
-    .then(res => res.json())
-    .then(data => {
-      clearInterval(timer);
-      if (data.error) {
-        alert("Error: " + data.error);
+      .then(res => res.json())
+      .then(data => {
+        clearInterval(timer);
+        if (data.error) {
+          alert("Error: " + data.error);
+          document.getElementById('upload-proc').classList.add('hidden');
+          document.getElementById('upload-main').classList.remove('hidden');
+        } else {
+          // Finish progress
+          updateStep(total - 1);
+          setTimeout(() => {
+            updateStep(total);
+            document.getElementById('proc-pct').textContent = '100%';
+            document.getElementById('proc-fill').style.width = '100%';
+            const lastDot = document.getElementById('dot-' + total);
+            if (lastDot) { lastDot.className = 'step-dot done'; lastDot.textContent = '✓'; }
+
+            setTimeout(() => {
+              // Redirect immediately to the results page
+              window.location.href = '/results/' + data.report_id;
+            }, 800);
+          }, 500);
+        }
+      })
+      .catch(err => {
+        clearInterval(timer);
+        alert("Upload failed. Check console.");
+        console.error(err);
         document.getElementById('upload-proc').classList.add('hidden');
         document.getElementById('upload-main').classList.remove('hidden');
-      } else {
-        // Finish progress
-        updateStep(total - 1);
-        setTimeout(() => {
-          updateStep(total);
-          document.getElementById('proc-pct').textContent = '100%';
-          document.getElementById('proc-fill').style.width = '100%';
-          const lastDot = document.getElementById('dot-' + total);
-          if (lastDot) { lastDot.className = 'step-dot done'; lastDot.textContent = '✓'; }
-          
-          setTimeout(() => {
-            // Redirect immediately to the results page
-            window.location.href = '/results/' + data.report_id;
-          }, 800);
-        }, 500);
-      }
-    })
-    .catch(err => {
-      clearInterval(timer);
-      alert("Upload failed. Check console.");
-      console.error(err);
-      document.getElementById('upload-proc').classList.add('hidden');
-      document.getElementById('upload-main').classList.remove('hidden');
-    });
+      });
   }
 })();
