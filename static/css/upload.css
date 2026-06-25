@@ -2,66 +2,29 @@
  * Aayu AI — Upload Page CSS
  */
 
-.upload-config { 
-  display: grid; 
-  grid-template-columns: 1fr 1fr 1fr; 
-  gap: 16px; 
-  margin-bottom: 20px; 
+.upload-trust-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+  background: var(--bg-secondary);
+  padding: 16px 24px;
+  border-radius: 100px;
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-sm);
 }
-.config-item { }
-.config-label { 
-  font-size: 10px; 
-  font-weight: 700; 
-  text-transform: uppercase; 
-  letter-spacing: 0.06em; 
-  color: var(--text-dim); 
-  margin-bottom: 8px; 
+.trust-item {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.member-pills { 
-  display: flex; 
-  gap: 8px; 
-}
-.member-pill { 
-  width: 40px; 
-  height: 40px; 
-  border-radius: 50%; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  font-weight: 700; 
-  color: #fff; 
-  cursor: pointer; 
-  border: 2px solid transparent; 
-  transition: all var(--transition-fast); 
-  font-size: 14px; 
-}
-.member-pill.active { 
-  border-color: #fff; 
-  box-shadow: 0 0 15px rgba(0,212,170,0.3); 
-}
-.lang-pills { 
-  display: flex; 
-  gap: 8px; 
-}
-.lang-pill { 
-  padding: 8px 14px; 
-  border-radius: var(--radius-md); 
-  border: 1px solid var(--border-glass); 
-  background: transparent; 
-  color: var(--text-muted); 
-  font-size: 12px; 
-  font-weight: 600; 
-  cursor: pointer; 
-  transition: all var(--transition-fast); 
-}
-.lang-pill.active { 
-  border-color: var(--accent-teal); 
-  background: var(--accent-teal-dim); 
-  color: var(--accent-teal); 
-}
-#tags-input:focus {
-  border-color: var(--accent-teal);
-  box-shadow: 0 0 0 2px rgba(0, 212, 170, 0.1);
+.trust-icon {
+  font-size: 16px;
 }
 .modes-row { 
   display: grid; 
@@ -248,5 +211,6 @@
 }
 
 @media (max-width: 768px) {
-  .upload-config, .modes-row { grid-template-columns: 1fr; }
+  .upload-trust-banner { border-radius: 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
+  .modes-row { grid-template-columns: 1fr; }
 }

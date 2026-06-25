@@ -3,7 +3,7 @@ Aayu AI — Flask Application
 AI-powered medical report analyzer for every Indian family.
 """
 
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
@@ -23,6 +23,9 @@ from services.vision_extractor import extract_text_from_photo
 from services.pdf_extractor import extract_text_from_pdf
 from services.ocr_extractor import extract_text_from_image
 from services.llm_service import get_explanation, structure_raw_text, answer_chat_question
+from services.rag_service import load_knowledge_base
+from services.ml_service import predict_health_risks
+from services.pdf_service import generate_report_pdf
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'aayu-ai-dev-secret-key-2026')
@@ -162,11 +165,16 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    report = Report.query.filter_by(user_id=current_user.id).order_by(Report.created_at.desc()).first()
+    patient_filter = request.args.get('patient')
+    
+    query = Report.query.filter_by(user_id=current_user.id)
+    if patient_filter:
+        query = query.filter_by(patient_name=patient_filter)
+        
+    report = query.order_by(Report.created_at.desc()).first()
     
     if not report:
-        # Pass empty data if no reports
-        report_data = {'id': None, 'patient_name': current_user.name, 'health_score': 100, 'params': []}
+        report_data = {'id': None, 'patient_name': patient_filter or current_user.name, 'health_score': 100, 'params': []}
     else:
         params = Parameter.query.filter_by(report_id=report.id).all()
         report_data = {
@@ -189,20 +197,89 @@ def dashboard():
             } for p in params]
         }
     
-    family_data = [{
-        'id': current_user.id,
-        'name': current_user.name,
-        'initial': current_user.name[0].upper() if current_user.name else 'U',
-        'age': report.patient_age if report and getattr(report, 'patient_age', None) else '--',
-        'gender': report.patient_gender if report and getattr(report, 'patient_gender', None) else 'Unknown',
-        'score': report.health_score if report else 100,
-        'reports': Report.query.filter_by(user_id=current_user.id).count(),
-        'lastReport': datetime.now().strftime('%d %b %Y') if report else 'No reports yet',
-        'concern': 'None' if not report else 'See Results',
-        'color': '#00D4AA'
-    }]
+    # Group family members
+    all_reports = Report.query.filter_by(user_id=current_user.id).all()
+    family_members = {}
+    colors = ['#00D4AA', '#3B6FE8', '#F59E0B', '#8B5CF6', '#EF4444']
     
-    return render_template('dashboard.html', user=current_user, report_json=json.dumps(report_data), family_json=json.dumps(family_data))
+    # Ensure current user is always in the list even without reports
+    if not all_reports:
+        family_members[current_user.name] = {
+            'id': current_user.name,
+            'name': current_user.name,
+            'initial': current_user.name[0].upper() if current_user.name else 'U',
+            'age': '--',
+            'gender': 'Unknown',
+            'score': 100,
+            'reports': 0,
+            'lastReport': 'No reports yet',
+            'concern': 'None',
+            'color': colors[0],
+            'selected': not patient_filter or patient_filter == current_user.name,
+            'is_primary': True
+        }
+    
+    for idx, r in enumerate(all_reports):
+        name = r.patient_name or current_user.name
+        if name not in family_members:
+            c = colors[len(family_members) % len(colors)]
+            family_members[name] = {
+                'id': name,
+                'name': name,
+                'initial': name[0].upper() if name else 'U',
+                'age': r.patient_age or '--',
+                'gender': r.patient_gender or 'Unknown',
+                'score': r.health_score or 100,
+                'reports': 1,
+                'latest_date': r.created_at,
+                'lastReport': r.test_date or (r.created_at.strftime('%d %b %Y') if r.created_at else 'Unknown'),
+                'concern': 'See Results',
+                'color': c,
+                'selected': patient_filter == name or (not patient_filter and len(family_members) == 0),
+                'is_primary': name == current_user.name
+            }
+        else:
+            family_members[name]['reports'] += 1
+            if r.created_at and family_members[name].get('latest_date') and r.created_at > family_members[name]['latest_date']:
+                family_members[name]['score'] = r.health_score or 100
+                family_members[name]['latest_date'] = r.created_at
+                family_members[name]['lastReport'] = r.test_date or r.created_at.strftime('%d %b %Y')
+                
+    for member in family_members.values():
+        if 'latest_date' in member:
+            del member['latest_date']
+            
+    family_data = list(family_members.values())
+    
+    risk_data = predict_health_risks(current_user.id, patient_filter)
+    
+    # 3. Checkup Reminder Logic
+    reminder = None
+    if report and report.created_at:
+        days_since = (datetime.now() - report.created_at).days
+        if days_since > 180 or request.args.get('simulate_reminder'):
+            reminder = {
+                'title': 'Routine Checkup Due',
+                'message': f"It has been over 6 months since {report.patient_name or 'your'} last blood test. Regular checkups are key to preventive health!"
+            }
+    
+    return render_template('dashboard.html', user=current_user, report_json=json.dumps(report_data), family_json=json.dumps(family_data), risk_json=json.dumps(risk_data), reminder=reminder)
+
+@app.route('/delete_patient', methods=['POST'])
+@login_required
+def delete_patient():
+    patient_name = request.form.get('patient_name')
+    if not patient_name:
+        return "Missing patient name", 400
+        
+    # Find all reports for this user and patient_name
+    reports = Report.query.filter_by(user_id=current_user.id, patient_name=patient_name).all()
+    for r in reports:
+        db.session.delete(r)
+    db.session.commit()
+    
+    flash(f"Deleted all records for {patient_name}.", "success")
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/history')
@@ -228,6 +305,28 @@ def history():
         })
     
     return render_template('history.html', user=current_user, reports=reports_data)
+
+
+@app.route('/export/pdf/<int:report_id>')
+@login_required
+def export_pdf(report_id):
+    report = Report.query.get_or_404(report_id)
+    if report.user_id != current_user.id:
+        return "Unauthorized", 403
+    
+    parameters = Parameter.query.filter_by(report_id=report.id).all()
+    pdf_buffer = generate_report_pdf(report, parameters)
+    
+    filename = f"Aayu_AI_Report_{report.patient_name or 'Unknown'}_{report.test_date or 'Unknown'}.pdf"
+    # Ensure safe filename
+    filename = "".join([c for c in filename if c.isalpha() or c.isdigit() or c in (' ', '.', '_')]).rstrip()
+    
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=filename,
+        mimetype='application/pdf'
+    )
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -576,21 +675,57 @@ def diet():
 @app.route('/family')
 @login_required
 def family():
-    # Fetch user's latest report to show stats
-    report = Report.query.filter_by(user_id=current_user.id).order_by(Report.created_at.desc()).first()
+    all_reports = Report.query.filter_by(user_id=current_user.id).all()
+    family_members = {}
+    colors = ['#00D4AA', '#3B6FE8', '#F59E0B', '#8B5CF6', '#EF4444']
     
-    family_data = [{
-        'id': current_user.id,
-        'name': current_user.name,
-        'initial': current_user.name[0].upper() if current_user.name else 'U',
-        'age': report.patient_age if report and report.patient_age else '--',
-        'gender': report.patient_gender if report and report.patient_gender else 'Unknown',
-        'score': report.health_score if report else 0,
-        'reports': Report.query.filter_by(user_id=current_user.id).count(),
-        'lastReport': datetime.now().strftime('%d %b %Y') if report else 'No reports yet',
-        'concern': 'None' if not report else 'See Results',
-        'color': '#00D4AA'
-    }]
+    if not all_reports:
+        family_members[current_user.name] = {
+            'id': current_user.name,
+            'name': current_user.name,
+            'initial': current_user.name[0].upper() if current_user.name else 'U',
+            'age': '--',
+            'gender': 'Unknown',
+            'score': 100,
+            'reports': 0,
+            'lastReport': 'No reports yet',
+            'concern': 'None',
+            'color': colors[0],
+            'selected': False,
+            'is_primary': True
+        }
+    
+    for idx, r in enumerate(all_reports):
+        name = r.patient_name or current_user.name
+        if name not in family_members:
+            c = colors[len(family_members) % len(colors)]
+            family_members[name] = {
+                'id': name,
+                'name': name,
+                'initial': name[0].upper() if name else 'U',
+                'age': r.patient_age or '--',
+                'gender': r.patient_gender or 'Unknown',
+                'score': r.health_score or 100,
+                'reports': 1,
+                'latest_date': r.created_at,
+                'lastReport': r.test_date or (r.created_at.strftime('%d %b %Y') if r.created_at else 'Unknown'),
+                'concern': 'See Results',
+                'color': c,
+                'selected': False,
+                'is_primary': name == current_user.name
+            }
+        else:
+            family_members[name]['reports'] += 1
+            if r.created_at and family_members[name].get('latest_date') and r.created_at > family_members[name]['latest_date']:
+                family_members[name]['score'] = r.health_score or 100
+                family_members[name]['latest_date'] = r.created_at
+                family_members[name]['lastReport'] = r.test_date or r.created_at.strftime('%d %b %Y')
+                
+    for member in family_members.values():
+        if 'latest_date' in member:
+            del member['latest_date']
+            
+    family_data = list(family_members.values())
     
     return render_template('family.html', user=current_user, family_json=json.dumps(family_data))
 
@@ -726,4 +861,7 @@ if __name__ == '__main__':
     with app.app_context():
         # Create database tables if they don't exist
         db.create_all()
+        # Initialize RAG knowledge base
+        print("Initializing Medical Knowledge Base (ChromaDB)...")
+        load_knowledge_base()
     app.run(debug=True, port=5000)

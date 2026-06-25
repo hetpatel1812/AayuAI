@@ -14,8 +14,16 @@
       <div class="fam-card" id="fc-${i}" data-idx="${i}">
         <div class="fam-top">
           <div class="avatar avatar-xl" style="background:${m.color};">${m.initial}</div>
-          <div>
-            <div class="fam-name">${m.name}</div>
+          <div style="flex: 1;">
+            <div class="fam-name" style="display: flex; justify-content: space-between; align-items: center;">
+              ${m.name}
+              ${!m.is_primary ? `
+              <form action="/delete_patient" method="POST" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete all reports for ${m.name}? This cannot be undone.');">
+                <input type="hidden" name="patient_name" value="${m.name}">
+                <button type="submit" class="btn btn-ghost" style="padding: 2px 6px; font-size: 10px; color: var(--danger); border: 1px solid var(--danger);" onclick="event.stopPropagation();">🗑 Delete</button>
+              </form>
+              ` : ''}
+            </div>
             <div class="fam-meta">${m.age}y · ${m.gender}</div>
             ${m.conditions ? `<div class="fam-cond">⚠ ${m.conditions}</div>` : ''}
           </div>
@@ -68,7 +76,17 @@
         <td>${m.lastReport}</td>
         <td><span style="font-size:18px; font-weight:800; color:${scoreColor(m.score)};">${m.score}</span><span style="font-size:10px; color:var(--text-dim);">/100</span></td>
         <td style="color:var(--status-high);">${m.concern}</td>
-        <td><button class="btn btn-sm btn-secondary">View →</button></td>
+        <td>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-sm btn-secondary" onclick="window.location.href='/dashboard?patient=${encodeURIComponent(m.name)}'">Dashboard</button>
+            ${!m.is_primary ? `
+            <form action="/delete_patient" method="POST" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete all reports for ${m.name}? This cannot be undone.');">
+              <input type="hidden" name="patient_name" value="${m.name}">
+              <button type="submit" class="btn btn-sm btn-ghost" style="color: var(--danger); border: 1px solid var(--danger);">Delete</button>
+            </form>
+            ` : ''}
+          </div>
+        </td>
       </tr>
     `).join('');
   }

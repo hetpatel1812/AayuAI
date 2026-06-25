@@ -15,27 +15,11 @@
 
 <!-- Phase 1: Main Upload UI -->
 <div id="upload-main">
-  <!-- Config Bar -->
-  <div class="glass-card--solid glass-card--no-hover" style="margin-bottom: 20px;">
-    <div class="upload-config">
-      <div class="config-item">
-        <div class="config-label">Patient</div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div class="member-pills" style="gap: 0;">
-            <div class="member-pill active" style="background: #00D4AA; width: 36px; height: 36px; font-size: 14px;" data-member="{{ user.name[0].upper() if user.name else 'U' }}" title="{{ user.name }}">{{ user.name[0].upper() if user.name else 'U' }}</div>
-          </div>
-          <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);">{{ user.name if user.name else 'User' }}</span>
-        </div>
-      </div>
-      <div class="config-item">
-        <div class="config-label">Test Date</div>
-        <div style="font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-secondary);">{{ today_full }}</div>
-      </div>
-      <div class="config-item">
-        <div class="config-label">Tags / Notes</div>
-        <input type="text" name="tags" id="tags-input" form="upload-form" placeholder="e.g. Fasting, Post-meal" style="width: 100%; font-size: 13px; background: var(--bg-tertiary); padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border-glass); color: var(--text-primary); outline: none; transition: border-color var(--transition-fast);">
-      </div>
-    </div>
+  <!-- Trust / Info Banner -->
+  <div class="upload-trust-banner animate-fade-in">
+    <div class="trust-item"><span class="trust-icon">🔒</span> Secure & Private</div>
+    <div class="trust-item"><span class="trust-icon">✨</span> AI Auto-Extracts Name & Date</div>
+    <div class="trust-item"><span class="trust-icon">⚡</span> Instant Results</div>
   </div>
 
   <!-- Mode Cards -->

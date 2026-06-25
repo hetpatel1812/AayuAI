@@ -9,9 +9,9 @@
 /* ── CSS Variables ──────────────────────────────────── */
 :root {
   /* Background */
-  --bg-primary: #F1F5F9;       /* Slightly darker slate to contrast with white cards */
+  --bg-primary: #F0FDFA;       /* Very soft medical mint/teal */
   --bg-secondary: #FFFFFF;     /* Pure white */
-  --bg-tertiary: #E2E8F0;      /* Darker slate for tertiary elements */
+  --bg-tertiary: #CCFBF1;      /* Slightly darker mint */
   --bg-elevated: #FFFFFF;
   --bg-glass: rgba(255, 255, 255, 0.85);
   --bg-glass-light: rgba(255, 255, 255, 0.6);

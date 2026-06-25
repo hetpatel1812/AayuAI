@@ -24,6 +24,10 @@
     const pageHeaderP = document.querySelector('.page-header-left p');
     if(pageHeaderP) pageHeaderP.textContent = `Family health overview · Welcome ${DATA.patient_name}`;
     
+    // Hide export button
+    const exportBtn = document.getElementById('dash-export-btn');
+    if(exportBtn) exportBtn.style.display = 'none';
+    
     // Stats for empty
     const dashStats = document.getElementById('dash-stats');
     if (dashStats) {
@@ -161,22 +165,74 @@
             <span class="badge badge-warning">${DATA.lab_name}</span>
         `;
     }
+    
+    const exportBtn = document.getElementById('dash-export-btn');
+    if(exportBtn && DATA.id) {
+        exportBtn.href = '/export/pdf/' + DATA.id;
+        exportBtn.style.display = 'flex';
+    }
   }
 
-  // Family
+  // Family Vault Insights
   const dashFamily = document.getElementById('dash-family');
   if (dashFamily && typeof window.LIVE_FAMILY !== 'undefined') {
     dashFamily.innerHTML = window.LIVE_FAMILY.map(m => `
-      <div class="family-member">
+      <div class="family-member" style="cursor: pointer; ${m.selected ? 'border: 2px solid ' + m.color + ';' : ''}" onclick="window.location.href='/dashboard?patient=${encodeURIComponent(m.name)}'">
         <div class="avatar avatar-lg" style="background:${m.color};">${m.initial}</div>
-        <div class="family-info">
-          <div class="family-name">${m.name}</div>
+        <div class="family-info" style="flex: 1;">
+          <div class="family-name" style="display: flex; justify-content: space-between; align-items: center;">
+            ${m.name}
+            ${!m.is_primary ? `
+            <form action="/delete_patient" method="POST" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete all reports for ${m.name}? This cannot be undone.');">
+              <input type="hidden" name="patient_name" value="${m.name}">
+              <button type="submit" class="btn btn-ghost" style="padding: 2px 6px; font-size: 10px; color: var(--danger); border: 1px solid var(--danger);" onclick="event.stopPropagation();">🗑 Delete</button>
+            </form>
+            ` : ''}
+          </div>
           <div class="family-meta">${m.age}y · ${m.gender}</div>
           ${m.conditions ? `<div class="family-cond">⚠ ${m.conditions}</div>` : ''}
           <div class="family-score" style="color:${m.color};">${m.score}/100 · ${m.reports} reports</div>
         </div>
       </div>
     `).join('');
+    
+    // Also render top tabs
+    const tabsContainer = document.getElementById('dash-family-tabs');
+    if(tabsContainer) {
+      tabsContainer.innerHTML = window.LIVE_FAMILY.map(m => `
+        <button class="btn btn-sm ${m.selected ? 'btn-primary' : 'btn-secondary'}" onclick="window.location.href='/dashboard?patient=${encodeURIComponent(m.name)}'" style="border-radius: 20px; padding: 6px 16px;">
+          <div class="avatar avatar-sm" style="background:${m.color}; width: 20px; height: 20px; font-size: 10px; margin-right: 6px;">${m.initial}</div>
+          ${m.name}
+        </button>
+      `).join('');
+    }
+  }
+
+  // ML Risk
+  const dashRisk = document.getElementById('dash-risk');
+  if (dashRisk && typeof window.LIVE_RISK !== 'undefined') {
+    const r = window.LIVE_RISK;
+    if (r.status === 'insufficient_data') {
+      dashRisk.innerHTML = `<div style="padding: 16px; font-size: 13px; color: var(--text-muted); text-align: center; border: 1px dashed var(--border); border-radius: 8px;">📊 ${r.message}</div>`;
+    } else if (r.status === 'success') {
+      const p = r.predictions[0];
+      dashRisk.innerHTML = `
+        <div style="display: flex; gap: 16px; align-items: stretch; background: var(--bg); padding: 16px; border-radius: 8px; border-left: 3px solid var(--${p.color});">
+          <div style="flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--white); padding: 12px; border-radius: 6px; border: 1px solid var(--border); min-width: 90px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; text-align: center;">${p.disease}</div>
+            <div style="font-family: 'Sora', sans-serif; font-size: 24px; font-weight: 800; color: var(--${p.color});">${p.score}%</div>
+            <div style="font-size: 10px; font-weight: 600; color: var(--${p.color});">${p.level} Risk</div>
+          </div>
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 13px; color: var(--text); font-weight: 500; margin-bottom: 6px;">${p.advice}</div>
+            <div style="display: flex; gap: 12px; font-size: 11px;">
+              <span style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border);">Glucose: <strong style="text-transform: capitalize;">${p.trends.glucose}</strong></span>
+              <span style="background: white; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border);">HbA1c: <strong style="text-transform: capitalize;">${p.trends.hba1c}</strong></span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
   }
 
 })();

@@ -81,7 +81,7 @@
         <td>
           <div class="history-actions">
             <a href="{{ url_for('results', report_id=report.id) }}" class="btn btn-sm btn-secondary">View</a>
-            <button class="btn btn-sm btn-ghost" onclick="exportReport({{ report.id }})">Export</button>
+            <a href="{{ url_for('export_pdf', report_id=report.id) }}" class="btn btn-sm btn-ghost">⬇ PDF</a>
           </div>
         </td>
       </tr>
@@ -105,16 +105,9 @@
 
 {% block extra_js %}
 <script>
-  // Export report — opens a print-friendly version of the results page
+  // Export report — downloads the PDF version
   function exportReport(reportId) {
-    // Open the results page for that report in a new tab for printing
-    var win = window.open('/results/' + reportId, '_blank');
-    // Give it a moment to load, then trigger print
-    if (win) {
-      win.addEventListener('load', function() {
-        setTimeout(function() { win.print(); }, 800);
-      });
-    }
+    window.open('/export/pdf/' + reportId, '_blank');
   }
 </script>
 {% endblock %}

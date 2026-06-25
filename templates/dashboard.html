@@ -36,6 +36,23 @@
   </div>
 </div>
 
+<!-- Family Profile Tabs -->
+<div id="dash-family-tabs" style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;"></div>
+
+<!-- Reminder Popup -->
+{% if reminder %}
+<div class="alert alert-info animate-fade-in-down" style="margin-bottom: 20px; border-radius: var(--radius-lg); background: linear-gradient(135deg, #EEF2FD, #E6F7F6); border-left: 4px solid var(--blue); padding: 16px; display: flex; gap: 16px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+  <div style="font-size: 24px;">📅</div>
+  <div style="flex: 1;">
+    <h4 style="margin: 0 0 4px 0; color: var(--navy); font-weight: 700;">{{ reminder.title }}</h4>
+    <p style="margin: 0; color: var(--text); font-size: 13px;">{{ reminder.message }}</p>
+  </div>
+  <div>
+    <button class="btn btn-sm btn-ghost" onclick="this.parentElement.parentElement.style.display='none'">✕ Dismiss</button>
+  </div>
+</div>
+{% endif %}
+
 <!-- Alert Banner -->
 <div class="alert alert-warning" id="dash-alert" style="margin-bottom: 20px; display: none; border-radius: var(--radius-lg); font-weight: 500;"></div>
 
@@ -65,11 +82,21 @@
       <div id="dash-params-grid" class="dash-params-grid"></div>
     </div>
     
-    <div class="dash-table-footer">
-      <a href="{{ url_for('results') }}" class="btn btn-primary" style="flex: 1; padding: 12px 20px; justify-content: center; font-weight: 700;">View Detailed Results →</a>
-      <a href="{{ url_for('history') }}" class="btn btn-secondary" style="flex: 1; padding: 12px 20px; justify-content: center; font-weight: 700;">◷ Full History</a>
+    <div class="dash-table-footer" style="display: flex; gap: 10px; padding: 16px;">
+      <a href="{{ url_for('results') }}" class="btn btn-primary" style="flex: 1; justify-content: center; font-weight: 700;">View Detailed Results →</a>
+      <a href="{{ url_for('export_pdf', report_id=report_json|tojson|safe|replace('\"', '')|replace(':', '')|replace('{id', '')|replace(',', ' ')|truncate(10, True, '') if False else 0) }}" id="dash-export-btn" class="btn btn-secondary" style="justify-content: center; font-weight: 700;">⬇ PDF</a>
+      <a href="{{ url_for('history') }}" class="btn btn-secondary" style="flex: 1; justify-content: center; font-weight: 700;">◷ History</a>
     </div>
   </div>
+</div>
+
+<!-- ML Risk Predictions Preview -->
+<div class="glass-card--solid glass-card--no-hover vault-card-panel animate-scale-in" style="margin-bottom: 20px;">
+  <div class="stat-label" style="margin-bottom: 16px; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+    <span>🤖 XGBoost Risk Trajectory</span>
+    <span style="font-size: 10px; background: rgba(0, 212, 170, 0.2); color: #00D4AA; padding: 2px 8px; border-radius: 4px; font-weight: 700; letter-spacing: 1px;">BETA</span>
+  </div>
+  <div id="dash-risk"></div>
 </div>
 
 <!-- Family Vault Preview -->
@@ -83,6 +110,7 @@
 <script>
   window.LIVE_DATA = {{ report_json | safe }};
   window.LIVE_FAMILY = {{ family_json | safe }};
+  window.LIVE_RISK = {{ risk_json | safe }};
 </script>
 <script src="{{ url_for('static', filename='js/dashboard.js', v=16) }}"></script>
 {% endblock %}

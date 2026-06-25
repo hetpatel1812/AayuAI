@@ -72,7 +72,7 @@
         Free forever.
       </p>
       <div class="hero-actions">
-        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg btn-glow">
           Get Started Free →
         </a>
         <a href="#how-it-works" class="btn btn-secondary btn-lg">
@@ -149,30 +149,46 @@
   </div>
 </section>
 
-<!-- How it works -->
-<section class="section" id="how-it-works">
-  <div class="section-eyebrow">How It Works</div>
-  <h2 class="section-heading reveal">Three Simple Steps</h2>
-  <p class="section-desc">Upload your blood test report in any format — AI does the rest in under 10 seconds.</p>
+<!-- How It Works (Scroll Driven) -->
+<section class="scroll-sequence" id="how-it-works">
+  <div class="scroll-sticky">
+    <div class="scroll-content">
+      <div class="section-eyebrow">How It Works</div>
+      <h2 class="section-heading">Three Simple Steps</h2>
+      <p class="section-desc">Keep scrolling down to see the magic happen.</p>
 
-  <div class="steps-grid">
-    <div class="step-card reveal reveal-delay-1">
-      <div class="step-num">1</div>
-      <div class="step-icon">📤</div>
-      <h3>Upload Report</h3>
-      <p>Upload your digital PDF or scan your printed report. Any lab format works.</p>
-    </div>
-    <div class="step-card reveal reveal-delay-2">
-      <div class="step-num">2</div>
-      <div class="step-icon">🤖</div>
-      <h3>AI Analyzes</h3>
-      <p>Our AI extracts every parameter, classifies values, and generates plain language explanations using RAG + LLM.</p>
-    </div>
-    <div class="step-card reveal reveal-delay-3">
-      <div class="step-num">3</div>
-      <div class="step-icon">📊</div>
-      <h3>Get Insights</h3>
-      <p>See your health score, abnormal values, diet tips, specialist recommendations, and track trends over time.</p>
+      <div class="scroll-cards">
+        <div class="scroll-card active">
+          <div class="sc-icon-wrapper">
+            📄
+            <div class="sc-step-badge">1</div>
+          </div>
+          <div class="sc-content">
+            <h3>Upload Report</h3>
+            <p>Simply upload your official digital PDF reports from any major lab or snap a clear photo of a printed copy. Our system handles it instantly.</p>
+          </div>
+        </div>
+        <div class="scroll-card">
+          <div class="sc-icon-wrapper" style="background: linear-gradient(135deg, rgba(59,111,232,0.1), rgba(59,111,232,0.02)); border-color: rgba(59,111,232,0.2);">
+            🤖
+            <div class="sc-step-badge" style="background: var(--accent-blue);">2</div>
+          </div>
+          <div class="sc-content">
+            <h3>AI Analyzes</h3>
+            <p>Our advanced medical AI instantly reads your report, extracts every parameter, and translates complex medical jargon into plain insights.</p>
+          </div>
+        </div>
+        <div class="scroll-card">
+          <div class="sc-icon-wrapper" style="background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.02)); border-color: rgba(245,158,11,0.2);">
+            📊
+            <div class="sc-step-badge" style="background: var(--status-warning);">3</div>
+          </div>
+          <div class="sc-content">
+            <h3>Get Insights</h3>
+            <p>View your overall health score, automatically flagged abnormal values, tailored diet tips, and a complete translation in your native language.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -180,19 +196,23 @@
 <!-- Input Modes -->
 <section class="section" id="input-modes" style="padding-top: 60px;">
   <div class="section-eyebrow">Input Methods</div>
-  <h2 class="section-heading reveal">Upload Any Way You Want</h2>
-  <p class="section-desc">Two intelligent pipelines handle any type of blood test report from any Indian lab.</p>
-
-  <div class="modes-grid">
-    <div class="mode-card mode-card--pdf reveal reveal-delay-1">
-      <div class="mode-icon">📄</div>
-      <h3>Digital PDF</h3>
-      <p>Lab-generated PDFs from Apollo, Lal PathLabs, Metropolis, etc. Highest accuracy, instant parsing.</p>
+  <h2 class="section-heading reveal">Supports Any Format, Any Lab</h2>
+  
+  <div class="modes-banner reveal">
+    <div class="mode-item">
+      <div class="mode-icon-wrapper pdf-bg">📄</div>
+      <div class="mode-text">
+        <h3>Digital PDFs</h3>
+        <p>Perfect for official lab reports from Apollo, Metropolis, Lal PathLabs, and more.</p>
+      </div>
     </div>
-    <div class="mode-card mode-card--scan reveal reveal-delay-2">
-      <div class="mode-icon">🖨️</div>
-      <h3>Scanned Image</h3>
-      <p>Upload flatbed scans (JPG/PNG). Advanced OCR handles tables, columns, and variable layouts perfectly.</p>
+    <div class="mode-divider"></div>
+    <div class="mode-item">
+      <div class="mode-icon-wrapper scan-bg">📸</div>
+      <div class="mode-text">
+        <h3>Photos & Scans</h3>
+        <p>Physical copy? Just snap a clear photo or upload a scanned image.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -203,49 +223,81 @@
   <h2 class="section-heading reveal">Everything You Need</h2>
   <p class="section-desc">From instant analysis to family health tracking — all powered by AI, all free.</p>
 
-  <div class="features-grid">
-    <div class="feature-card reveal reveal-delay-1">
-      <div class="feature-icon">📊</div>
+  <div class="bento-grid">
+    <!-- Big Feature: 2x2 -->
+    <div class="bento-item col-span-2 row-span-2 reveal reveal-delay-1" style="background: linear-gradient(145deg, rgba(0,212,170,0.05), transparent);">
+      <div class="bento-icon">📊</div>
       <h3>Health Score Dashboard</h3>
-      <p>Overall score 0–100 with sub-scores for Kidney, Liver, Heart, Blood, Thyroid, and Vitamins.</p>
+      <p style="margin-bottom: 24px;">Overall score 0–100 calculated from your blood parameters. A single pane of glass for your health.</p>
+      
+      <div style="margin-top: auto; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); padding: 24px; border-radius: 16px; border: 1px solid var(--border-glass); box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);">
+        <svg class="mock-score-ring" viewBox="0 0 80 80" style="margin: 0; width: 100px; height: 100px;">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(15,23,42,0.06)" stroke-width="8"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#F59E0B" stroke-width="8" stroke-dasharray="213.6" stroke-dashoffset="81.2" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+          <text x="40" y="38" text-anchor="middle" font-family="Outfit" font-size="20" font-weight="800" fill="#F59E0B">62</text>
+          <text x="40" y="50" text-anchor="middle" font-size="9" fill="#94A3B8">/100</text>
+        </svg>
+        <div style="margin-left: 32px; display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-primary);"><span style="width:8px; height:8px; border-radius:50%; background:var(--accent-emerald);"></span> Hemoglobin <span style="margin-left:auto; color:var(--text-muted); font-weight:500;">Normal</span></div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-primary);"><span style="width:8px; height:8px; border-radius:50%; background:var(--status-warning);"></span> Cholesterol <span style="margin-left:auto; color:var(--text-muted); font-weight:500;">High</span></div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-primary);"><span style="width:8px; height:8px; border-radius:50%; background:var(--accent-emerald);"></span> Blood Sugar <span style="margin-left:auto; color:var(--text-muted); font-weight:500;">Normal</span></div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-primary);"><span style="width:8px; height:8px; border-radius:50%; background:var(--status-high);"></span> Vitamin D <span style="margin-left:auto; color:var(--text-muted); font-weight:500;">Low</span></div>
+        </div>
+      </div>
     </div>
-    <div class="feature-card reveal reveal-delay-2">
-      <div class="feature-icon">📈</div>
+    
+    <!-- Wide Feature: 2x1 -->
+    <div class="bento-item col-span-2 reveal reveal-delay-2">
+      <div class="bento-icon">🌐</div>
+      <h3>Multilingual</h3>
+      <p>Get your health explanations in English, Hindi (हिंदी), or Gujarati (ગુજરાતી), ensuring your entire family understands every medical detail.</p>
+    </div>
+    
+    <!-- Standard Feature: 1x1 -->
+    <div class="bento-item reveal reveal-delay-3">
+      <div class="bento-icon">📈</div>
       <h3>Trend Tracking</h3>
-      <p>Upload multiple reports — see how every parameter changes over time. Detect improving or worsening trends.</p>
+      <p>Securely upload multiple reports over time to visualize your health journey and monitor improving or worsening trends.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-3">
-      <div class="feature-icon">👨‍👩‍👧</div>
-      <h3>Family Health Vault</h3>
-      <p>Manage reports for different family members under one account and track their independent health histories.</p>
+    
+    <!-- Standard Feature: 1x1 -->
+    <div class="bento-item reveal reveal-delay-1">
+      <div class="bento-icon">👨‍👩‍👧</div>
+      <h3>Family Vault</h3>
+      <p>Manage reports for different family members under one account.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-1">
-      <div class="feature-icon">💬</div>
+    
+    <!-- Wide Feature: 2x1 -->
+    <div class="bento-item col-span-2 reveal reveal-delay-2">
+      <div class="bento-icon">💬</div>
       <h3>AI Chatbot</h3>
       <p>"Why is my TSH high?" — ask anything and get context-aware answers about your specific report values.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-2">
-      <div class="feature-icon">🍛</div>
+    
+    <!-- Wide Feature: 2x1 -->
+    <div class="bento-item col-span-2 reveal reveal-delay-3">
+      <div class="bento-icon">🍛</div>
       <h3>Indian Diet Tips</h3>
-      <p>Low iron → "Eat palak, rajma, pomegranate." India-specific food recommendations for every abnormal value.</p>
+      <p>Low iron → "Eat palak, rajma, pomegranate." India-specific food recommendations tailored to your exact abnormal values.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-3">
-      <div class="feature-icon">🌐</div>
-      <h3>Multilingual</h3>
-      <p>Get explanations in English, Hindi (हिंदी), or Gujarati (ગુજરાતી). Powered by IndicTrans2.</p>
+    
+    <!-- Standard Feature: 1x1 -->
+    <div class="bento-item reveal reveal-delay-1">
+      <div class="bento-icon">🔄</div>
+      <h3>Comparison</h3>
+      <p>Compare any two reports side-by-side.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-1">
-      <div class="feature-icon">🔄</div>
-      <h3>Report Comparison</h3>
-      <p>Select any two reports — see side-by-side what improved, what worsened, with percentage changes.</p>
-    </div>
-    <div class="feature-card reveal reveal-delay-2">
-      <div class="feature-icon">🚨</div>
+    
+    <!-- Standard Feature: 1x1 -->
+    <div class="bento-item reveal reveal-delay-2">
+      <div class="bento-icon">🚨</div>
       <h3>Critical Alerts</h3>
-      <p>Instantly flagged if any value is dangerously abnormal with "See doctor immediately" guidance.</p>
+      <p>Instant alerts for dangerous values.</p>
     </div>
-    <div class="feature-card reveal reveal-delay-3">
-      <div class="feature-icon">📄</div>
+    
+    <!-- Wide Feature: 2x1 -->
+    <div class="bento-item col-span-2 reveal reveal-delay-3" style="background: linear-gradient(145deg, rgba(59,111,232,0.05), transparent);">
+      <div class="bento-icon">📄</div>
       <h3>PDF Export</h3>
       <p>Download a clean, simplified report — color-coded and explained — to share with your doctor or family.</p>
     </div>
@@ -277,15 +329,15 @@
     </details>
     <details class="faq-item reveal">
       <summary class="faq-question">Is it actually free?</summary>
-      <div class="faq-answer">Yes, 100% free forever. This is a student-built project aimed at making health information accessible to every Indian family, without any subscription walls.</div>
+      <div class="faq-answer">Yes, 100% free. Our mission is to make critical health information accessible and understandable for every family.</div>
     </details>
     <details class="faq-item reveal">
       <summary class="faq-question">What languages do you support?</summary>
-      <div class="faq-answer">We currently provide full RAG-powered explanations in English, Hindi (हिंदी), and Gujarati (ગુજરાતી) using state-of-the-art IndicTrans2 models.</div>
+      <div class="faq-answer">We currently provide comprehensive health explanations in English, Hindi (हिंदी), and Gujarati (ગુજરાતી).</div>
     </details>
     <details class="faq-item reveal">
       <summary class="faq-question">Can I upload handwritten reports?</summary>
-      <div class="faq-answer">Our OCR works best with typed, computer-generated lab reports (PDFs or clear photos). Handwritten doctor notes or prescriptions may not be parsed accurately.</div>
+      <div class="faq-answer">Our AI is optimized for printed or typed lab reports (PDFs or clear photos). Handwritten doctor notes or prescriptions are currently not supported.</div>
     </details>
   </div>
 </section>
@@ -416,6 +468,54 @@
   
   // Apply theme immediately on load
   applyTheme();
+  // Scroll-Driven Animation (Optimized for 60fps)
+  const scrollSeq = document.querySelector('.scroll-sequence');
+  const scrollCards = document.querySelectorAll('.scroll-card');
+  
+  if (scrollSeq && scrollCards.length > 0) {
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = scrollSeq.getBoundingClientRect();
+          let progress = 0;
+          
+          // Calculate progress between 0 and 1
+          if (rect.top <= 0) {
+             progress = Math.abs(rect.top) / (rect.height - window.innerHeight);
+          }
+          
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          let activeIndex = 0;
+          if (progress > 0.33 && progress <= 0.66) {
+            activeIndex = 1;
+          } else if (progress > 0.66) {
+            activeIndex = 2;
+          }
+
+          scrollCards.forEach((card, index) => {
+            let targetClass = 'scroll-card';
+            if (index < activeIndex) {
+              targetClass = 'scroll-card past';
+            } else if (index === activeIndex) {
+              targetClass = 'scroll-card active';
+            }
+            
+            // Only touch DOM if class actually changes (prevents layout thrashing)
+            if (card.className !== targetClass) {
+              card.className = targetClass;
+            }
+          });
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
 </script>
 </body>
 </html>

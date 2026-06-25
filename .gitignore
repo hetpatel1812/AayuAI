@@ -12,6 +12,8 @@ env/
 # Database
 instance/
 *.db
+*.sqlite3
+chroma_db/
 
 # Uploads (user files)
 uploads/*

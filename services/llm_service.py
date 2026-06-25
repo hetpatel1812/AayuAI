@@ -5,6 +5,7 @@ Groq (Llama 3.3 70B) primary + Gemini fallback for generating explanations.
 import os
 from groq import Groq
 import google.generativeai as genai
+from services.rag_service import retrieve_context
 
 
 FALLBACK_EXPLANATIONS = {
@@ -80,6 +81,10 @@ def _build_prompt(param, language):
         'gu': 'Explain in simple Gujarati (Gujarati script).'
     }.get(language, 'Explain in simple English.')
 
+    # Retrieve Medical Context using RAG
+    medical_context = retrieve_context(param['test'])
+    context_injection = f"\nMedical Knowledge Context:\n{medical_context}\n" if medical_context else ""
+
     return f"""You are a medical educator AI. {lang_instruction}
 
 Blood Test Result:
@@ -87,8 +92,8 @@ Blood Test Result:
 - Your Value: {param['value']} {param['unit']}
 - Normal Range: {param.get('ref_low', '?')} – {param.get('ref_high', '?')} {param['unit']}
 - Status: {param['status']}
-
-Explain what this test measures, what the patient's value means, potential symptoms, and what they should do next. Keep it under 100 words. Use simple language a non-medical person can understand. If the value is abnormal, suggest an Indian diet tip."""
+{context_injection}
+Explain what this test measures, what the patient's value means, potential symptoms, and what they should do next. Keep it under 100 words. Use simple language a non-medical person can understand. If the value is abnormal, suggest an Indian diet tip. Base your advice on the provided Medical Knowledge Context if available."""
 
 
 def _call_groq(prompt):
