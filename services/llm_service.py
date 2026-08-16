@@ -1,6 +1,6 @@
 """
 Aayu AI — LLM Service
-Groq (Llama 3.3 70B) primary + Gemini fallback for generating explanations.
+Groq (GPT OSS 120B / Qwen 3.6 27B) primary + Gemini fallback for generating explanations.
 """
 import os
 from groq import Groq
@@ -96,18 +96,26 @@ Blood Test Result:
 Explain what this test measures, what the patient's value means, potential symptoms, and what they should do next. Keep it under 100 words. Use simple language a non-medical person can understand. If the value is abnormal, suggest an Indian diet tip. Base your advice on the provided Medical Knowledge Context if available."""
 
 
-def _call_groq(prompt):
+def _call_groq(prompt, max_tokens=600):
     api_key = os.environ.get('GROQ_API_KEY', '')
     if not api_key:
         return None
     try:
         client = Groq(api_key=api_key)
-        response = client.chat.completions.create(
-            model=os.environ.get('GROQ_MODEL', 'llama-3.3-70b-versatile'),
-            messages=[{'role': 'user', 'content': prompt}],
-            temperature=0.3,
-            max_tokens=300
-        )
+        model_name = os.environ.get('GROQ_MODEL', 'openai/gpt-oss-120b')
+        kwargs = {
+            'model': model_name,
+            'messages': [{'role': 'user', 'content': prompt}],
+            'temperature': 0.3,
+            'max_tokens': max_tokens
+        }
+        # Configure reasoning effort for reasoning models on Groq
+        if 'gpt-oss' in model_name.lower():
+            kwargs['reasoning_effort'] = 'low'
+        elif 'qwen' in model_name.lower():
+            kwargs['reasoning_effort'] = 'none'
+
+        response = client.chat.completions.create(**kwargs)
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"Groq error: {e}")
@@ -204,7 +212,7 @@ Format your response nicely with clear headings, bullet points, and actionable t
 
 Do NOT include any medical disclaimers at the start (just give the plan directly).
 """
-    response = _call_groq(prompt)
+    response = _call_groq(prompt, max_tokens=1200)
     if response:
         return response
     return "I'm currently unable to connect to the AI service to generate your diet plan. Please try again later."

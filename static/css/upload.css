@@ -41,6 +41,7 @@
   transition: all var(--transition-base); 
   position: relative; 
   overflow: hidden; 
+  text-align: center; 
 }
 .upload-mode::before { 
   content: ''; 

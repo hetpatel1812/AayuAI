@@ -6,7 +6,7 @@
 /* ── Dashboard Hero ─────────────────────────────────── */
 .dash-hero {
   position: relative;
-  background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #1e40af 100%);
+  background: linear-gradient(135deg, #0f766e 0%, #0d9488 40%, #0284c7 100%);
   border-radius: var(--radius-xl);
   padding: 32px 40px;
   color: #ffffff;
@@ -107,8 +107,9 @@
 }
 
 .visual-shield {
-  font-size: 80px;
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
   animation: float 4s ease-in-out infinite;
 }
 
@@ -149,9 +150,9 @@
 }
 
 .dash-stats .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-elevated);
-  border-color: rgba(13, 148, 136, 0.25);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 24px -8px rgba(13, 148, 136, 0.2);
+  border-color: rgba(13, 148, 136, 0.35);
 }
 
 /* ── Main Body Grid ─────────────────────────────────── */
@@ -236,23 +237,23 @@
 }
 
 .dash-param-item:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.01);
   background: var(--bg-secondary);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: 0 8px 16px -4px rgba(0,0,0,0.05);
 }
 
 /* State-specific outline glows */
 .param-status-normal:hover {
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.1);
 }
 .param-status-high:hover {
-  border-color: rgba(239, 68, 68, 0.35);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.1);
 }
 .param-status-low:hover {
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.1);
 }
 
 .param-item-left {

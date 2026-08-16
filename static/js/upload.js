@@ -192,41 +192,65 @@
     }
 
     const formData = new FormData(document.getElementById('upload-form'));
+    let retried = false;
 
-    fetch('/upload', {
-      method: 'POST',
-      body: formData
-    })
-      .then(res => res.json())
-      .then(data => {
-        clearInterval(timer);
-        if (data.error) {
-          alert("Error: " + data.error);
+    function doUpload(body) {
+      fetch('/upload', {
+        method: 'POST',
+        body: body
+      })
+        .then(res => {
+          if (!res.ok && !retried) {
+            // Auto-retry once on server error (cold start / API timeout)
+            retried = true;
+            console.warn('First upload attempt failed, retrying...');
+            const retryData = new FormData(document.getElementById('upload-form'));
+            setTimeout(() => doUpload(retryData), 1500);
+            return null;
+          }
+          return res.json();
+        })
+        .then(data => {
+          if (!data) return; // retry in progress
+          clearInterval(timer);
+          if (data.error) {
+            alert("Error: " + data.error);
+            document.getElementById('upload-proc').classList.add('hidden');
+            document.getElementById('upload-main').classList.remove('hidden');
+          } else {
+            // Finish progress
+            updateStep(total - 1);
+            setTimeout(() => {
+              updateStep(total);
+              document.getElementById('proc-pct').textContent = '100%';
+              document.getElementById('proc-fill').style.width = '100%';
+              const lastDot = document.getElementById('dot-' + total);
+              if (lastDot) { lastDot.className = 'step-dot done'; lastDot.textContent = '✓'; }
+
+              setTimeout(() => {
+                // Redirect immediately to the results page
+                window.location.href = '/results/' + data.report_id;
+              }, 800);
+            }, 500);
+          }
+        })
+        .catch(err => {
+          if (!retried) {
+            // Auto-retry once on network/parse error
+            retried = true;
+            console.warn('Upload error, retrying once...', err);
+            const retryData = new FormData(document.getElementById('upload-form'));
+            setTimeout(() => doUpload(retryData), 1500);
+            return;
+          }
+          clearInterval(timer);
+          alert("Upload failed. Please try again.");
+          console.error('Upload failed after retry:', err);
           document.getElementById('upload-proc').classList.add('hidden');
           document.getElementById('upload-main').classList.remove('hidden');
-        } else {
-          // Finish progress
-          updateStep(total - 1);
-          setTimeout(() => {
-            updateStep(total);
-            document.getElementById('proc-pct').textContent = '100%';
-            document.getElementById('proc-fill').style.width = '100%';
-            const lastDot = document.getElementById('dot-' + total);
-            if (lastDot) { lastDot.className = 'step-dot done'; lastDot.textContent = '✓'; }
+        });
+    }
 
-            setTimeout(() => {
-              // Redirect immediately to the results page
-              window.location.href = '/results/' + data.report_id;
-            }, 800);
-          }, 500);
-        }
-      })
-      .catch(err => {
-        clearInterval(timer);
-        alert("Upload failed. Check console.");
-        console.error(err);
-        document.getElementById('upload-proc').classList.add('hidden');
-        document.getElementById('upload-main').classList.remove('hidden');
-      });
+    doUpload(formData);
   }
 })();

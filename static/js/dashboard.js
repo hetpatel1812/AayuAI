@@ -10,7 +10,7 @@
     document.querySelector('.dash-body').innerHTML = `
       <div style="grid-column: 1 / -1;">
         <div class="glass-card empty-state animate-fade-in-up">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
           <h3>No reports found</h3>
           <p>Upload your first blood test report to see your dashboard insights.</p>
           <a href="/upload" class="btn btn-primary" style="margin-top: 10px;">+ Upload Report</a>
@@ -55,13 +55,13 @@
       alertBanner.className = 'alert alert-warning animate-fade-in-down';
       const topTests = abnormalParams.slice(0, 5).map(p => p.test).join(', ');
       alertBanner.innerHTML = `
-        <span class="alert-icon">⚠️</span>
+        <span class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
         <span><strong>Action needed:</strong> ${abnormalCount} abnormal values — ${topTests}${abnormalCount > 5 ? ' and more' : ''} require attention.</span>
       `;
     } else {
       alertBanner.className = 'alert alert-success animate-fade-in-down';
       alertBanner.innerHTML = `
-        <span class="alert-icon">✅</span>
+        <span class="alert-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
         <span><strong>All good!</strong> No abnormal values detected in your recent report.</span>
       `;
     }
@@ -122,17 +122,18 @@
       const vc = statusColor(p.status);
       const range = (p.refLow && p.refHigh) ? `${p.refLow}–${p.refHigh}` : p.refHigh ? `< ${p.refHigh}` : '-';
       
+      const iconBase = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
       const catIcons = {
-        'CBC': '🩸',
-        'KFT': '💧',
-        'LFT': '☘️',
-        'Glucose': '🍬',
-        'Lipid': '🥑',
-        'Thyroid': '⚡',
-        'Vitamins': '💊',
-        'Other': '🔬'
+        'CBC': iconBase + '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>', // drop
+        'KFT': iconBase + '<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg>', // droplet (kidney fluid)
+        'LFT': iconBase + '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2v1c0 5.6-4.5 10.1-10.1 10.1v7Z"/></svg>', // leaf (liver)
+        'Glucose': iconBase + '<circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>', // sun (energy/glucose)
+        'Lipid': iconBase + '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>', // info/alert (cholesterol)
+        'Thyroid': iconBase + '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>', // zap (metabolism)
+        'Vitamins': iconBase + '<rect width="16" height="6" x="4" y="9" rx="3"/><path d="M4 12h16"/></svg>', // pill
+        'Other': iconBase + '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>' // info
       };
-      const icon = catIcons[p.cat] || '🔬';
+      const icon = catIcons[p.cat] || catIcons['Other'];
       
       const cardStatusClass = p.status === 'HIGH' ? 'param-status-high' : p.status === 'LOW' ? 'param-status-low' : 'param-status-normal';
 
@@ -190,7 +191,7 @@
             ` : ''}
           </div>
           <div class="family-meta">${m.age}y · ${m.gender}</div>
-          ${m.conditions ? `<div class="family-cond">⚠ ${m.conditions}</div>` : ''}
+          ${m.conditions ? `<div class="family-cond" style="display: flex; align-items: center; gap: 4px;"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${m.conditions}</div>` : ''}
           <div class="family-score" style="color:${m.color};">${m.score}/100 · ${m.reports} reports</div>
         </div>
       </div>

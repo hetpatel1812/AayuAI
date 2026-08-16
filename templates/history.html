@@ -26,6 +26,30 @@
   .score-color-high { color: var(--status-high); }
   .score-color-warning { color: var(--status-warning); }
   .score-color-normal { color: var(--status-normal); }
+  .btn-delete {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-delete:hover {
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #ef4444;
+    transform: translateY(-1px);
+  }
+  .btn-delete:active {
+    transform: scale(0.96);
+  }
+  tr.removing {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.35s ease;
+  }
 </style>
 {% endblock %}
 
@@ -82,6 +106,7 @@
           <div class="history-actions">
             <a href="{{ url_for('results', report_id=report.id) }}" class="btn btn-sm btn-secondary">View</a>
             <a href="{{ url_for('export_pdf', report_id=report.id) }}" class="btn btn-sm btn-ghost">⬇ PDF</a>
+            <button class="btn-delete" onclick="deleteReport({{ report.id }}, this)" title="Delete this report">🗑 Delete</button>
           </div>
         </td>
       </tr>
@@ -108,6 +133,46 @@
   // Export report — downloads the PDF version
   function exportReport(reportId) {
     window.open('/export/pdf/' + reportId, '_blank');
+  }
+
+  // Delete a single report
+  function deleteReport(reportId, btn) {
+    if (!confirm('Are you sure you want to delete this report? This cannot be undone.')) return;
+
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    fetch('/history/delete/' + reportId, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const row = btn.closest('tr');
+          row.classList.add('removing');
+          setTimeout(() => {
+            row.remove();
+            // Update the report count text
+            const rows = document.querySelectorAll('.history-table tbody tr');
+            const countTexts = document.querySelectorAll('.page-header-left p, .text-sm.text-muted');
+            const count = rows.length;
+            countTexts.forEach(el => {
+              if (el.textContent.includes('report')) {
+                el.textContent = el.textContent.replace(/\d+ report/, count + ' report');
+              }
+            });
+            if (count === 0) location.reload();
+          }, 400);
+        } else {
+          alert('Error: ' + (data.error || 'Could not delete report.'));
+          btn.disabled = false;
+          btn.textContent = '🗑 Delete';
+        }
+      })
+      .catch(err => {
+        alert('Failed to delete report. Please try again.');
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = '🗑 Delete';
+      });
   }
 </script>
 {% endblock %}

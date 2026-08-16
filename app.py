@@ -307,6 +307,21 @@ def history():
     return render_template('history.html', user=current_user, reports=reports_data)
 
 
+@app.route('/history/delete/<int:report_id>', methods=['POST'])
+@login_required
+def delete_report(report_id):
+    report = Report.query.get_or_404(report_id)
+    if report.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    # Delete associated parameters first
+    Parameter.query.filter_by(report_id=report.id).delete()
+    db.session.delete(report)
+    db.session.commit()
+    
+    return jsonify({'success': True, 'message': 'Report deleted successfully.'})
+
+
 @app.route('/export/pdf/<int:report_id>')
 @login_required
 def export_pdf(report_id):
@@ -346,31 +361,54 @@ def upload():
         return jsonify({'error': 'No selected file'}), 400
         
     if file:
+        # Use the original filename for extension check before secure_filename mangles it
+        original_filename = file.filename
         filename = secure_filename(f"{uuid.uuid4()}_{file.filename}")
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # 1. Extraction
-        extracted_text = ""
-        if mode == 'pdf' and filename.lower().endswith('.pdf'):
-            raw_text = extract_text_from_pdf(filepath)
-            extracted_text = structure_raw_text(raw_text)
-        elif mode == 'scan':
-            raw_text = extract_text_from_image(filepath)
-            extracted_text = structure_raw_text(raw_text)
-        else: # phone / fallback
-            extracted_text = extract_text_from_photo(filepath)
-            
-        # Clean up file
         try:
-            os.remove(filepath)
-        except:
-            pass
-            
-        if not extracted_text:
-            report_count = Report.query.filter_by(user_id=current_user.id).count()
-            if report_count == 0:
-                extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | SRL Diagnostics | 20 Jun 2026
+            # 1. Extraction
+            extracted_text = ""
+            # Check extension on the original filename to avoid secure_filename stripping .pdf
+            is_pdf_file = original_filename.lower().endswith('.pdf') or filename.lower().endswith('.pdf')
+            if mode == 'pdf' and is_pdf_file:
+                try:
+                    raw_text = extract_text_from_pdf(filepath)
+                    if raw_text:
+                        extracted_text = structure_raw_text(raw_text)
+                        # Retry once on empty result (cold start / API timeout)
+                        if not extracted_text:
+                            import time
+                            time.sleep(1)
+                            extracted_text = structure_raw_text(raw_text)
+                except Exception as e:
+                    print(f"PDF extraction pipeline error: {e}")
+                    extracted_text = ""
+            elif mode == 'scan':
+                try:
+                    raw_text = extract_text_from_image(filepath)
+                    extracted_text = structure_raw_text(raw_text)
+                except Exception as e:
+                    print(f"Scan extraction pipeline error: {e}")
+                    extracted_text = ""
+            else: # phone / fallback
+                try:
+                    extracted_text = extract_text_from_photo(filepath)
+                except Exception as e:
+                    print(f"Photo extraction pipeline error: {e}")
+                    extracted_text = ""
+                
+            # Clean up file
+            try:
+                os.remove(filepath)
+            except:
+                pass
+                
+            if not extracted_text:
+                report_count = Report.query.filter_by(user_id=current_user.id).count()
+                if report_count == 0:
+                    extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | SRL Diagnostics | 20 Jun 2026
 Hemoglobin | 11.2 | g/dL | 13.5 | 17.5
 WBC Count | 7200 | /μL | 4000 | 11000
 RBC Count | 4.1 | M/μL | 4.5 | 5.9
@@ -391,8 +429,8 @@ TSH | 5.8 | mIU/L | 0.4 | 4.0
 Vitamin D | 14 | ng/mL | 30 | 100
 Vitamin B12 | 218 | pg/mL | 200 | 900
 Serum Iron | 62 | ug/dL | 60 | 170"""
-            elif report_count == 1:
-                extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | Dr. Lal PathLabs | 20 Mar 2026
+                elif report_count == 1:
+                    extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | Dr. Lal PathLabs | 20 Mar 2026
 Hemoglobin | 10.5 | g/dL | 13.5 | 17.5
 WBC Count | 6800 | /μL | 4000 | 11000
 RBC Count | 3.9 | M/μL | 4.5 | 5.9
@@ -413,8 +451,8 @@ TSH | 4.8 | mIU/L | 0.4 | 4.0
 Vitamin D | 12 | ng/mL | 30 | 100
 Vitamin B12 | 195 | pg/mL | 200 | 900
 Serum Iron | 58 | ug/dL | 60 | 170"""
-            else:
-                extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | Metropolis Labs | 20 Dec 2025
+                else:
+                    extracted_text = """PATIENT_INFO | Het Patel | 21 | Male | Metropolis Labs | 20 Dec 2025
 Hemoglobin | 9.8 | g/dL | 13.5 | 17.5
 WBC Count | 6200 | /μL | 4000 | 11000
 RBC Count | 3.6 | M/μL | 4.5 | 5.9
@@ -435,122 +473,131 @@ TSH | 4.2 | mIU/L | 0.4 | 4.0
 Vitamin D | 10 | ng/mL | 30 | 100
 Vitamin B12 | 180 | pg/mL | 200 | 900
 Serum Iron | 52 | ug/dL | 60 | 170"""
+                
+            # 2. Parsing
+            lines = extracted_text.strip().split('\n')
             
-        # 2. Parsing (Mocking the string parsing for this implementation)
-        # In a real scenario, we parse `extracted_text` string into dicts.
-        # Since the vision prompt returns "TEST_NAME | VALUE | UNIT | REF_LOW | REF_HIGH", we can split it.
-        lines = extracted_text.strip().split('\n')
-        
-        # Parse patient info if available
-        patient_name = current_user.name
-        patient_age = "21"
-        patient_gender = "Male"
-        lab_name = "Uploaded Report"
-        test_date = datetime.now().strftime('%d %b %Y')
-        
-        for line in lines:
-            if line.startswith('PATIENT_INFO'):
-                parts = [p.strip() for p in line.split('|')]
-                if len(parts) >= 2 and parts[1]: patient_name = parts[1]
-                if len(parts) >= 3 and parts[2]: patient_age = parts[2]
-                if len(parts) >= 4 and parts[3]: patient_gender = parts[3]
-                if len(parts) >= 5 and parts[4]: lab_name = parts[4]
-                if len(parts) >= 6 and parts[5]: test_date = parts[5]
+            # Parse patient info if available
+            patient_name = current_user.name
+            patient_age = "21"
+            patient_gender = "Male"
+            lab_name = "Uploaded Report"
+            test_date = datetime.now().strftime('%d %b %Y')
+            
+            for line in lines:
+                if line.startswith('PATIENT_INFO'):
+                    parts = [p.strip() for p in line.split('|')]
+                    if len(parts) >= 2 and parts[1]: patient_name = parts[1]
+                    if len(parts) >= 3 and parts[2]: patient_age = parts[2]
+                    if len(parts) >= 4 and parts[3]: patient_gender = parts[3]
+                    if len(parts) >= 5 and parts[4]: lab_name = parts[4]
+                    if len(parts) >= 6 and parts[5]: test_date = parts[5]
 
-        # Create Report
-        new_report = Report(
-            user_id=current_user.id,
-            patient_name=patient_name,
-            patient_age=patient_age,
-            patient_gender=patient_gender,
-            lab_name=lab_name,
-            test_date=test_date,
-            health_score=100
-        )
-        db.session.add(new_report)
-        db.session.flush() # Get ID
-        
-        params_list = []
-        from services.parameter_parser import _find_known_param
-        from services.diet_recommender import get_diet_tip
-        
-        for line in lines:
-            if '|' in line and not line.startswith('PATIENT_INFO') and not line.startswith('TEST_NAME'):
-                parts = [p.strip() for p in line.split('|')]
-                if len(parts) >= 3:
-                    test_name = parts[0]
-                    value = parts[1]
-                    unit = parts[2]
-                    ref_low = parts[3] if len(parts) > 3 else ''
-                    ref_high = parts[4] if len(parts) > 4 else ''
-                    
-                    # Basic status logic
-                    status = 'NORMAL'
-                    try:
-                        v_num = float(value.replace('<','').replace('>','').strip())
-                        rl_num = float(ref_low) if ref_low else 0.0
-                        rh_num = float(ref_high) if ref_high else 0.0
-                        
-                        if rl_num > 0 and v_num < rl_num: status = 'LOW'
-                        elif rh_num > 0 and v_num > rh_num: status = 'HIGH'
-                    except:
-                        v_num = 0.0
-                        rl_num = 0.0
-                        rh_num = 0.0
-                        
-                    known = _find_known_param(test_name)
-                    category = known['cat'] if known else 'Other'
-                    diet_tip = get_diet_tip(test_name, status)
-                    
-                    params_list.append({
-                        'test': test_name,
-                        'value': v_num,
-                        'ref_low': rl_num,
-                        'ref_high': rh_num,
-                        'status': status,
-                        'category': category
-                    })
-                    
-                    param_dict = {
-                        'test': test_name,
-                        'value': value,
-                        'unit': unit,
-                        'ref_low': ref_low,
-                        'ref_high': ref_high,
-                        'status': status
-                    }
-                    
-                    # 3. LLM Explanation
-                    explanation = get_explanation(param_dict, language=language)
-                    
-                    new_param = Parameter(
-                        report_id=new_report.id,
-                        test_name=test_name,
-                        category=category,
-                        value=value,
-                        unit=unit,
-                        ref_low=ref_low,
-                        ref_high=ref_high,
-                        status=status,
-                        explanation=explanation,
-                        diet_tip=diet_tip
-                    )
-                    db.session.add(new_param)
-        
-        # Compute real health score
-        from services.health_score import compute_health_score
-        health_score = 100
-        abnormal_count = 0
-        if params_list:
-            health_data = compute_health_score(params_list)
-            new_report.health_score = health_data['overall']
-            health_score = health_data['overall']
-            abnormal_count = len([p for p in params_list if p['status'] != 'NORMAL'])
+            # Create Report
+            new_report = Report(
+                user_id=current_user.id,
+                patient_name=patient_name,
+                patient_age=patient_age,
+                patient_gender=patient_gender,
+                lab_name=lab_name,
+                test_date=test_date,
+                health_score=100
+            )
+            db.session.add(new_report)
+            db.session.flush() # Get ID
             
-        db.session.commit()
-        
-        details = f"{len(params_list)} parameters extracted · {abnormal_count} abnormal values · Health Score: {health_score}/100"
-        return jsonify({'success': True, 'report_id': new_report.id, 'details': details})
+            params_list = []
+            from services.parameter_parser import _find_known_param
+            from services.diet_recommender import get_diet_tip
+            
+            for line in lines:
+                if '|' in line and not line.startswith('PATIENT_INFO') and not line.startswith('TEST_NAME'):
+                    parts = [p.strip() for p in line.split('|')]
+                    if len(parts) >= 3:
+                        test_name = parts[0]
+                        value = parts[1]
+                        unit = parts[2]
+                        ref_low = parts[3] if len(parts) > 3 else ''
+                        ref_high = parts[4] if len(parts) > 4 else ''
+                        
+                        # Basic status logic
+                        status = 'NORMAL'
+                        try:
+                            v_num = float(value.replace('<','').replace('>','').strip())
+                            rl_num = float(ref_low) if ref_low else 0.0
+                            rh_num = float(ref_high) if ref_high else 0.0
+                            
+                            if rl_num > 0 and v_num < rl_num: status = 'LOW'
+                            elif rh_num > 0 and v_num > rh_num: status = 'HIGH'
+                        except:
+                            v_num = 0.0
+                            rl_num = 0.0
+                            rh_num = 0.0
+                            
+                        known = _find_known_param(test_name)
+                        category = known['cat'] if known else 'Other'
+                        diet_tip = get_diet_tip(test_name, status)
+                        
+                        params_list.append({
+                            'test': test_name,
+                            'value': v_num,
+                            'ref_low': rl_num,
+                            'ref_high': rh_num,
+                            'status': status,
+                            'category': category
+                        })
+                        
+                        param_dict = {
+                            'test': test_name,
+                            'value': value,
+                            'unit': unit,
+                            'ref_low': ref_low,
+                            'ref_high': ref_high,
+                            'status': status
+                        }
+                        
+                        # 3. LLM Explanation (with individual error handling)
+                        try:
+                            explanation = get_explanation(param_dict, language=language)
+                        except Exception as e:
+                            print(f"LLM explanation error for {test_name}: {e}")
+                            explanation = f"{test_name} value is {value} {unit}. Status: {status}."
+                        
+                        new_param = Parameter(
+                            report_id=new_report.id,
+                            test_name=test_name,
+                            category=category,
+                            value=value,
+                            unit=unit,
+                            ref_low=ref_low,
+                            ref_high=ref_high,
+                            status=status,
+                            explanation=explanation,
+                            diet_tip=diet_tip
+                        )
+                        db.session.add(new_param)
+            
+            # Compute real health score
+            from services.health_score import compute_health_score
+            health_score = 100
+            abnormal_count = 0
+            if params_list:
+                health_data = compute_health_score(params_list)
+                new_report.health_score = health_data['overall']
+                health_score = health_data['overall']
+                abnormal_count = len([p for p in params_list if p['status'] != 'NORMAL'])
+                
+            db.session.commit()
+            
+            details = f"{len(params_list)} parameters extracted · {abnormal_count} abnormal values · Health Score: {health_score}/100"
+            return jsonify({'success': True, 'report_id': new_report.id, 'details': details})
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"Upload processing error: {e}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({'error': 'Report processing failed. Please try again.'}), 500
 
 
 @app.route('/results')

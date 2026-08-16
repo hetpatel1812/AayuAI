@@ -122,6 +122,13 @@
   color: var(--text-dim);
   flex-shrink: 0;
   transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-icon svg {
+  display: block;
 }
 
 /* User section at bottom */
@@ -171,6 +178,33 @@
 .sidebar-logout:hover {
   background: var(--status-high-bg);
   color: var(--status-high);
+}
+
+.sidebar-logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.sidebar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+  transform: scale(1.1);
+}
+
+.sidebar-logout-btn:active {
+  transform: scale(0.95);
 }
 
 /* ── Main Content ───────────────────────────────────── */
